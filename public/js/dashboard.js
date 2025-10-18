@@ -1,70 +1,99 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-    // --- LÓGICA PARA MOSTRAR EL NOMBRE DE USUARIO (MODIFICADA) ---
-    const welcomeTitle = document.getElementById('welcome-title');
-    // Recuperamos los datos del usuario guardados en localStorage durante el login
+    
     const userData = JSON.parse(localStorage.getItem('mercifood_user'));
 
-    // Verificamos si tenemos los datos del usuario y su nombre
-    if (userData && userData.fullName) {
-        // Si es así, mostramos el mensaje personalizado y corregido
-        welcomeTitle.textContent = `Bienvenido/a, ${userData.fullName}`;
-    } else {
-        // De lo contrario, mostramos un mensaje genérico
-        welcomeTitle.textContent = 'Bienvenido/a';
+    const welcomeTitle = document.getElementById('welcome-title');
+    if (welcomeTitle) {
+        if (userData && userData.fullName) {
+            welcomeTitle.textContent = `Bienvenido/a, ${userData.fullName}`;
+        } else {
+            welcomeTitle.textContent = 'Bienvenido/a';
+        }
     }
 
-    // --- LÓGICA PARA EL MODAL DE CIERRE DE SESIÓN ---
+    const profileName = document.getElementById('profile-name');
+    const profileEmail = document.getElementById('profile-email');
+    const profilePic = document.getElementById('profile-pic');
+    
+    if (userData) {
+        if (profileName) profileName.textContent = userData.fullName || 'Usuario';
+        if (profileEmail) profileEmail.textContent = userData.email || 'No email';
+        if (profilePic) {
+            profilePic.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.fullName || 'U')}&background=FF6347&color=fff&bold=true`;
+        }
+    }
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme) {
+        document.body.setAttribute('data-theme', currentTheme);
+        if (currentTheme === 'dark') {
+            themeToggle.checked = true;
+        }
+    }
+
+    function switchTheme(e) {
+        if (e.target.checked) {
+            document.body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('change', switchTheme, false);
+    }
+
+    const profileToggle = document.getElementById('profile-toggle');
+    const profileDropdown = document.getElementById('profile-dropdown');
+
+    if (profileToggle && profileDropdown) {
+        profileToggle.addEventListener('click', () => {
+            profileDropdown.classList.toggle('active');
+        });
+
+        window.addEventListener('click', function(e) {
+            if (!profileToggle.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+    }
+
     const logoutBtn = document.getElementById('logout-btn');
     const confirmationModal = document.getElementById('confirmation-modal');
     const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
     const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
 
-    // Función para mostrar el modal de confirmación
     const openConfirmationModal = () => {
-        if (confirmationModal) {
-            confirmationModal.classList.add('active');
-        }
+        if (confirmationModal) confirmationModal.classList.add('active');
     };
 
-    // Función para cerrar el modal
     const closeConfirmationModal = () => {
-        if (confirmationModal) {
-            confirmationModal.classList.remove('active');
-        }
+        if (confirmationModal) confirmationModal.classList.remove('active');
     };
 
-    // La función que ejecuta el cierre de sesión
     const executeLogout = () => {
         localStorage.removeItem('mercifood_user');
-        window.location.href = '/login'; // Redirige a la ruta de login de Laravel
+        window.location.href = '/login';
     };
 
-    // 1. Al hacer clic en "Cerrar Sesión", abrimos el modal
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', openConfirmationModal);
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openConfirmationModal();
+        });
     }
-
-    // 2. Si el usuario confirma, cerramos la sesión
-    if (confirmLogoutBtn) {
-        confirmLogoutBtn.addEventListener('click', executeLogout);
-    }
-
-    // 3. Si el usuario cancela, solo cerramos el modal
-    if (cancelLogoutBtn) {
-        cancelLogoutBtn.addEventListener('click', closeConfirmationModal);
-    }
-
-    // 4. También cerramos el modal si se hace clic fuera de la caja
+    if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', executeLogout);
+    if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', closeConfirmationModal);
     if (confirmationModal) {
         confirmationModal.addEventListener('click', (e) => {
-            if (e.target === confirmationModal) {
-                closeConfirmationModal();
-            }
+            if (e.target === confirmationModal) closeConfirmationModal();
         });
     }
 
-    // --- LÓGICA PARA EL MENÚ RESPONSIVO ---
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
 
