@@ -1,35 +1,38 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
-    const userData = JSON.parse(localStorage.getItem('mercifood_user'));
 
-    const welcomeTitle = document.getElementById('welcome-title');
-    if (welcomeTitle) {
-        if (userData && userData.fullName) {
-            welcomeTitle.textContent = `Bienvenido/a, ${userData.fullName}`;
-        } else {
-            welcomeTitle.textContent = 'Bienvenido/a';
-        }
-    }
+    // --- LÓGICA DE NAVEGACIÓN DEL SIDEBAR ---
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.dashboard-section');
 
-    const profileName = document.getElementById('profile-name');
-    const profileEmail = document.getElementById('profile-email');
-    const profilePic = document.getElementById('profile-pic');
-    
-    if (userData) {
-        if (profileName) profileName.textContent = userData.fullName || 'Usuario';
-        if (profileEmail) profileEmail.textContent = userData.email || 'No email';
-        if (profilePic) {
-            profilePic.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.fullName || 'U')}&background=FF6347&color=fff&bold=true`;
-        }
-    }
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
 
+            const targetSectionId = this.getAttribute('data-section');
+
+            // Oculta todas las secciones y quita la clase activa de los links
+            sections.forEach(section => section.classList.remove('active'));
+            navLinks.forEach(navLink => navLink.classList.remove('active'));
+
+            // Muestra la sección correcta y activa el link correspondiente
+            document.getElementById(targetSectionId).classList.add('active');
+            this.classList.add('active');
+
+            // Cierra el sidebar en vista móvil después de hacer clic
+            if (window.innerWidth <= 991) {
+                sidebar.classList.remove('active');
+            }
+        });
+    });
+
+    // --- LÓGICA DEL TEMA (DÍA/NOCHE) ---
     const themeToggle = document.getElementById('theme-toggle');
     const currentTheme = localStorage.getItem('theme');
 
     if (currentTheme) {
         document.body.setAttribute('data-theme', currentTheme);
         if (currentTheme === 'dark') {
-            themeToggle.checked = true;
+            if(themeToggle) themeToggle.checked = true;
         }
     }
 
@@ -42,11 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('theme', 'light');
         }
     }
-
-    if (themeToggle) {
-        themeToggle.addEventListener('change', switchTheme, false);
-    }
-
+    if (themeToggle) themeToggle.addEventListener('change', switchTheme);
+    
+    // --- LÓGICA DEL MENÚ DE PERFIL ---
     const profileToggle = document.getElementById('profile-toggle');
     const profileDropdown = document.getElementById('profile-dropdown');
 
@@ -54,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
         profileToggle.addEventListener('click', () => {
             profileDropdown.classList.toggle('active');
         });
-
         window.addEventListener('click', function(e) {
             if (!profileToggle.contains(e.target) && !profileDropdown.contains(e.target)) {
                 profileDropdown.classList.remove('active');
@@ -62,38 +62,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // --- LÓGICA DEL MODAL DE CIERRE DE SESIÓN ---
     const logoutBtn = document.getElementById('logout-btn');
     const confirmationModal = document.getElementById('confirmation-modal');
     const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
     const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
 
-    const openConfirmationModal = () => {
-        if (confirmationModal) confirmationModal.classList.add('active');
-    };
-
-    const closeConfirmationModal = () => {
-        if (confirmationModal) confirmationModal.classList.remove('active');
-    };
+    const openConfirmationModal = () => confirmationModal?.classList.add('active');
+    const closeConfirmationModal = () => confirmationModal?.classList.remove('active');
 
     const executeLogout = () => {
-        localStorage.removeItem('mercifood_user');
-        window.location.href = '/login';
+        // Redirección a una ruta de logout que Laravel manejará
+        window.location.href = '/logout'; 
     };
 
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openConfirmationModal();
-        });
-    }
-    if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', executeLogout);
-    if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', closeConfirmationModal);
-    if (confirmationModal) {
-        confirmationModal.addEventListener('click', (e) => {
-            if (e.target === confirmationModal) closeConfirmationModal();
-        });
-    }
+    if(logoutBtn) logoutBtn.addEventListener('click', openConfirmationModal);
+    if(confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', executeLogout);
+    if(cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', closeConfirmationModal);
+    if(confirmationModal) confirmationModal.addEventListener('click', (e) => {
+        if (e.target === confirmationModal) closeConfirmationModal();
+    });
 
+    // --- LÓGICA DEL MENÚ HAMBURGUESA PARA MÓVIL ---
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
 

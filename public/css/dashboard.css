@@ -16,7 +16,7 @@
     --card-bg: #1E293B;
     --sidebar-bg: #1E293B;
     --topbar-text-color: #E2E8F0;
-    --text-color-dark: #E2E8F0;
+    --text-color-dark: #fff;
     --text-color-light: #fff;
     --border-color: #334155;
 }
@@ -395,4 +395,12 @@ input:checked + .slider:before { transform: translateX(24px); }
 
 .btn-confirm:hover {
     background-color: #c0392b;
+}
+
+.dashboard-section {
+    display: none;
+}
+
+.dashboard-section.active {
+    display: block;
 }
