@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 formData.password = document.getElementById('repartidor-pass').value;
             }
 
-            fetch('/api/register', {
+            fetch('/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

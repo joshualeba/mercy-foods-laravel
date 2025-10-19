@@ -2,40 +2,40 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('index');
 });
 
-// Ruta para la página de Inicio de Sesión
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
 
-// Ruta para la página de Registro
 Route::get('/registro', function () {
     return view('registro');
 });
 
-// Ruta para la página de detalles de un restaurante
 Route::get('/restaurante-detalle', function () {
     return view('restaurante-detalle');
 });
 
+// Rutas para procesar el formulario de login y registro
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
-// Ruta para el dashboard del Cliente
-Route::get('/cliente-dashboard', function () {
-    return view('cliente-dashboard');
-});
+Route::middleware(['auth'])->group(function () {
+        Route::get('/cliente-dashboard', function () {
+        return view('cliente-dashboard', ['user' => Auth::user()]);
+    });
 
-// Ruta para el dashboard del Restaurante
-Route::get('/restaurante-dashboard', function () {
-    return view('restaurante-dashboard');
-});
+    Route::get('/restaurante-dashboard', function () {
+        return view('restaurante-dashboard');
+    });
 
-// Ruta para el dashboard del Repartidor
-Route::get('/repartidor-dashboard', function () {
-    return view('repartidor-dashboard');
+    Route::get('/repartidor-dashboard', function () {
+        return view('repartidor-dashboard');
+    });
 });
 
 Route::get('/faq', [FaqController::class, 'index']);

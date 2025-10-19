@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = emailInput.value;
             const password = passInput.value;
 
-            fetch('/api/login', {
+            fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

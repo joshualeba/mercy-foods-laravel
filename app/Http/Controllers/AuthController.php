@@ -52,6 +52,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Credenciales incorrectas...'], 401);
         }
 
+        $request->session()->regenerate();
+
         // Si la autenticación es exitosa, obtiene los datos del usuario
         $user = User::where('email', $request->email)->firstOrFail();
 

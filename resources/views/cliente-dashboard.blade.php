@@ -73,7 +73,7 @@
             <!-- Contenido de la página -->
             <div class="main-content-inner">
                 <div class="welcome-message">
-                    <h1 id="welcome-title"></h1>
+                    <h1 id="welcome-title">Bienvenido/a, {{ $user->fullName }}</h1>
                     <p>Es un gusto tenerte de vuelta.</p>
                 </div>
 
