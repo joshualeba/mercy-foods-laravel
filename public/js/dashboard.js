@@ -1,5 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+
+    // --- LÓGICA PARA OCULTAR EL LOADER ---
+    window.addEventListener('load', function() {
+        const loaderWrapper = document.getElementById('loader-wrapper');
+        if (loaderWrapper) {
+            loaderWrapper.style.opacity = '0';
+            setTimeout(() => {
+                loaderWrapper.style.display = 'none';
+            }, 500);
+        }
+    });
+
     // --- LÓGICA DE NAVEGACIÓN UNIFICADA ---
     const navLinks = document.querySelectorAll('.nav-link');
     const mainContentContainer = document.querySelector('.main-content-inner');

@@ -7,8 +7,20 @@
     <link rel="shortcut icon" href="{{ asset('multimedia/logo.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
 </head>
 <body data-theme="light">
+
+    <div id="loader-wrapper">
+        <div class="loadingspinner">
+            <div id="square1"></div>
+            <div id="square2"></div>
+            <div id="square3"></div>
+            <div id="square4"></div>
+            <div id="square5"></div>
+        </div>
+        <span id="loader-text">Cargando tu experiencia...</span>
+    </div>
 
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">

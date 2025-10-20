@@ -39,4 +39,9 @@ class User extends Authenticatable
             'password' => 'hashed', // Esto encripta la contraseña automáticamente
         ];
     }
+
+    public function platillos()
+    {
+        return $this->hasMany(Platillo::class);
+    }
 }

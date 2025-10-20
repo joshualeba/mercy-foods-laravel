@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Restaurante - Mercy Food</title>
-    
+    <title>Panel de restaurante - Mercy Food</title>
     <link rel="shortcut icon" href="{{ asset('multimedia/logo.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
 </head>
 <body data-theme="light">
+
+    <div id="loader-wrapper">
+        <div class="loadingspinner">
+            <div id="square1"></div>
+            <div id="square2"></div>
+            <div id="square3"></div>
+            <div id="square4"></div>
+            <div id="square5"></div>
+        </div>
+        <span id="loader-text">Cargando tu experiencia...</span>
+    </div>
 
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
@@ -83,6 +94,7 @@
                     <h1>Gestionar pedidos</h1>
                     <div class="content-placeholder"><p>Aquí se mostrarán los pedidos activos y el historial.</p></div>
                 </section>
+                
                 <section id="perfil" class="dashboard-section">
                     <h1>Perfil del local</h1>
                     <div class="content-placeholder"><p>Aquí podrás editar la información de tu restaurante.</p></div>
