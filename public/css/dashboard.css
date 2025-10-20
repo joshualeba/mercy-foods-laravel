@@ -722,3 +722,200 @@ input:checked + .slider:before { transform: translateX(24px); }
     width: 100%;
     border-radius: 8px;
 }
+
+/* --- Estilos para el Modal de Detalles --- */
+.modal-image-container {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+.modal-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+[data-theme="light"] #details-modal.is-editing input:not([readonly]),
+[data-theme="light"] #details-modal.is-editing textarea:not([readonly]) {
+    background: var(--main-bg) !important;
+    border-color: #ddd !important;
+}
+
+.modal-buttons-stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+textarea {
+    resize: none;
+}
+
+/* ============================================= */
+/* === ESTILOS MEJORADOS PARA MODALES Y TARJETAS === */
+/* ============================================= */
+
+/* --- Bloquea el scroll del fondo cuando un modal está abierto --- */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* --- Quitar resize de TODOS los textareas --- */
+textarea {
+    resize: none;
+}
+
+/* --- Estado del platillo en la tarjeta --- */
+.platillo-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.platillo-card-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.platillo-card-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 50px;
+}
+.status-active { color: #1a6e33; background-color: #d1f7dd; }
+.status-paused { color: #616161; background-color: #f0f0f0; }
+[data-theme="dark"] .status-active { color: #7ee29a; background-color: #24462d; }
+[data-theme="dark"] .status-paused { color: #a0a0a0; background-color: #3a3a3a; }
+
+/* --- Botón de cierre para modales --- */
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--text-color-light);
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    transition: color 0.3s;
+}
+[data-theme="dark"] .close-modal-btn { color: #a0a0a0; }
+.close-modal-btn:hover { color: var(--primary-color); }
+
+/* --- Estructura y Scroll para Modales de Formulario --- */
+#platillo-modal .modal-box,
+#details-modal .modal-box {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    width: 95%;
+    max-width: 550px;
+    padding: 2rem;
+    text-align: left; /* Alinea el texto a la izquierda */
+}
+#platillo-form,
+#details-form {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
+}
+.form-scroll-content {
+    overflow-y: auto;
+    padding: 5px 1rem 5px 5px;
+    margin-right: -1rem;
+}
+#details-form .modal-image-container {
+    height: 200px;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+}
+#platillo-form .modal-buttons,
+#details-form .modal-buttons-stacked {
+    padding-top: 1.5rem;
+    flex-shrink: 0;
+}
+
+/* --- Unifica colores de modal en modo día --- */
+[data-theme="light"] #platillo-modal .modal-box,
+[data-theme="light"] #details-modal .modal-box {
+    background: var(--card-bg);
+    color: var(--text-color-dark);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--border-color);
+}
+
+/* --- Aumenta el tamaño de la letra en modal de detalles --- */
+#details-modal #details-nombre {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color-dark);
+}
+#details-modal #details-descripcion {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+#details-modal #details-precio {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* --- Corrección y mejora del Toggle Switch --- */
+.availability-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    flex-shrink: 0;
+}
+.availability-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.switch-slider {
+    position: absolute;
+    cursor: not-allowed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #4a4a4a;
+    transition: .4s;
+    border-radius: 34px;
+}
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+#details-modal.is-editing .switch-slider {
+    cursor: pointer;
+}
+input:checked + .switch-slider {
+    background-color: var(--primary-color);
+}
+[data-theme="light"] .switch-slider {
+    background-color: #ccc;
+}
+[data-theme="light"] input:disabled + .switch-slider {
+    background-color: #e0e0e0;
+}
+input:checked + .switch-slider:before {
+    transform: translateX(26px);
+}

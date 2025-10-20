@@ -120,32 +120,97 @@
             <h2>Agregar nuevo platillo</h2>
             <form id="platillo-form" action="{{ route('platillos.store') }}" enctype="multipart/form-data" novalidate>
                 <div class="input-group-modal">
-                    <label for="nombre">Nombre del platillo</label>
+                    <label for="nombre">Nombre del Platillo</label>
                     <input type="text" id="nombre" name="nombre" required maxlength="50">
+                    <small class="form-hint">Máximo 50 caracteres.</small>
                     <small class="error-message"></small>
                 </div>
                 <div class="input-group-modal">
                     <label for="descripcion">Descripción</label>
-                    <textarea id="descripcion" name="descripcion" rows="3" required maxlength="200" style="resize: none;"></textarea>
+                    <textarea id="descripcion" name="descripcion" rows="3" required maxlength="150"></textarea>
+                    <small class="form-hint">Máximo 150 caracteres.</small>
                     <small class="error-message"></small>
                 </div>
                 <div class="input-group-modal">
                     <label for="precio">Precio</label>
                     <input type="text" id="precio" name="precio" inputmode="decimal" required placeholder="Ej: 120.50">
+                    <small class="form-hint">Solo números y punto decimal.</small>
                     <small class="error-message"></small>
                 </div>
                 <div class="input-group-modal">
-                    <label for="imagen">Imagen del platillo</label>
+                    <label for="imagen">Imagen del Platillo</label>
                     <div class="file-input-wrapper">
                         <label for="imagen" class="file-input-button">Seleccionar archivo</label>
                         <span id="file-name" class="file-name-display">Ningún archivo seleccionado</span>
                         <input type="file" id="imagen" name="imagen" accept="image/*" required>
                     </div>
+                    <small class="form-hint">Tamaño máximo: 2MB.</small>
                     <small class="error-message"></small>
                 </div>
                 <div class="modal-buttons">
                     <button type="button" class="btn-cancel" id="cancel-platillo-btn">Cancelar</button>
                     <button type="submit" class="btn-confirm">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="confirmation-modal-overlay" id="details-modal">
+        <div class="modal-box glass-modal">
+            <button type="button" class="close-modal-btn" id="close-details-btn">&times;</button>
+            <h2 id="details-modal-title">Detalles del platillo</h2>
+            
+            <form id="details-form" enctype="multipart/form-data" novalidate>
+                <input type="hidden" name="_method" value="PUT">
+                
+                <div class="modal-image-container">
+                    <img id="details-image" src="" alt="Imagen del platillo">
+                </div>
+
+                <div class="form-scroll-content">
+                    <div class="input-group-modal">
+                        <label for="details-nombre">Nombre del Platillo</label>
+                        <input type="text" id="details-nombre" name="nombre" required maxlength="50" readonly>
+                        <small class="form-hint edit-mode-field" style="display: none;">Máximo 50 caracteres.</small>
+                        <small class="error-message"></small>
+                    </div>
+                    <div class="input-group-modal">
+                        <label for="details-descripcion">Descripción</label>
+                        <textarea id="details-descripcion" name="descripcion" rows="4" required maxlength="150" readonly></textarea>
+                        <small class="form-hint edit-mode-field" style="display: none;">Máximo 150 caracteres.</small>
+                        <small class="error-message"></small>
+                    </div>
+                    <div class="input-group-modal">
+                        <label for="details-precio">Precio</label>
+                        <input type="text" id="details-precio" name="precio" inputmode="decimal" required placeholder="Ej: 120.50" readonly>
+                        <small class="form-hint edit-mode-field" style="display: none;">Solo números y punto decimal.</small>
+                        <small class="error-message"></small>
+                    </div>
+                    <div class="input-group-modal edit-mode-field" style="display: none;">
+                        <label for="details-new-image">Cambiar Imagen (opcional)</label>
+                        <div class="file-input-wrapper">
+                            <label for="details-new-image" class="file-input-button">Seleccionar archivo</label>
+                            <span id="details-file-name" class="file-name-display">Ningún archivo nuevo</span>
+                            <input type="file" id="details-new-image" name="imagen" accept="image/*">
+                        </div>
+                        <small class="form-hint">Tamaño máximo: 2MB.</small>
+                    </div>
+                    <div class="availability-container">
+                        <div class="availability-text">
+                            <label for="details-disponible">Disponibilidad en el menú - Si está activo, los clientes podrán ver y ordenar este platillo.</label>
+                        </div>
+                        <label class="availability-switch">
+                            <input type="checkbox" id="details-disponible" name="disponible" disabled>
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-buttons modal-buttons-stacked">
+                    <button type="button" class="btn-primary view-mode-btn" id="edit-btn">Editar</button>
+                    <button type="button" class="btn-danger view-mode-btn" id="delete-btn">Eliminar</button>
+                    <button type="submit" class="btn-confirm edit-mode-btn" style="display:none;">Guardar Cambios</button>
+                    <button type="button" class="btn-cancel edit-mode-btn" id="cancel-edit-btn" style="display:none;">Cancelar</button>
                 </div>
             </form>
         </div>

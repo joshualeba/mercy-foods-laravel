@@ -18,10 +18,15 @@
                     <div class="platillo-card-content">
                         <h3>{{ $platillo->nombre }}</h3>
                         <p>{{ Str::limit($platillo->descripcion, 80) }}</p>
-                        <span class="platillo-card-price">${{ number_format($platillo->precio, 2) }}</span>
+                        <div class="platillo-card-footer">
+                            <span class="platillo-card-price">${{ number_format($platillo->precio, 2) }}</span>
+                            <span class="platillo-card-status {{ $platillo->disponible ? 'status-active' : 'status-paused' }}">
+                                {{ $platillo->disponible ? 'Activo' : 'Pausado' }}
+                            </span>
+                        </div>
                     </div>
                     <div class="platillo-card-actions">
-                        <a href="#" class="btn btn-primary btn-sm">Ver Detalles</a>
+                        <button class="btn btn-primary btn-sm btn-details" data-id="{{ $platillo->id }}">Ver detalles</button>
                     </div>
                 </div>
             @endforeach
