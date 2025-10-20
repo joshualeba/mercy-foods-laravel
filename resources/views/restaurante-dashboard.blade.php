@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Panel de restaurante - Mercy Food</title>
     <link rel="shortcut icon" href="{{ asset('multimedia/logo.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
@@ -94,7 +95,7 @@
                     <h1>Gestionar pedidos</h1>
                     <div class="content-placeholder"><p>Aquí se mostrarán los pedidos activos y el historial.</p></div>
                 </section>
-                
+
                 <section id="perfil" class="dashboard-section">
                     <h1>Perfil del local</h1>
                     <div class="content-placeholder"><p>Aquí podrás editar la información de tu restaurante.</p></div>
@@ -111,6 +112,42 @@
                 <button class="btn-cancel" id="cancel-logout-btn">Cancelar</button>
                 <button class="btn-confirm" id="confirm-logout-btn">Confirmar</button>
             </div>
+        </div>
+    </div>
+
+    <div class="confirmation-modal-overlay" id="platillo-modal">
+        <div class="modal-box glass-modal">
+            <h2>Agregar nuevo platillo</h2>
+            <form id="platillo-form" action="{{ route('platillos.store') }}" enctype="multipart/form-data" novalidate>
+                <div class="input-group-modal">
+                    <label for="nombre">Nombre del platillo</label>
+                    <input type="text" id="nombre" name="nombre" required maxlength="50">
+                    <small class="error-message"></small>
+                </div>
+                <div class="input-group-modal">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" rows="3" required maxlength="200" style="resize: none;"></textarea>
+                    <small class="error-message"></small>
+                </div>
+                <div class="input-group-modal">
+                    <label for="precio">Precio</label>
+                    <input type="text" id="precio" name="precio" inputmode="decimal" required placeholder="Ej: 120.50">
+                    <small class="error-message"></small>
+                </div>
+                <div class="input-group-modal">
+                    <label for="imagen">Imagen del platillo</label>
+                    <div class="file-input-wrapper">
+                        <label for="imagen" class="file-input-button">Seleccionar archivo</label>
+                        <span id="file-name" class="file-name-display">Ningún archivo seleccionado</span>
+                        <input type="file" id="imagen" name="imagen" accept="image/*" required>
+                    </div>
+                    <small class="error-message"></small>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" id="cancel-platillo-btn">Cancelar</button>
+                    <button type="submit" class="btn-confirm">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 
