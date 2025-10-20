@@ -59,7 +59,7 @@
                                 <h4 id="profile-name">{{ Auth::user()->full_name }}</h4>
                                 <p id="profile-email">{{ Auth::user()->email }}</p>
                             </div>
-                            <a href="#" class="dropdown-item">
+                            <a href="#perfil" class="dropdown-item nav-link" data-section="perfil">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 <span>Ver perfil</span>
                             </a>
@@ -75,20 +75,20 @@
                         <p>Es un gusto tenerte de vuelta.</p>
                     </div>
                     <div class="content-placeholder">
-                        <h2>Panel Principal</h2>
+                        <h2>Panel principal</h2>
                         <p>Aquí irá un resumen de tus pedidos, restaurantes recomendados, etc.</p>
                     </div>
                 </section>
 
                 <section id="pedidos" class="dashboard-section">
-                    <h1>Mis Pedidos</h1>
+                    <h1>Mis pedidos</h1>
                     <div class="content-placeholder">
                         <p>Aquí se mostrará el historial de tus pedidos.</p>
                     </div>
                 </section>
 
                 <section id="perfil" class="dashboard-section">
-                    <h1>Mi Perfil</h1>
+                    <h1>Mi perfil</h1>
                     <div class="content-placeholder">
                         <p>Aquí podrás editar tu información personal, dirección y contraseña.</p>
                     </div>

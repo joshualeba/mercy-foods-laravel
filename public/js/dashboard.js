@@ -1,95 +1,111 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- LÓGICA DE NAVEGACIÓN DEL SIDEBAR ---
+    // --- LÓGICA DE NAVEGACIÓN UNIFICADA ---
     const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.dashboard-section');
+    const mainContentContainer = document.querySelector('.main-content-inner');
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
+    if (navLinks.length > 0 && mainContentContainer) {
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('href');
+                const sectionId = this.getAttribute('data-section');
 
-            const targetSectionId = this.getAttribute('data-section');
+                // Activa TODOS los enlaces que apunten a la misma sección
+                navLinks.forEach(navLink => {
+                    navLink.classList.toggle('active', navLink.getAttribute('data-section') === sectionId);
+                });
 
-            // Oculta todas las secciones y quita la clase activa de los links
-            sections.forEach(section => section.classList.remove('active'));
-            navLinks.forEach(navLink => navLink.classList.remove('active'));
+                // CASO 1: Navegación interna (Dashboard de Cliente)
+                if (url.startsWith('#')) {
+                    const allSections = mainContentContainer.querySelectorAll('.dashboard-section');
+                    const targetSection = document.getElementById(sectionId);
 
-            // Muestra la sección correcta y activa el link correspondiente
-            document.getElementById(targetSectionId).classList.add('active');
-            this.classList.add('active');
+                    allSections.forEach(s => s.classList.remove('active'));
+                    
+                    // Limpia el contenido AJAX si existiera
+                    const ajaxWrapper = document.getElementById('ajax-content-wrapper');
+                    if(ajaxWrapper) ajaxWrapper.innerHTML = "";
 
-            // Cierra el sidebar en vista móvil después de hacer clic
-            if (window.innerWidth <= 991) {
-                sidebar.classList.remove('active');
-            }
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                } 
+                // CASO 2: Carga de contenido externo (Dashboard de Restaurante)
+                else {
+                    const allSections = mainContentContainer.querySelectorAll('.dashboard-section');
+                    allSections.forEach(s => s.classList.remove('active'));
+
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(html => {
+                            let ajaxWrapper = document.getElementById('ajax-content-wrapper');
+                            if (!ajaxWrapper) {
+                                ajaxWrapper = document.createElement('div');
+                                ajaxWrapper.id = 'ajax-content-wrapper';
+                                mainContentContainer.appendChild(ajaxWrapper);
+                            }
+                            ajaxWrapper.innerHTML = html;
+                        })
+                        .catch(error => {
+                            console.error('Error al cargar la sección:', error);
+                            mainContentContainer.innerHTML = '<p>Error al cargar el contenido.</p>';
+                        });
+                }
+
+                // Cierra el sidebar en móvil
+                if (window.innerWidth <= 991) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+
+                document.getElementById('profile-dropdown')?.classList.remove('active');
+            });
         });
-    });
+    }
 
-    // --- LÓGICA DEL TEMA (DÍA/NOCHE) ---
+    // --- TU CÓDIGO ORIGINAL PARA TODO LO DEMÁS (TEMA, PERFIL, LOGOUT, ETC.) ---
     const themeToggle = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme');
-
-    if (currentTheme) {
-        document.body.setAttribute('data-theme', currentTheme);
-        if (currentTheme === 'dark') {
-            if(themeToggle) themeToggle.checked = true;
+    if (themeToggle) {
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.body.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'dark') themeToggle.checked = true;
         }
+        themeToggle.addEventListener('change', function(e) {
+            const theme = e.target.checked ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
     }
 
-    function switchTheme(e) {
-        if (e.target.checked) {
-            document.body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.body.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-        }
-    }
-    if (themeToggle) themeToggle.addEventListener('change', switchTheme);
-    
-    // --- LÓGICA DEL MENÚ DE PERFIL ---
     const profileToggle = document.getElementById('profile-toggle');
     const profileDropdown = document.getElementById('profile-dropdown');
-
     if (profileToggle && profileDropdown) {
-        profileToggle.addEventListener('click', () => {
+        profileToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             profileDropdown.classList.toggle('active');
         });
-        window.addEventListener('click', function(e) {
-            if (!profileToggle.contains(e.target) && !profileDropdown.contains(e.target)) {
+        document.addEventListener('click', (e) => {
+            if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
                 profileDropdown.classList.remove('active');
             }
         });
     }
 
-    // --- LÓGICA DEL MODAL DE CIERRE DE SESIÓN ---
     const logoutBtn = document.getElementById('logout-btn');
     const confirmationModal = document.getElementById('confirmation-modal');
-    const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
-    const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
+    if (logoutBtn && confirmationModal) {
+        const openModal = () => confirmationModal.classList.add('active');
+        const closeModal = () => confirmationModal.classList.remove('active');
+        logoutBtn.addEventListener('click', openModal);
+        document.getElementById('cancel-logout-btn').addEventListener('click', closeModal);
+        document.getElementById('confirm-logout-btn').addEventListener('click', () => { window.location.href = '/logout'; });
+        confirmationModal.addEventListener('click', (e) => { if (e.target === confirmationModal) closeModal(); });
+    }
 
-    const openConfirmationModal = () => confirmationModal?.classList.add('active');
-    const closeConfirmationModal = () => confirmationModal?.classList.remove('active');
-
-    const executeLogout = () => {
-        // Redirección a una ruta de logout que Laravel manejará
-        window.location.href = '/logout'; 
-    };
-
-    if(logoutBtn) logoutBtn.addEventListener('click', openConfirmationModal);
-    if(confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', executeLogout);
-    if(cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', closeConfirmationModal);
-    if(confirmationModal) confirmationModal.addEventListener('click', (e) => {
-        if (e.target === confirmationModal) closeConfirmationModal();
-    });
-
-    // --- LÓGICA DEL MENÚ HAMBURGUESA PARA MÓVIL ---
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
-
     if (menuToggle && sidebar) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
     }
 });
