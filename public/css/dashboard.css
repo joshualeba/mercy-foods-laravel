@@ -889,10 +889,11 @@ textarea {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #4a4a4a;
+    background-color: #4a4a4a; /* Color por defecto (OFF en modo oscuro) */
     transition: .4s;
     border-radius: 34px;
 }
+
 .switch-slider:before {
     position: absolute;
     content: "";
@@ -904,18 +905,421 @@ textarea {
     transition: .4s;
     border-radius: 50%;
 }
+
+/* Modo edición */
 #details-modal.is-editing .switch-slider {
     cursor: pointer;
 }
-input:checked + .switch-slider {
-    background-color: var(--primary-color);
-}
+
+/* Color cuando está apagado (OFF) en modo claro */
 [data-theme="light"] .switch-slider {
     background-color: #ccc;
 }
-[data-theme="light"] input:disabled + .switch-slider {
-    background-color: #e0e0e0;
+
+/* Color cuando está encendido (ON) para ambos temas */
+input:checked + .switch-slider {
+    background-color: var(--primary-color);
 }
+
+/* Baja la opacidad cuando está deshabilitado para indicar que no es interactivo */
+input:disabled + .switch-slider {
+    opacity: 0.6;
+}
+
 input:checked + .switch-slider:before {
     transform: translateX(26px);
+}
+
+/* ============================================= */
+/* === ESTILOS PARA TARJETAS DE ACCESO RÁPIDO === */
+/* ============================================= */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="dark"] .stat-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-card-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Colores de íconos */
+.icon-pedidos { background-color: rgba(255, 159, 64, 0.2); color: #ff9f40; }
+.icon-menu { background-color: rgba(54, 162, 235, 0.2); color: #36a2eb; }
+.icon-ganancias { background-color: rgba(75, 192, 192, 0.2); color: #4bc0c0; }
+.icon-perfil { background-color: rgba(153, 102, 255, 0.2); color: #9966ff; }
+
+
+.stat-card-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color-dark);
+}
+
+.stat-card-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+
+.stat-card-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.card-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+.card-link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.card-link:hover svg {
+    transform: translateX(3px);
+}
+
+/* ============================================= */
+/* === ESTILOS PARA GESTIÓN DE PEDIDOS (KANBAN) === */
+/* ============================================= */
+.order-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.order-column {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.order-column-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.5rem 1rem 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.order-column-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.order-count {
+    background-color: var(--main-bg);
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+}
+
+.order-cards-container {
+    padding-top: 1rem;
+    min-height: 50vh; /* Asegura que la columna tenga una altura mínima */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.order-card {
+    background-color: var(--main-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .order-card:hover {
+     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.order-card-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.order-card-header span {
+    font-size: 0.85rem;
+    color: var(--text-color-light);
+}
+
+.order-card-body p {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+
+.order-card-items ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.order-card-items li {
+    margin-bottom: 4px;
+}
+
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.order-total {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.order-actions .btn-sm {
+    border-radius: 6px;
+    padding: 5px 12px;
+}
+
+/* ============================================= */
+/* === ESTILOS PARA LA SECCIÓN DE PERFIL       === */
+/* ============================================= */
+
+.profile-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 992px) {
+    .profile-container {
+        grid-template-columns: 300px 1fr;
+    }
+}
+
+.profile-sidebar {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 1.5rem auto;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--border-color);
+}
+
+.avatar-upload-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: var(--primary-color);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.avatar-upload-button:hover {
+    transform: scale(1.1);
+}
+
+#profile_image {
+    display: none;
+}
+
+.profile-sidebar h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+}
+
+.profile-sidebar p {
+    color: var(--text-color-light);
+    margin: 0;
+}
+
+.profile-form-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--main-bg);
+    color: var(--text-color-dark);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.2);
+}
+
+.input-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+#profile-save-btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.error {
+    background-color: #dc3545;
 }

@@ -83,7 +83,7 @@ class PlatilloController extends Controller
         $platillo->nombre = $request->nombre;
         $platillo->descripcion = $request->descripcion;
         $platillo->precio = $request->precio;
-        $platillo->disponible = $request->has('disponible'); // La lógica clave está aquí
+        $platillo->disponible = $request->input('disponible', 0);
 
         if ($request->hasFile('imagen')) {
             if ($platillo->imagen_url) {

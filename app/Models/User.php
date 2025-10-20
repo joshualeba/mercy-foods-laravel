@@ -15,13 +15,17 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'full_name',
+        'restaurant_name',
         'email',
         'password',
         'role',
         'restaurant_address',
+        'restaurant_description',
         'cuisine_type',
+        'opening_hours',
         'contact_phone',
         'vehicle_type',
+        'profile_image_url',
     ];
 
     /**

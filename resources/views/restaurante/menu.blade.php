@@ -1,5 +1,5 @@
 <div class="menu-header">
-    <h1>Mi Menú</h1>
+    <h1>Mi menú</h1>
     <button class="btn btn-primary" id="add-platillo-btn">Agregar Platillo</button>
 </div>
 

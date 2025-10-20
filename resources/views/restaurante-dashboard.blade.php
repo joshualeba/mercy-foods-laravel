@@ -38,7 +38,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                     <span>Mi menú</span>
                 </a></li>
-                <li><a href="#perfil" class="nav-link" data-section="perfil">
+                <li><a href="{{ route('perfil.index') }}" class="nav-link" data-section="perfil">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     <span>Perfil del local</span>
                 </a></li>
@@ -71,7 +71,7 @@
                                 <h4>{{ Auth::user()->full_name }}</h4>
                                 <p>{{ Auth::user()->email }}</p>
                             </div>
-                            <a href="#perfil" class="dropdown-item nav-link" data-section="perfil">
+                            <a href="{{ route('perfil.index') }}" class="dropdown-item nav-link" data-section="perfil">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 <span>Ver perfil</span>
                             </a>
@@ -84,21 +84,201 @@
                 <section id="inicio" class="dashboard-section active">
                     <div class="welcome-message">
                         <h1>Bienvenido/a, {{ Auth::user()->full_name }}</h1>
-                        <p>Listo para recibir pedidos y hacer crecer tu negocio.</p>
+                        <p>Conectando tu cocina con el apetito de la comunidad</p>
                     </div>
-                    <div class="content-placeholder">
-                        <h2>Panel de control</h2>
-                        <p>Aquí verás un resumen de tus ventas, pedidos activos y estadísticas clave.</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-pedidos">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Pedidos Activos</p>
+                                    <h3>0</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="#pedidos" class="card-link nav-link" data-section="pedidos">
+                                    <span>Gestionar pedidos</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-menu">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Platillos en tu menú</p>
+                                    <h3>{{ Auth::user()->platillos->count() }}</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="{{ route('platillos.index') }}" class="card-link nav-link" data-section="menu">
+                                    <span>Administrar menú</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-ganancias">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Ingresos del día</p>
+                                    <h3>$0.00</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="#" class="card-link">
+                                    <span>Ver estadísticas</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-perfil">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Tu Perfil</p>
+                                    <h3>Completo</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="#perfil" class="card-link nav-link" data-section="perfil">
+                                    <span>Editar información</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </section>
                 <section id="pedidos" class="dashboard-section">
                     <h1>Gestionar pedidos</h1>
-                    <div class="content-placeholder"><p>Aquí se mostrarán los pedidos activos y el historial.</p></div>
+
+                    <div class="order-board">
+                        <div class="order-column">
+                            <div class="order-column-header">
+                                <h2>Nuevos</h2>
+                                <span class="order-count">2</span>
+                            </div>
+                            <div class="order-cards-container">
+                                <div class="order-card">
+                                    <div class="order-card-header">
+                                        <h3>Pedido #1021</h3>
+                                        <span>hace 2 min</span>
+                                    </div>
+                                    <div class="order-card-body">
+                                        <p><strong>Cliente:</strong> Ana Sofía L.</p>
+                                        <div class="order-card-items">
+                                            <ul>
+                                                <li>1x Pizza Pepperoni</li>
+                                                <li>2x Refresco de Cola</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="order-card-footer">
+                                        <span class="order-total">$250.00</span>
+                                        <div class="order-actions">
+                                            <button class="btn btn-primary btn-sm">Aceptar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-card">
+                                    <div class="order-card-header">
+                                        <h3>Pedido #1020</h3>
+                                        <span>hace 5 min</span>
+                                    </div>
+                                    <div class="order-card-body">
+                                        <p><strong>Cliente:</strong> Carlos G.</p>
+                                        <div class="order-card-items">
+                                            <ul>
+                                                <li>1x Sushi Roll Express</li>
+                                                <li>1x Tacos "El Campeón"</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="order-card-footer">
+                                        <span class="order-total">$310.50</span>
+                                        <div class="order-actions">
+                                            <button class="btn btn-primary btn-sm">Aceptar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-column">
+                            <div class="order-column-header">
+                                <h2>En Preparación</h2>
+                                <span class="order-count">1</span>
+                            </div>
+                            <div class="order-cards-container">
+                                <div class="order-card">
+                                    <div class="order-card-header">
+                                        <h3>Pedido #1019</h3>
+                                        <span>hace 10 min</span>
+                                    </div>
+                                    <div class="order-card-body">
+                                        <p><strong>Cliente:</strong> Mariana P.</p>
+                                        <div class="order-card-items">
+                                            <ul>
+                                                <li>3x Tacos al Pastor</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="order-card-footer">
+                                        <span class="order-total">$90.00</span>
+                                        <div class="order-actions">
+                                            <button class="btn btn-primary btn-sm">Marcar como Listo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-column">
+                            <div class="order-column-header">
+                                <h2>Listos para Recoger</h2>
+                                <span class="order-count">1</span>
+                            </div>
+                            <div class="order-cards-container">
+                                <div class="order-card">
+                                    <div class="order-card-header">
+                                        <h3>Pedido #1018</h3>
+                                        <span>hace 15 min</span>
+                                    </div>
+                                    <div class="order-card-body">
+                                        <p><strong>Cliente:</strong> Javier M.</p>
+                                        <div class="order-card-items">
+                                            <ul>
+                                                <li>1x Hamburguesa Clásica</li>
+                                                <li>1x Papas a la Francesa</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="order-card-footer">
+                                        <span class="order-total">$180.00</span>
+                                        <div class="order-actions">
+                                            <button class="btn btn-sm">Entregado</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <section id="perfil" class="dashboard-section">
-                    <h1>Perfil del local</h1>
-                    <div class="content-placeholder"><p>Aquí podrás editar la información de tu restaurante.</p></div>
+                    {{-- El contenido se cargará dinámicamente aquí a través de AJAX/Fetch --}}
                 </section>
             </div>
         </main>

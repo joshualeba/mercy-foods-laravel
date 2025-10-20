@@ -41,6 +41,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('platillos', PlatilloController::class);
+
+    // Rutas para el Perfil del Restaurante
+    Route::get('/perfil', [ProfileController::class, 'index'])->name('perfil.index');
+    Route::post('/perfil', [ProfileController::class, 'update'])->name('perfil.update');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);
