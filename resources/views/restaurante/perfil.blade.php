@@ -21,7 +21,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
             </label>
         </div>
-        <h2>{{ $user->name ?? 'Nombre no asignado' }}</h2>
+        <h2>{{ $user->full_name ?? 'Nombre no asignado' }}</h2>
         <p>{{ $user->email }}</p>
 
         {{-- Botón para desplegar el cambio de contraseña --}}
@@ -72,7 +72,7 @@
                     </div>
                     <div class="input-group">
                         <label for="name">Nombre del Restaurante</label>
-                        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required pattern="[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ]+">
+                        <input type="text" id="name" name="name" value="{{ old('name', $user->full_name) }}" required pattern="[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ]+">
                     </div>
                     <div class="input-group">
                         <label for="description">Descripción (Bio)</label>
@@ -96,16 +96,10 @@
 
                 <div class="form-section">
                     <h3>Horarios</h3>
-                    <div class="input-group" style="display: flex; align-items: center; gap: 10px;">
-                        @php
-                            $horarios = explode(' - ', $user->opening_hours);
-                            $opening_time = $horarios[0] ?? '';
-                            $closing_time = $horarios[1] ?? '';
-                        @endphp
-                        <label for="opening_time" style="margin-bottom: 0;">De:</label>
-                        <input type="time" name="opening_time" id="opening_time" value="{{ old('opening_time', $opening_time) }}" required>
-                        <label for="closing_time" style="margin-bottom: 0;">a:</label>
-                        <input type="time" name="closing_time" id="closing_time" value="{{ old('closing_time', $closing_time) }}" required>
+                    <div class="input-group">
+                        <label for="opening_hours">Horario de Apertura</label>
+                        <input type="text" id="opening_hours" name="opening_hours" value="{{ old('opening_hours', $user->opening_hours) }}" required placeholder="Ej: L-V: 9am - 6pm, S: 10am - 2pm">
+                        <small class="form-hint">Describe tus horarios de atención.</small>
                     </div>
                 </div>
             </fieldset>
@@ -117,7 +111,6 @@
 <style>
     .profile-form-container {
         box-shadow: none !important;
-        border: 1px solid var(--border-color);
     }
     .form-header {
         display: flex;
@@ -133,76 +126,3 @@
         padding-bottom: 0;
     }
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Previene que el script se ejecute múltiples veces
-    if (window.profileScriptLoaded) return;
-    window.profileScriptLoaded = true;
-
-    // --- Lógica para desplegar el formulario de contraseña ---
-    const togglePasswordBtn = document.getElementById('toggle-password-form');
-    const passwordSection = document.getElementById('password-section');
-    togglePasswordBtn.addEventListener('click', function() {
-        const isHidden = passwordSection.style.display === 'none';
-        passwordSection.style.display = isHidden ? 'block' : 'none';
-        this.textContent = isHidden ? 'Ocultar' : 'Cambiar Contraseña';
-    });
-    
-    // --- Lógica de Edición del Formulario Principal ---
-    const editButton = document.getElementById('edit-button');
-    const saveButton = document.getElementById('save-button');
-    const cancelButton = document.getElementById('cancel-button');
-    const profileFieldset = document.getElementById('profile-fieldset');
-    const uploadButton = document.querySelector('.avatar-upload-button');
-    const profileImageInput = document.getElementById('profile_image_main');
-    const avatarPreview = document.getElementById('avatar-preview');
-    
-    // Almacenar valores originales para poder cancelar
-    const originalValues = {};
-    document.querySelectorAll('#profile-fieldset input, #profile-fieldset textarea').forEach(input => {
-        originalValues[input.name] = input.value;
-    });
-    const originalImageSrc = avatarPreview.src;
-
-    // Activar modo edición
-    editButton.addEventListener('click', function() {
-        profileFieldset.disabled = false;
-        editButton.style.display = 'none';
-        saveButton.style.display = 'inline-block';
-        cancelButton.style.display = 'inline-block';
-        uploadButton.style.display = 'flex';
-    });
-
-    // Cancelar edición
-    cancelButton.addEventListener('click', function() {
-        profileFieldset.disabled = true;
-        editButton.style.display = 'inline-block';
-        saveButton.style.display = 'none';
-        cancelButton.style.display = 'none';
-        uploadButton.style.display = 'none';
-        
-        // Restaurar valores originales
-        document.querySelectorAll('#profile-fieldset input, #profile-fieldset textarea').forEach(input => {
-            input.value = originalValues[input.name];
-        });
-        
-        avatarPreview.src = originalImageSrc;
-        profileImageInput.value = ''; // Limpiar el input de archivo
-    });
-    
-    // Previsualizar imagen al seleccionarla
-    profileImageInput.addEventListener('change', function(e) {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (event) => avatarPreview.src = event.target.result;
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    });
-
-    // Ocultar notificaciones después de 5 segundos
-    setTimeout(() => {
-        document.querySelectorAll('.notification.show').forEach(n => n.classList.remove('show'));
-    }, 5000);
-});
-</script>
