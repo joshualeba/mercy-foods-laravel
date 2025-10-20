@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlatilloController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('index');
@@ -44,7 +45,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Rutas para el Perfil del Restaurante
     Route::get('/perfil', [ProfileController::class, 'index'])->name('perfil.index');
-    Route::post('/perfil', [ProfileController::class, 'update'])->name('perfil.update');
+    Route::put('/perfil', [ProfileController::class, 'update'])->name('perfil.update');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);

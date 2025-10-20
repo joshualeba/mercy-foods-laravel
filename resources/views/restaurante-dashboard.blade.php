@@ -277,9 +277,7 @@
                     </div>
                 </section>
 
-                <section id="perfil" class="dashboard-section">
-                    {{-- El contenido se cargará dinámicamente aquí a través de AJAX/Fetch --}}
-                </section>
+                <div id="ajax-content-wrapper"></div>
             </div>
         </main>
     </div>
