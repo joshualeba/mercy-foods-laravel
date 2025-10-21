@@ -144,9 +144,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 2. Lógica para el modal de DETALLES/EDICIÓN
+    // 2. Lógica para el modal de DETALLES/EDICIÓN y ELIMINACIÓN
     const detailsModal = document.getElementById('details-modal');
+    const deleteModal = document.getElementById('delete-platillo-modal');
     let openDetailsModal = () => {};
+    let currentPlatilloId = null; 
 
     if (detailsModal) {
         const form = detailsModal.querySelector('#details-form');
@@ -160,7 +162,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const viewModeBtns = detailsModal.querySelectorAll('.view-mode-btn');
         const editModeBtns = detailsModal.querySelectorAll('.edit-mode-btn');
         const editModeFields = detailsModal.querySelectorAll('.edit-mode-field');
-        let currentPlatilloId = null;
+        
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
 
         const setEditMode = (isEditing) => {
             detailsModal.classList.toggle('is-editing', isEditing);
@@ -192,32 +196,63 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const closeDetailsModal = () => {
             detailsModal.classList.remove('active');
-            dashboardContainer.classList.remove('blurred');
+            if (!deleteModal.classList.contains('active')) {
+                dashboardContainer.classList.remove('blurred');
+            }
             form.reset();
             fileNameDisplay.textContent = 'Ningún archivo nuevo';
             form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
         };
         
-        const handleDelete = () => {
-            if (confirm('¿Estás seguro de que quieres eliminar este platillo? Esta acción no se puede deshacer.')) {
-                fetch(`/platillos/${currentPlatilloId}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 'Accept': 'application/json' }
-                })
-                .then(res => res.json())
-                .then(() => {
-                    closeDetailsModal();
-                    document.querySelector('.nav-link[data-section="menu"]').click();
-                }).catch(err => console.error('Error al eliminar:', err));
+        const openDeleteModal = () => {
+            deleteModal.classList.add('active');
+            dashboardContainer.classList.add('blurred');
+        };
+
+        const closeDeleteModal = () => {
+            deleteModal.classList.remove('active');
+            if (!detailsModal.classList.contains('active')) {
+                dashboardContainer.classList.remove('blurred');
             }
         };
+        
+        const handleDelete = () => {
+            openDeleteModal();
+        };
+
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (!currentPlatilloId) return;
+
+            fetch(`/platillos/${currentPlatilloId}`, {
+                method: 'DELETE',
+                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 'Accept': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(() => {
+                closeDetailsModal();
+                closeDeleteModal(); 
+                document.querySelector('.nav-link[data-section="menu"]').click();
+            }).catch(err => {
+                console.error('Error al eliminar:', err);
+                closeDeleteModal();
+                alert('No se pudo eliminar el platillo.');
+            });
+        });
+        
+        cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+        deleteModal.addEventListener('click', (e) => {
+            if (e.target === deleteModal) closeDeleteModal();
+        });
+
 
         detailsModal.addEventListener('click', (e) => {
             if (e.target.id === 'edit-btn') setEditMode(true);
             if (e.target.id === 'cancel-edit-btn' || e.target === detailsModal || e.target.closest('.close-modal-btn')) {
                 closeDetailsModal();
             }
-            if (e.target.id === 'delete-btn') handleDelete();
+            if (e.target.id === 'delete-btn') {
+                handleDelete();
+            }
         });
 
         newImageInput.addEventListener('change', function() {

@@ -405,6 +405,17 @@
         </div>
     </div>
 
+    <div class="confirmation-modal-overlay" id="delete-platillo-modal">
+        <div class="modal-box">
+            <h2 id="delete-modal-title">Confirmar eliminación</h2>
+            <p id="delete-modal-message">¿Estás seguro/a de que quieres eliminar este platillo? Esta acción no se puede deshacer.</p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="cancel-delete-btn">Cancelar</button>
+                <button class="btn-confirm" id="confirm-delete-btn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('js/dashboard.js') }}"></script>
 </body>
 </html>
