@@ -38,7 +38,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                     <span>Mi menú</span>
                 </a></li>
-                <li><a href="#perfil" class="nav-link" data-section="perfil">
+                <li><a href="{{ route('restaurante.perfil.index') }}" class="nav-link" data-section="perfil">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     <span>Perfil del local</span>
                 </a></li>
@@ -71,7 +71,7 @@
                                 <h4>{{ Auth::user()->full_name }}</h4>
                                 <p>{{ Auth::user()->email }}</p>
                             </div>
-                            <a href="#perfil" class="dropdown-item nav-link" data-section="perfil">
+                            <a href="{{ route('restaurante.perfil.index') }}" class="dropdown-item nav-link" data-section="perfil"> {{-- Cambiado href --}}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 <span>Ver perfil</span>
                             </a>
@@ -387,7 +387,7 @@
                 <div class="modal-buttons modal-buttons-stacked">
                     <button type="button" class="btn-primary view-mode-btn" id="edit-btn">Editar</button>
                     <button type="button" class="btn-danger view-mode-btn" id="delete-btn">Eliminar</button>
-                    <button type="submit" class="btn-confirm edit-mode-btn" style="display:none;">Guardar Cambios</button>
+                    <button type="submit" class="btn-confirm edit-mode-btn" style="display:none;">Guardar cambios</button>
                     <button type="button" class="btn-cancel edit-mode-btn" id="cancel-edit-btn" style="display:none;">Cancelar</button>
                 </div>
             </form>

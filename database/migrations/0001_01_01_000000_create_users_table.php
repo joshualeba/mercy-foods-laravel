@@ -13,15 +13,32 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('email', 120)->unique();
-            $table->string('password'); 
             $table->string('full_name', 120);
+            $table->string('email', 120)->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
             $table->string('role', 20);
             $table->string('restaurant_address', 200)->nullable();
             $table->string('cuisine_type', 50)->nullable();
-            $table->string('contact_phone', 15)->nullable();
+            $table->string('contact_phone', 10)->nullable();
             $table->string('vehicle_type', 50)->nullable();
+            $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
         });
     }
 

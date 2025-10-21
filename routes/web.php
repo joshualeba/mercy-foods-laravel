@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlatilloController;
+use App\Http\Controllers\RestauranteProfileController;
 
 Route::get('/', function () {
     return view('index');
@@ -40,7 +41,12 @@ Route::middleware(['auth'])->group(function () {
         return view('repartidor-dashboard');
     });
 
-    Route::resource('platillos', PlatilloController::class);
+    // Rutas para Platillos (ya existentes)
+    Route::resource('platillos', PlatilloController::class)->except(['create', 'edit']); // Ajustado para API RESTful
+
+    // RUTAS PARA EL PERFIL DEL RESTAURANTE ---
+    Route::get('/perfil-restaurante', [RestauranteProfileController::class, 'index'])->name('restaurante.perfil.index');
+    Route::put('/perfil-restaurante', [RestauranteProfileController::class, 'update'])->name('restaurante.perfil.update');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);

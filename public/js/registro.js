@@ -234,21 +234,30 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             if (activeTabId === 'cliente') {
-                formData.nombre = document.getElementById('cliente-nombre').value;
+                formData.full_name = document.getElementById('cliente-nombre').value;
                 formData.email = document.getElementById('cliente-email').value;
                 formData.password = document.getElementById('cliente-pass').value;
             } else if (activeTabId === 'restaurante') {
-                formData.nombre = document.getElementById('restaurante-nombre').value;
-                formData.direccion = document.getElementById('restaurante-direccion').value;
-                formData.tipo = document.getElementById('restaurante-tipo').value;
-                formData.telefono = document.getElementById('restaurante-telefono').value;
+                formData.full_name = document.getElementById('restaurante-nombre').value;    
+                formData.restaurant_address = document.getElementById('restaurante-direccion').value;
+                formData.cuisine_type = document.getElementById('restaurante-tipo').value;
+                formData.contact_phone = document.getElementById('restaurante-telefono').value;
                 formData.email = document.getElementById('restaurante-email').value;
                 formData.password = document.getElementById('restaurante-pass').value;
             } else if (activeTabId === 'repartidor') {
-                formData.nombre = document.getElementById('repartidor-nombre').value;
+                formData.full_name = document.getElementById('repartidor-nombre').value;
                 formData.email = document.getElementById('repartidor-email').value;
-                formData.vehiculo = document.getElementById('repartidor-vehiculo').value;
+                formData.vehicle_type = document.getElementById('repartidor-vehiculo').value;
                 formData.password = document.getElementById('repartidor-pass').value;
+            }
+
+            // El backend la necesita para la regla 'confirmed'
+            if (activeTabId === 'cliente') {
+                formData.password_confirmation = document.getElementById('cliente-pass-confirm').value;
+            } else if (activeTabId === 'restaurante') {
+                formData.password_confirmation = document.getElementById('restaurante-pass-confirm').value;
+            } else if (activeTabId === 'repartidor') {
+                 formData.password_confirmation = document.getElementById('repartidor-pass-confirm').value;
             }
 
             fetch('/register', {
@@ -275,6 +284,4 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    
-    //setupValidationForActiveTab();
 });

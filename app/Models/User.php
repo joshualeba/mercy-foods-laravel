@@ -44,4 +44,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Platillo::class);
     }
+
+    public function restaurantDetail()
+    {
+        return $this->hasOne(RestaurantDetail::class);
+    }
 }
