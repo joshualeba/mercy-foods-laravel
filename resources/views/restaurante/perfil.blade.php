@@ -69,34 +69,52 @@
                 </div>
             </div>
              
-             {{-- Campos para cambiar contraseña (ocultos en modo vista) --}}
-             <div class="password-change-fields edit-mode-field" style="display: none;">
-                 <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
-                 <div class="profile-grid">
-                    {{-- Contraseña actual --}}
-                    <div class="form-group">
-                        <label for="profile-current_password">Contraseña actual</label>
-                        <input type="password" id="profile-current_password" name="current_password" autocomplete="current-password">
-                        <small class="form-hint">Requerida si cambias la contraseña.</small>
-                        <small class="error-message"></small>
+            {{-- Campos para cambiar contraseña (ocultos en modo vista) --}}
+            <div class="password-change-fields edit-mode-field" style="display: none;">
+                <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
+                
+                {{-- Contraseña actual --}}
+                <div class="form-group">
+                    <label for="profile-current_password">Contraseña actual</label>
+                    {{-- Contenedor solo para el input y el ícono --}}
+                    <div class="input-icon-wrapper">
+                        <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
+                        <i class="toggle-password fas fa-eye"></i>
                     </div>
-                    {{-- Nueva contraseña --}}
-                    <div class="form-group">
-                        <label for="profile-new_password">Nueva contraseña</label>
-                        <input type="password" id="profile-new_password" name="new_password" autocomplete="new-password">
-                        <small class="form-hint">Mínimo 8 caracteres.</small>
-                        <small class="error-message"></small>
+                    <small class="error-message"></small>
+                </div>
+
+                {{-- Nueva contraseña --}}
+                <div class="form-group">
+                    <label for="profile-new_password">Nueva contraseña</label>
+                    {{-- Contenedor solo para el input y el ícono --}}
+                    <div class="input-icon-wrapper">
+                        <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
+                        <i class="toggle-password fas fa-eye"></i>
                     </div>
-                    {{-- Confirmar nueva contraseña --}}
-                    <div class="form-group">
-                        <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
-                        <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" autocomplete="new-password">
-                        <small class="form-hint">Debe coincidir con la nueva contraseña.</small>
-                        <small class="error-message"></small>
+                    <small class="error-message"></small>
+                </div>
+
+                {{-- Confirmar nueva contraseña --}}
+                <div class="form-group">
+                    <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
+                    {{-- Contenedor solo para el input y el ícono --}}
+                    <div class="input-icon-wrapper">
+                        <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
+                        <i class="toggle-password fas fa-eye"></i>
                     </div>
-                 </div>
+                    <small class="error-message"></small>
+                </div>
+
+                {{-- Lista de Requisitos de Contraseña (esto se queda igual) --}}
+                <div id="password-requirements">
+                    <ul class="password-checklist">
+                        <li id="length">8-25 caracteres</li>
+                        <li id="uppercase">Una mayúscula</li>
+                        <li id="special">Un caracter especial (!@#$%)</li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
         {{-- Botones de acción --}}
         <div class="profile-actions">

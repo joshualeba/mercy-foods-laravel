@@ -329,252 +329,285 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const initializeProfileSection = () => {
-    const profileForm = document.getElementById('profile-form');
-    if (!profileForm) return;
+        const profileForm = document.getElementById('profile-form');
+        if (!profileForm) return;
 
-    // --- Seleccion de Elementos ---
-    const inputs = profileForm.querySelectorAll('input:not([type="password"])');
-    const viewModeBtns = profileForm.querySelectorAll('.view-mode-btn');
-    const editModeBtns = profileForm.querySelectorAll('.edit-mode-btn');
-    const editModeFields = profileForm.querySelectorAll('.edit-mode-field');
-    
-    // --- Elementos del Nuevo Modal ---
-    const notificationModal = document.getElementById('profile-notification-modal');
-    const notificationTitle = document.getElementById('profile-notification-title');
-    const notificationMessage = document.getElementById('profile-notification-message');
-    const notificationCloseBtn = document.getElementById('profile-notification-close-btn');
+        // --- Seleccion de Elementos ---
+        const inputs = profileForm.querySelectorAll('input:not([type="password"])');
+        const viewModeBtns = profileForm.querySelectorAll('.view-mode-btn');
+        const editModeBtns = profileForm.querySelectorAll('.edit-mode-btn');
+        const editModeFields = profileForm.querySelectorAll('.edit-mode-field');
+        
+        // --- Elementos del Nuevo Modal ---
+        const notificationModal = document.getElementById('profile-notification-modal');
+        const notificationTitle = document.getElementById('profile-notification-title');
+        const notificationMessage = document.getElementById('profile-notification-message');
+        const notificationCloseBtn = document.getElementById('profile-notification-close-btn');
 
-    let originalValues = {};
+        let originalValues = {};
 
-    // Inputs específicos para validación
-    const addressInput = document.getElementById('profile-restaurant_address');
-    const cuisineInput = document.getElementById('profile-cuisine_type');
-    const phoneInput = document.getElementById('profile-contact_phone');
-    const attentionScheduleInput = document.getElementById('profile-attention_schedule');
-    const currentPassInput = document.getElementById('profile-current_password');
-    const newPassInput = document.getElementById('profile-new_password');
-    const confirmPassInput = document.getElementById('profile-new_password_confirmation');
-    
-    // --- Lógica del Nuevo Modal ---
-    const showProfileNotification = (title, message, isError = false) => {
-        notificationTitle.textContent = title;
-        notificationMessage.textContent = message;
-        notificationModal.classList.toggle('error', isError);
-        notificationModal.classList.toggle('success', !isError);
-        notificationModal.classList.add('active');
-    };
-
-    const closeProfileNotification = () => {
-        notificationModal.classList.remove('active');
-    };
-
-    if(notificationCloseBtn) {
-        notificationCloseBtn.addEventListener('click', closeProfileNotification);
-    }
-    if(notificationModal) {
-        notificationModal.addEventListener('click', (e) => {
-            if (e.target === notificationModal) {
-                closeProfileNotification();
-            }
-        });
-    }
-
-    // --- Lógica de Validación en Tiempo Real ---
-    const phoneRegex = /^\d{10}$/;
-
-    const validators = {
-        'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200,
-        'profile-cuisine_type': (val) => val.trim().length > 0 && val.length <= 50,
-        'profile-contact_phone': (val) => phoneRegex.test(val),
-        'profile-attention_schedule': (val) => val.length <= 255,
-        'profile-current_password': (val) => {
-            if (newPassInput.value.length === 0 && confirmPassInput.value.length === 0) return true;
-            return val.length > 0;
-        },
-        'profile-new_password': (val) => {
-            if (val.length === 0 && currentPassInput.value.length === 0) return true;
-            return val.length >= 8;
-        },
-        'profile-new_password_confirmation': (val) => {
-            return val === newPassInput.value;
-        }
-    };
-
-    const validateField = (input) => {
-        if (!input || typeof validators[input.id] !== 'function') return;
-        if (profileForm.classList.contains('view-mode')) return;
-
-        const isValid = validators[input.id](input.value);
-        input.classList.toggle('is-valid', isValid);
-        input.classList.toggle('is-invalid', !isValid);
-
-        if (input.id === 'profile-new_password') {
-            validateField(confirmPassInput);
-        }
-        if (input.id === 'profile-new_password' || input.id === 'profile-new_password_confirmation') {
-            validateField(currentPassInput);
-        }
-    };
-    
-    const clearAllValidation = () => {
-        profileForm.querySelectorAll('input.is-valid, input.is-invalid').forEach(input => {
-            input.classList.remove('is-valid', 'is-invalid');
-        });
-        profileForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-    };
-    
-    [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput].forEach(input => {
-        if (input) {
-            input.addEventListener('input', () => validateField(input));
-        }
-    });
-
-    // --- Lógica de Modo Edición/Vista ---
-    const setProfileEditMode = (isEditing) => {
-            profileForm.classList.toggle('view-mode', !isEditing);
-            profileForm.classList.toggle('edit-mode', isEditing);
-
-            const formElements = profileForm.querySelectorAll('input:not([type="password"]), select');
-
-            formElements.forEach(el => {
-                // Campos que nunca cambian
-                if (el.id === 'profile-full_name' || el.id === 'profile-email') {
-                    el.readOnly = true;
-                    return; // Continuamos al siguiente elemento
-                }
-                
-                // Lógica para el SELECT
-                if (el.tagName === 'SELECT') {
-                    el.disabled = !isEditing; // Lo habilitamos o deshabilitamos
-                    el.classList.toggle('form-control-plaintext', !isEditing); // Cambiamos su apariencia
-                } 
-                // Lógica para los INPUTS
-                else {
-                    el.readOnly = !isEditing;
-                }
-
-                // Guardamos valores originales al entrar en modo edición
-                if (isEditing) {
-                    originalValues[el.name] = el.value;
-                    validateField(el); // Validamos el campo al entrar a editar
-                }
-            });
-            
-            // Campos de contraseña
-            [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
-                if(input) input.disabled = !isEditing;
-            });
-
-            // Limpiamos todo al salir del modo edición
-            if (!isEditing) {
-                clearAllValidation();
-                [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
-                    if(input) input.value = '';
-                });
-            }
-
-            // Mostramos/ocultamos los botones correspondientes
-            viewModeBtns.forEach(btn => btn.style.display = !isEditing ? 'inline-block' : 'none');
-            editModeBtns.forEach(btn => btn.style.display = isEditing ? 'inline-block' : 'none');
-            editModeFields.forEach(field => field.style.display = isEditing ? 'block' : 'none');
+        // Inputs específicos para validación
+        const addressInput = document.getElementById('profile-restaurant_address');
+        const cuisineInput = document.getElementById('profile-cuisine_type');
+        const phoneInput = document.getElementById('profile-contact_phone');
+        const attentionScheduleInput = document.getElementById('profile-attention_schedule');
+        const currentPassInput = document.getElementById('profile-current_password');
+        const newPassInput = document.getElementById('profile-new_password');
+        const confirmPassInput = document.getElementById('profile-new_password_confirmation');
+        
+        // --- Lógica del Nuevo Modal ---
+        const showProfileNotification = (title, message, isError = false) => {
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            notificationModal.classList.toggle('error', isError);
+            notificationModal.classList.toggle('success', !isError);
+            notificationModal.classList.add('active');
         };
 
-    const editBtn = document.getElementById('edit-profile-btn');
-    if(editBtn) editBtn.addEventListener('click', () => setProfileEditMode(true));
+        const closeProfileNotification = () => {
+            notificationModal.classList.remove('active');
+        };
 
-    const cancelBtn = document.getElementById('cancel-profile-btn');
-    if(cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            inputs.forEach(input => {
-                if (originalValues[input.name] !== undefined) {
-                    input.value = originalValues[input.name];
-                }
-            });
-            setProfileEditMode(false);
-        });
-    }
-
-    // --- Lógica de Envío (Submit) ---
-    profileForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        let isFormValid = true;
-        const allInputsToValidate = [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput];
-        
-        allInputsToValidate.forEach(input => {
-            if (input) {
-                validateField(input);
-                if (input.classList.contains('is-invalid')) {
-                    isFormValid = false;
-                }
-            }
-        });
-
-        if (!isFormValid) {
-            showProfileNotification('Formulario incompleto', 'Por favor, corrige los campos marcados en rojo.', true);
-            return;
+        if(notificationCloseBtn) {
+            notificationCloseBtn.addEventListener('click', closeProfileNotification);
         }
-        
-        const formData = new FormData(this);
-        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-        clearAllValidation();
-
-            formData.append('_method', 'PUT');
-
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '',
-                    'Accept': 'application/json',
-                }
-            })
-        .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
-        .then(data => {
-            // Itera sobre todos los datos recibidos y actualiza los campos del formulario
-            Object.keys(data).forEach(key => {
-                // Busca el input por su atributo 'name'
-                const input = profileForm.querySelector(`[name="${key}"]`);
-                if (input) {
-                    input.value = data[key];
+        if(notificationModal) {
+            notificationModal.addEventListener('click', (e) => {
+                if (e.target === notificationModal) {
+                    closeProfileNotification();
                 }
             });
-            setProfileEditMode(false); // Cambia de nuevo a modo vista
-            showProfileNotification('¡Éxito!', 'Tu perfil se ha actualizado correctamente.');
-        })
-        .catch(error => {
-            clearAllValidation(); 
-            if (error.errors) {
-                let firstErrorMessage = 'Por favor, revisa los errores en el formulario.';
-                let firstErrorFound = false;
-                
-                for (const key in error.errors) {
-                    if (!firstErrorFound) {
-                        firstErrorMessage = error.errors[key][0];
-                        firstErrorFound = true;
-                    }
-                    
-                    let inputId = `profile-${key}`;
-                    if (key === 'new_password_confirmation') inputId = `profile-new_password_confirmation`;
-                    
-                    const input = document.getElementById(inputId);
-                    const errorContainer = input ? input.closest('.form-group').querySelector('.error-message') : null;
+        }
 
-                    if (input) input.classList.add('is-invalid');
+        // --- Lógica de Validación en Tiempo Real ---
+        const phoneRegex = /^\d{10}$/;
 
-                    if (errorContainer) {
-                        errorContainer.textContent = error.errors[key][0];
-                    }
-                }
-                 showProfileNotification('Error de validación', firstErrorMessage, true);
-            } else {
-                showProfileNotification('Error inesperado', 'Ocurrió un problema al guardar los datos. Inténtalo de nuevo.', true);
+        const validators = {
+            'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200,
+            'profile-cuisine_type': (val) => val.trim().length > 0 && val.length <= 50,
+            'profile-contact_phone': (val) => phoneRegex.test(val),
+            'profile-attention_schedule': (val) => val.length <= 255,
+            'profile-current_password': (val) => {
+                if (newPassInput.value.length === 0 && confirmPassInput.value.length === 0) return true;
+                return val.length > 0;
+            },
+            'profile-new_password': (val) => {
+                if (val.length === 0 && currentPassInput.value.length === 0) return true;
+                return val.length >= 8;
+            },
+            'profile-new_password_confirmation': (val) => {
+                return val === newPassInput.value;
+            }
+        };
+
+        const validateField = (input) => {
+            if (!input || typeof validators[input.id] !== 'function') return;
+            if (profileForm.classList.contains('view-mode')) return;
+
+            const isValid = validators[input.id](input.value);
+            input.classList.toggle('is-valid', isValid);
+            input.classList.toggle('is-invalid', !isValid);
+
+            if (input.id === 'profile-new_password') {
+                validateField(confirmPassInput);
+            }
+            if (input.id === 'profile-new_password' || input.id === 'profile-new_password_confirmation') {
+                validateField(currentPassInput);
+            }
+        };
+        
+        const clearAllValidation = () => {
+            profileForm.querySelectorAll('input.is-valid, input.is-invalid').forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
+            profileForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        };
+        
+        [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput].forEach(input => {
+            if (input) {
+                input.addEventListener('input', () => validateField(input));
             }
         });
-    });
 
-    setProfileEditMode(false);
-};
+        // --- Lógica de Modo Edición/Vista ---
+        const setProfileEditMode = (isEditing) => {
+                profileForm.classList.toggle('view-mode', !isEditing);
+                profileForm.classList.toggle('edit-mode', isEditing);
+
+                const formElements = profileForm.querySelectorAll('input:not([type="password"]), select');
+
+                formElements.forEach(el => {
+                    // Campos que nunca cambian
+                    if (el.id === 'profile-full_name' || el.id === 'profile-email') {
+                        el.readOnly = true;
+                        return; // Continuamos al siguiente elemento
+                    }
+                    
+                    // Lógica para el SELECT
+                    if (el.tagName === 'SELECT') {
+                        el.disabled = !isEditing; // Lo habilitamos o deshabilitamos
+                        el.classList.toggle('form-control-plaintext', !isEditing); // Cambiamos su apariencia
+                    } 
+                    // Lógica para los INPUTS
+                    else {
+                        el.readOnly = !isEditing;
+                    }
+
+                    // Guardamos valores originales al entrar en modo edición
+                    if (isEditing) {
+                        originalValues[el.name] = el.value;
+                        validateField(el); // Validamos el campo al entrar a editar
+                    }
+                });
+                
+                // Campos de contraseña
+                [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
+                    if(input) input.disabled = !isEditing;
+                });
+
+                // Limpiamos todo al salir del modo edición
+                if (!isEditing) {
+                    clearAllValidation();
+                    [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
+                        if(input) input.value = '';
+                    });
+                }
+
+                // Mostramos/ocultamos los botones correspondientes
+                viewModeBtns.forEach(btn => btn.style.display = !isEditing ? 'inline-block' : 'none');
+                editModeBtns.forEach(btn => btn.style.display = isEditing ? 'inline-block' : 'none');
+                editModeFields.forEach(field => field.style.display = isEditing ? 'block' : 'none');
+            };
+
+        const editBtn = document.getElementById('edit-profile-btn');
+        if(editBtn) editBtn.addEventListener('click', () => setProfileEditMode(true));
+
+        const cancelBtn = document.getElementById('cancel-profile-btn');
+        if(cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                inputs.forEach(input => {
+                    if (originalValues[input.name] !== undefined) {
+                        input.value = originalValues[input.name];
+                    }
+                });
+                setProfileEditMode(false);
+            });
+        }
+
+        // --- LÓGICA PARA MOSTRAR/OCULTAR CONTRASEÑA ---
+        profileForm.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function () {
+                const passwordInput = this.previousElementSibling;
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+
+        // --- LÓGICA PARA VALIDACIÓN DE CONTRASEÑA EN TIEMPO REAL ---
+        const newPasswordInput = document.getElementById('profile-new_password');
+        if (newPasswordInput) {
+            const requirements = {
+                length: document.querySelector('#password-requirements #length'),
+                uppercase: document.querySelector('#password-requirements #uppercase'),
+                special: document.querySelector('#password-requirements #special')
+            };
+
+            newPasswordInput.addEventListener('keyup', function() {
+                const value = this.value;
+
+                // 1. Validar longitud (8-25 caracteres)
+                requirements.length.classList.toggle('valid', value.length >= 8 && value.length <= 25);
+                
+                // 2. Validar mayúscula
+                requirements.uppercase.classList.toggle('valid', /[A-Z]/.test(value));
+                
+                // 3. Validar caracter especial
+                requirements.special.classList.toggle('valid', /[!@#$%^&*(),.?":{}|<>]/.test(value));
+            });
+        }
+
+        // --- Lógica de Envío (Submit) ---
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isFormValid = true;
+            const allInputsToValidate = [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput];
+            
+            allInputsToValidate.forEach(input => {
+                if (input) {
+                    validateField(input);
+                    if (input.classList.contains('is-invalid')) {
+                        isFormValid = false;
+                    }
+                }
+            });
+
+            if (!isFormValid) {
+                showProfileNotification('Formulario incompleto', 'Por favor, corrige los campos marcados en rojo.', true);
+                return;
+            }
+            
+            const formData = new FormData(this);
+            const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+            clearAllValidation();
+
+                formData.append('_method', 'PUT');
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '',
+                        'Accept': 'application/json',
+                    }
+                })
+            .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
+            .then(data => {
+                // Itera sobre todos los datos recibidos y actualiza los campos del formulario
+                Object.keys(data).forEach(key => {
+                    // Busca el input por su atributo 'name'
+                    const input = profileForm.querySelector(`[name="${key}"]`);
+                    if (input) {
+                        input.value = data[key];
+                    }
+                });
+                setProfileEditMode(false); // Cambia de nuevo a modo vista
+                showProfileNotification('¡Éxito!', 'Tu perfil se ha actualizado correctamente.');
+            })
+            .catch(error => {
+                clearAllValidation(); 
+                if (error.errors) {
+                    let firstErrorMessage = 'Por favor, revisa los errores en el formulario.';
+                    let firstErrorFound = false;
+                    
+                    for (const key in error.errors) {
+                        if (!firstErrorFound) {
+                            firstErrorMessage = error.errors[key][0];
+                            firstErrorFound = true;
+                        }
+                        
+                        let inputId = `profile-${key}`;
+                        if (key === 'new_password_confirmation') inputId = `profile-new_password_confirmation`;
+                        
+                        const input = document.getElementById(inputId);
+                        const errorContainer = input ? input.closest('.form-group').querySelector('.error-message') : null;
+
+                        if (input) input.classList.add('is-invalid');
+
+                        if (errorContainer) {
+                            errorContainer.textContent = error.errors[key][0];
+                        }
+                    }
+                    showProfileNotification('Error de validación', firstErrorMessage, true);
+                } else {
+                    showProfileNotification('Error inesperado', 'Ocurrió un problema al guardar los datos. Inténtalo de nuevo.', true);
+                }
+            });
+        });
+
+        setProfileEditMode(false);
+    };
     // --- MODIFICACIÓN EN LA NAVEGACIÓN PRINCIPAL ---
     // Asegúrate de que tu lógica de navegación llame a initializeProfileSection
     // después de cargar el contenido de perfil vía AJAX.
@@ -631,11 +664,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (sectionId === 'perfil') {
                             initializeProfileSection();
                         }
-                        // Agrega aquí otras inicializaciones si cargas más secciones por AJAX
-                        // if (sectionId === 'otraSeccion') {
-                        //     initializeOtraSeccion();
-                        // }
-
                     })
                     .catch(error => {
                         console.error('Error al cargar la sección:', error);
@@ -654,4 +682,63 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // --- LÓGICA PARA MOSTRAR/OCULTAR CONTRASEÑA ---
+    const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+
+    togglePasswordIcons.forEach(icon => {
+        icon.addEventListener('click', function () {
+            const passwordInput = this.previousElementSibling;
+            // Cambia el tipo de input entre 'password' y 'text'
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            // Cambia el ícono del ojo
+            this.classList.toggle('fa-eye-slash');
+        });
+    });
+
+    // --- LÓGICA PARA VALIDACIÓN EN TIEMPO REAL DE LA NUEVA CONTRASEÑA ---
+    const newPasswordInput = document.getElementById('new_password');
+    if (newPasswordInput) {
+        const requirements = {
+            length: document.getElementById('length'),
+            uppercase: document.getElementById('uppercase'),
+            special: document.getElementById('special')
+        };
+
+        newPasswordInput.addEventListener('keyup', function() {
+            const value = this.value;
+
+            // 1. Validar longitud (8-25 caracteres)
+            if (value.length >= 8 && value.length <= 25) {
+                requirements.length.classList.add('valid');
+                requirements.length.classList.remove('invalid');
+            } else {
+                requirements.length.classList.add('invalid');
+                requirements.length.classList.remove('valid');
+            }
+
+            // 2. Validar mayúscula
+            if (/[A-Z]/.test(value)) {
+                requirements.uppercase.classList.add('valid');
+                requirements.uppercase.classList.remove('invalid');
+            } else {
+                requirements.uppercase.classList.add('invalid');
+                requirements.uppercase.classList.remove('valid');
+            }
+
+            // 3. Validar caracter especial
+            if (/[@$!%*?&.]/.test(value)) {
+                requirements.special.classList.add('valid');
+                requirements.special.classList.remove('invalid');
+            } else {
+                requirements.special.classList.add('invalid');
+                requirements.special.classList.remove('valid');
+            }
+        });
+    }
+
 });
