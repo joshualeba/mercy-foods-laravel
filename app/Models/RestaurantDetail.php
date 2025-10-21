@@ -12,6 +12,9 @@ class RestaurantDetail extends Model
     // Campos que permitimos que se llenen masivamente
     protected $fillable = [
         'user_id',
+        'restaurant_address',
+        'cuisine_type',
+        'contact_phone',
         'attention_schedule',
     ];
 

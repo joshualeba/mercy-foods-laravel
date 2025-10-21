@@ -1,7 +1,7 @@
 <div class="profile-section-container">
     <h1>Perfil del local</h1>
 
-    <form id="profile-form" class="profile-form view-mode" novalidate>
+    <form id="profile-form" action="{{ route('restaurante.perfil.update') }}" class="profile-form view-mode" novalidate>
         @csrf
         @method('PUT')
 

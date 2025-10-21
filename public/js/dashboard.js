@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             formData.append('_method', 'PUT');
 
-            fetch('{{ route("restaurante.perfil.update") }}', {
+            fetch(this.action, {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -531,11 +531,15 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
         .then(data => {
+            // Itera sobre todos los datos recibidos y actualiza los campos del formulario
             Object.keys(data).forEach(key => {
+                // Busca el input por su atributo 'name'
                 const input = profileForm.querySelector(`[name="${key}"]`);
-                if (input) input.value = data[key];
+                if (input) {
+                    input.value = data[key];
+                }
             });
-            setProfileEditMode(false);
+            setProfileEditMode(false); // Cambia de nuevo a modo vista
             showProfileNotification('¡Éxito!', 'Tu perfil se ha actualizado correctamente.');
         })
         .catch(error => {

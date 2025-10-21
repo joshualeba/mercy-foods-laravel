@@ -43,30 +43,34 @@ class RestauranteProfileController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // 1. Actualiza los datos en la tabla 'users'
-        $user->restaurant_address = $request->restaurant_address;
-        $user->cuisine_type = $request->cuisine_type;
-        $user->contact_phone = $request->contact_phone;
-        // (full_name y email no se actualizan desde aquí)
-
+        // 1. Actualiza la contraseña si se proporcionó una nueva
         if ($request->filled('new_password')) {
             $user->password = Hash::make($request->new_password);
+            $user->save();
         }
 
-        $user->save(); // Guarda los cambios en 'users'
-
-        // 2. Actualiza o crea los datos en la tabla 'restaurant_details'
+        // 2. Actualiza o crea todos los detalles del restaurante en su tabla correspondiente
         $user->restaurantDetail()->updateOrCreate(
-            ['user_id' => $user->id], // Busca por user_id
-            ['attention_schedule' => $request->attention_schedule] // Actualiza/crea el horario
+            ['user_id' => $user->id], // Condición para buscar
+            [ // Datos para actualizar o crear
+                'restaurant_address' => $request->restaurant_address,
+                'cuisine_type' => $request->cuisine_type,
+                'contact_phone' => $request->contact_phone,
+                'attention_schedule' => $request->attention_schedule
+            ]
         );
 
-        // 3. Devuelve los datos actualizados
+        // 3. Recarga la relación para obtener los datos más recientes
+        $user->load('restaurantDetail');
+
+        // 4. Devuelve la respuesta JSON con los datos correctos
         return response()->json([
-            'restaurant_address' => $user->restaurant_address,
-            'cuisine_type' => $user->cuisine_type,
-            'contact_phone' => $user->contact_phone,
-            'attention_schedule' => $user->restaurantDetail->attention_schedule, // Devuelve el nuevo horario
+            'full_name' => $user->full_name,
+            'email' => $user->email,
+            'restaurant_address' => $user->restaurantDetail->restaurant_address,
+            'cuisine_type' => $user->restaurantDetail->cuisine_type,
+            'contact_phone' => $user->restaurantDetail->contact_phone,
+            'attention_schedule' => $user->restaurantDetail->attention_schedule,
         ]);
     }
 }
