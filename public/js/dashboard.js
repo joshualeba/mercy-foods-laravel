@@ -329,112 +329,143 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const initializeProfileSection = () => {
-        const profileForm = document.getElementById('profile-form');
-        if (!profileForm) return;
+    const profileForm = document.getElementById('profile-form');
+    if (!profileForm) return;
 
-        // --- Seleccion de Elementos ---
-        const inputs = profileForm.querySelectorAll('input:not([type="password"])');
-        const viewModeBtns = profileForm.querySelectorAll('.view-mode-btn');
-        const editModeBtns = profileForm.querySelectorAll('.edit-mode-btn');
-        const editModeFields = profileForm.querySelectorAll('.edit-mode-field');
-        const profileNotification = document.getElementById('profile-notification');
-        const profileNotificationMessage = document.getElementById('profile-notification-message');
-        let originalValues = {};
+    // --- Seleccion de Elementos ---
+    const inputs = profileForm.querySelectorAll('input:not([type="password"])');
+    const viewModeBtns = profileForm.querySelectorAll('.view-mode-btn');
+    const editModeBtns = profileForm.querySelectorAll('.edit-mode-btn');
+    const editModeFields = profileForm.querySelectorAll('.edit-mode-field');
+    
+    // --- Elementos del Nuevo Modal ---
+    const notificationModal = document.getElementById('profile-notification-modal');
+    const notificationTitle = document.getElementById('profile-notification-title');
+    const notificationMessage = document.getElementById('profile-notification-message');
+    const notificationCloseBtn = document.getElementById('profile-notification-close-btn');
 
-        // Inputs específicos para validación
-        const fullNameInput = document.getElementById('profile-full_name');
-        const addressInput = document.getElementById('profile-restaurant_address');
-        const cuisineInput = document.getElementById('profile-cuisine_type');
-        const phoneInput = document.getElementById('profile-contact_phone');
-        const attentionScheduleInput = document.getElementById('profile-attention_schedule');
-        const emailInput = document.getElementById('profile-email');
-        const currentPassInput = document.getElementById('profile-current_password');
-        const newPassInput = document.getElementById('profile-new_password');
-        const confirmPassInput = document.getElementById('profile-new_password_confirmation');
-        
-        // --- Lógica de Validación en Tiempo Real ---
+    let originalValues = {};
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^\d{10}$/;
+    // Inputs específicos para validación
+    const addressInput = document.getElementById('profile-restaurant_address');
+    const cuisineInput = document.getElementById('profile-cuisine_type');
+    const phoneInput = document.getElementById('profile-contact_phone');
+    const attentionScheduleInput = document.getElementById('profile-attention_schedule');
+    const currentPassInput = document.getElementById('profile-current_password');
+    const newPassInput = document.getElementById('profile-new_password');
+    const confirmPassInput = document.getElementById('profile-new_password_confirmation');
+    
+    // --- Lógica del Nuevo Modal ---
+    const showProfileNotification = (title, message, isError = false) => {
+        notificationTitle.textContent = title;
+        notificationMessage.textContent = message;
+        notificationModal.classList.toggle('error', isError);
+        notificationModal.classList.toggle('success', !isError);
+        notificationModal.classList.add('active');
+    };
 
-        // Objeto con las funciones de validación
-        const validators = {
-            'profile-restaurant_address': (val) => val.length > 0 && val.length <= 200,
-            'profile-cuisine_type': (val) => val.length > 0 && val.length <= 50,
-            'profile-contact_phone': (val) => phoneRegex.test(val),
-            'profile-attention_schedule': (val) => val.length <= 255,
-            'profile-current_password': (val) => {
-                if (newPassInput.value.length === 0 && confirmPassInput.value.length === 0) return true;
-                return val.length > 0;
-            },
-            'profile-new_password': (val) => {
-                if (val.length === 0) return true;
-                return val.length >= 8;
-            },
-            'profile-new_password_confirmation': (val) => {
-                return val === newPassInput.value;
-            }
-        };
+    const closeProfileNotification = () => {
+        notificationModal.classList.remove('active');
+    };
 
-        const validateField = (input) => {
-            if (!input || typeof validators[input.id] !== 'function') return;
-            if (profileForm.classList.contains('view-mode')) return;
-
-            const isValid = validators[input.id](input.value);
-            input.classList.toggle('is-valid', isValid);
-            input.classList.toggle('is-invalid', !isValid);
-
-            if (input.id === 'profile-new_password') {
-                validateField(confirmPassInput);
-            }
-            if (input.id === 'profile-new_password' || input.id === 'profile-new_password_confirmation') {
-                validateField(currentPassInput);
-            }
-        };
-
-        const clearAllValidation = () => {
-            profileForm.querySelectorAll('input.is-valid, input.is-invalid').forEach(input => {
-                input.classList.remove('is-valid', 'is-invalid');
-            });
-            profileForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-        };
-        
-        // --- CAMBIO 1 ---
-        // Quitamos fullNameInput y emailInput de la validación en tiempo real
-        [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput].forEach(input => {
-            if (input) {
-                input.addEventListener('input', () => validateField(input));
+    if(notificationCloseBtn) {
+        notificationCloseBtn.addEventListener('click', closeProfileNotification);
+    }
+    if(notificationModal) {
+        notificationModal.addEventListener('click', (e) => {
+            if (e.target === notificationModal) {
+                closeProfileNotification();
             }
         });
+    }
 
-        // --- Lógica de Modo Edición/Vista ---
-        const setProfileEditMode = (isEditing) => {
+    // --- Lógica de Validación en Tiempo Real ---
+    const phoneRegex = /^\d{10}$/;
+
+    const validators = {
+        'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200,
+        'profile-cuisine_type': (val) => val.trim().length > 0 && val.length <= 50,
+        'profile-contact_phone': (val) => phoneRegex.test(val),
+        'profile-attention_schedule': (val) => val.length <= 255,
+        'profile-current_password': (val) => {
+            if (newPassInput.value.length === 0 && confirmPassInput.value.length === 0) return true;
+            return val.length > 0;
+        },
+        'profile-new_password': (val) => {
+            if (val.length === 0 && currentPassInput.value.length === 0) return true;
+            return val.length >= 8;
+        },
+        'profile-new_password_confirmation': (val) => {
+            return val === newPassInput.value;
+        }
+    };
+
+    const validateField = (input) => {
+        if (!input || typeof validators[input.id] !== 'function') return;
+        if (profileForm.classList.contains('view-mode')) return;
+
+        const isValid = validators[input.id](input.value);
+        input.classList.toggle('is-valid', isValid);
+        input.classList.toggle('is-invalid', !isValid);
+
+        if (input.id === 'profile-new_password') {
+            validateField(confirmPassInput);
+        }
+        if (input.id === 'profile-new_password' || input.id === 'profile-new_password_confirmation') {
+            validateField(currentPassInput);
+        }
+    };
+    
+    const clearAllValidation = () => {
+        profileForm.querySelectorAll('input.is-valid, input.is-invalid').forEach(input => {
+            input.classList.remove('is-valid', 'is-invalid');
+        });
+        profileForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    };
+    
+    [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput].forEach(input => {
+        if (input) {
+            input.addEventListener('input', () => validateField(input));
+        }
+    });
+
+    // --- Lógica de Modo Edición/Vista ---
+    const setProfileEditMode = (isEditing) => {
             profileForm.classList.toggle('view-mode', !isEditing);
             profileForm.classList.toggle('edit-mode', isEditing);
 
-            inputs.forEach(input => {
-                // --- CAMBIO 2 ---
-                // Añadimos una condición para que nombre y email SIEMPRE sean readonly
-                if (input.id === 'profile-full_name' || input.id === 'profile-email') {
-                    input.readOnly = true;
-                } else {
-                    input.readOnly = !isEditing;
-                }
-                // --- FIN DEL CAMBIO ---
+            const formElements = profileForm.querySelectorAll('input:not([type="password"]), select');
 
+            formElements.forEach(el => {
+                // Campos que nunca cambian
+                if (el.id === 'profile-full_name' || el.id === 'profile-email') {
+                    el.readOnly = true;
+                    return; // Continuamos al siguiente elemento
+                }
+                
+                // Lógica para el SELECT
+                if (el.tagName === 'SELECT') {
+                    el.disabled = !isEditing; // Lo habilitamos o deshabilitamos
+                    el.classList.toggle('form-control-plaintext', !isEditing); // Cambiamos su apariencia
+                } 
+                // Lógica para los INPUTS
+                else {
+                    el.readOnly = !isEditing;
+                }
+
+                // Guardamos valores originales al entrar en modo edición
                 if (isEditing) {
-                    originalValues[input.name] = input.value;
-                    // Validamos solo los campos que SÍ son editables
-                    if (input.id !== 'profile-full_name' && input.id !== 'profile-email') {
-                        validateField(input);
-                    }
+                    originalValues[el.name] = el.value;
+                    validateField(el); // Validamos el campo al entrar a editar
                 }
             });
             
+            // Campos de contraseña
             [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
                 if(input) input.disabled = !isEditing;
             });
 
+            // Limpiamos todo al salir del modo edición
             if (!isEditing) {
                 clearAllValidation();
                 [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
@@ -442,66 +473,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            viewModeBtns.forEach(btn => btn.style.display = isEditing ? 'none' : 'inline-block');
+            // Mostramos/ocultamos los botones correspondientes
+            viewModeBtns.forEach(btn => btn.style.display = !isEditing ? 'inline-block' : 'none');
             editModeBtns.forEach(btn => btn.style.display = isEditing ? 'inline-block' : 'none');
             editModeFields.forEach(field => field.style.display = isEditing ? 'block' : 'none');
         };
 
-        const editBtn = document.getElementById('edit-profile-btn');
-        if(editBtn) {
-            editBtn.addEventListener('click', () => setProfileEditMode(true));
-        }
+    const editBtn = document.getElementById('edit-profile-btn');
+    if(editBtn) editBtn.addEventListener('click', () => setProfileEditMode(true));
 
-        const cancelBtn = document.getElementById('cancel-profile-btn');
-        if(cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                inputs.forEach(input => {
-                    if (originalValues[input.name] !== undefined) {
-                        input.value = originalValues[input.name];
-                    }
-                });
-                setProfileEditMode(false);
-            });
-        }
-
-        // --- Lógica de Envío (Submit) ---
-        profileForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            let isFormValid = true;
-            
-            // --- CAMBIO 3 ---
-            // Quitamos fullNameInput y emailInput de la validación final antes de enviar
-            const allInputsToValidate = [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput];
-            
-            allInputsToValidate.forEach(input => {
-                if (input) {
-                    validateField(input);
-                    if (input.classList.contains('is-invalid')) {
-                        isFormValid = false;
-                    }
+    const cancelBtn = document.getElementById('cancel-profile-btn');
+    if(cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            inputs.forEach(input => {
+                if (originalValues[input.name] !== undefined) {
+                    input.value = originalValues[input.name];
                 }
             });
+            setProfileEditMode(false);
+        });
+    }
 
-            if (!isFormValid) {
-                profileNotificationMessage.textContent = 'Por favor, corrige los campos marcados en rojo.';
-                profileNotification.className = 'notification error show';
-                profileNotification.style.display = 'block';
-                setTimeout(() => profileNotification.classList.remove('show'), 3000);
-                return;
+    // --- Lógica de Envío (Submit) ---
+    profileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let isFormValid = true;
+        const allInputsToValidate = [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput];
+        
+        allInputsToValidate.forEach(input => {
+            if (input) {
+                validateField(input);
+                if (input.classList.contains('is-invalid')) {
+                    isFormValid = false;
+                }
             }
-            
-            const formData = new FormData(this);
-            const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-            profileNotification.style.display = 'none';
-            clearAllValidation();
+        });
 
-            // --- CAMBIO 4 (Opcional pero bueno) ---
-            // Evitamos enviar los campos no editables al backend.
-            // Aunque el backend no debería procesarlos, es más limpio.
-            // formData.delete('full_name'); // Descomenta si tu backend falla al recibir campos que no espera actualizar
-            // formData.delete('email');     // Descomenta si tu backend falla
-            
+        if (!isFormValid) {
+            showProfileNotification('Formulario incompleto', 'Por favor, corrige los campos marcados en rojo.', true);
+            return;
+        }
+        
+        const formData = new FormData(this);
+        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+        clearAllValidation();
+
+            formData.append('_method', 'PUT');
 
             fetch('{{ route("restaurante.perfil.update") }}', {
                 method: 'POST',
@@ -511,68 +529,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Accept': 'application/json',
                 }
             })
-            .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
-            .then(data => {
-                // Éxito
-                Object.keys(data).forEach(key => {
-                    const input = profileForm.querySelector(`[name="${key}"]`);
-                    if (input) input.value = data[key];
-                });
-                setProfileEditMode(false);
-                
-                profileNotificationMessage.textContent = 'Perfil actualizado con éxito.';
-                profileNotification.className = 'notification success show';
-                profileNotification.style.display = 'block';
-                setTimeout(() => profileNotification.classList.remove('show'), 3000);
-
-                // Actualizar dropdown (esto ya no es necesario para nombre/email si no cambian, pero lo dejamos)
-                const profileNameDropdown = document.getElementById('profile-name');
-                if (profileNameDropdown && data.full_name) {
-                    profileNameDropdown.textContent = data.full_name;
-                    const profilePic = document.getElementById('profile-pic');
-                    if (profilePic) {
-                        profilePic.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.full_name)}&background=FF6347&color=fff&bold=true`;
-                    }
-                }
-                const profileEmailDropdown = document.getElementById('profile-email');
-                if (profileEmailDropdown && data.email) {
-                    profileEmailDropdown.textContent = data.email;
-                }
-            })
-            .catch(error => {
-                // Error de servidor (validación, etc.)
-                clearAllValidation(); 
-
-                if (error.errors) {
-                    for (const key in error.errors) {
-                        let inputId = `profile-${key}`;
-                        if (key === 'new_password_confirmation') inputId = `profile-new_password_confirmation`;
-                        
-                        const input = document.getElementById(inputId);
-                        const errorContainer = input ? input.closest('.form-group').querySelector('.error-message') : null;
-
-                        if (input) input.classList.add('is-invalid');
-
-                        if (errorContainer) {
-                            errorContainer.textContent = error.errors[key][0];
-                        } else {
-                            profileNotificationMessage.textContent = `Error: ${error.errors[key][0]}`;
-                            profileNotification.className = 'notification error show';
-                            profileNotification.style.display = 'block';
-                            setTimeout(() => profileNotification.classList.remove('show'), 5000);
-                        }
-                    }
-                } else {
-                    profileNotificationMessage.textContent = 'Ocurrió un error inesperado.';
-                    profileNotification.className = 'notification error show';
-                    profileNotification.style.display = 'block';
-                    setTimeout(() => profileNotification.classList.remove('show'), 5000);
-                }
+        .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
+        .then(data => {
+            Object.keys(data).forEach(key => {
+                const input = profileForm.querySelector(`[name="${key}"]`);
+                if (input) input.value = data[key];
             });
-        });
+            setProfileEditMode(false);
+            showProfileNotification('¡Éxito!', 'Tu perfil se ha actualizado correctamente.');
+        })
+        .catch(error => {
+            clearAllValidation(); 
+            if (error.errors) {
+                let firstErrorMessage = 'Por favor, revisa los errores en el formulario.';
+                let firstErrorFound = false;
+                
+                for (const key in error.errors) {
+                    if (!firstErrorFound) {
+                        firstErrorMessage = error.errors[key][0];
+                        firstErrorFound = true;
+                    }
+                    
+                    let inputId = `profile-${key}`;
+                    if (key === 'new_password_confirmation') inputId = `profile-new_password_confirmation`;
+                    
+                    const input = document.getElementById(inputId);
+                    const errorContainer = input ? input.closest('.form-group').querySelector('.error-message') : null;
 
-        setProfileEditMode(false);
-    };
+                    if (input) input.classList.add('is-invalid');
+
+                    if (errorContainer) {
+                        errorContainer.textContent = error.errors[key][0];
+                    }
+                }
+                 showProfileNotification('Error de validación', firstErrorMessage, true);
+            } else {
+                showProfileNotification('Error inesperado', 'Ocurrió un problema al guardar los datos. Inténtalo de nuevo.', true);
+            }
+        });
+    });
+
+    setProfileEditMode(false);
+};
     // --- MODIFICACIÓN EN LA NAVEGACIÓN PRINCIPAL ---
     // Asegúrate de que tu lógica de navegación llame a initializeProfileSection
     // después de cargar el contenido de perfil vía AJAX.

@@ -394,6 +394,16 @@
         </div>
     </div>
 
+    <div class="profile-notification-modal-overlay" id="profile-notification-modal">
+        <div class="modal-box">
+            <h2 id="profile-notification-title"></h2>
+            <p id="profile-notification-message"></p>
+            <div class="modal-buttons">
+                <button class="btn-confirm" id="profile-notification-close-btn">Entendido</button>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('js/dashboard.js') }}"></script>
 </body>
 </html>

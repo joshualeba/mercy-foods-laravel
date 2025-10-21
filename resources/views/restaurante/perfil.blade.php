@@ -1,12 +1,6 @@
 <div class="profile-section-container">
     <h1>Perfil del local</h1>
 
-    {{-- Notificación flotante para éxito/error general --}}
-    <div class="notification" id="profile-notification" style="display: none;">
-        <span id="profile-notification-message"></span>
-        <button onclick="this.parentElement.style.display='none';">&times;</button>
-    </div>
-
     <form id="profile-form" class="profile-form view-mode" novalidate>
         @csrf
         @method('PUT')
@@ -31,8 +25,18 @@
                 {{-- Tipo de cocina --}}
                 <div class="form-group">
                     <label for="profile-cuisine_type">Tipo de cocina</label>
-                    <input type="text" id="profile-cuisine_type" name="cuisine_type" value="{{ $user->cuisine_type }}" required maxlength="50" readonly>
-                    <small class="form-hint edit-mode-field" style="display: none;">Requerido. Máximo 50 caracteres.</small>
+                    <select id="profile_cuisine_type" name="cuisine_type" required>
+                        @php
+                            $opciones = ['mexicana', 'italiana', 'japonesa', 'americana', 'cafeteria', 'otro'];
+                        @endphp
+                        <option value="" disabled {{ !$user->cuisine_type ? 'selected' : '' }}>Selecciona una categoría</option>
+                        @foreach ($opciones as $opcion)
+                            <option value="{{ $opcion }}" {{ $user->cuisine_type == $opcion ? 'selected' : '' }}>
+                                {{ ucfirst($opcion) }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <small class="form-hint edit-mode-field" style="display: none;">Requerido. Selecciona una categoría.</small>
                     <small class="error-message"></small>
                 </div>
                 {{-- Teléfono --}}

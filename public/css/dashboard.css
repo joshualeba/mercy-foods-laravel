@@ -1323,3 +1323,158 @@ input:checked + .switch-slider:before {
 [data-theme="dark"] .profile-form.edit-mode .form-group input#profile-email {
      color: var(--text-color-dark);
 }
+
+/* ============================================= */
+/* === NUEVOS ESTILOS PARA MODAL DE ERROR Y VALIDACIÓN === */
+/* ============================================= */
+
+/* --- Variables de color para validación --- */
+:root {
+    --color-success: #28a745;
+    --color-danger: #dc3545;
+    --color-success-shadow: rgba(40, 167, 69, 0.3);
+    --color-danger-shadow: rgba(220, 53, 69, 0.3);
+}
+
+/* --- Modal de Notificación de Perfil (Error/Éxito) --- */
+.profile-notification-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 3000; /* Más alto para superponerse a otros modales si es necesario */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.profile-notification-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.profile-notification-modal-overlay .modal-box {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px B30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease, background-color 0.3s;
+    border: 1px solid var(--border-color);
+}
+
+.profile-notification-modal-overlay.active .modal-box {
+    transform: scale(1);
+}
+
+.profile-notification-modal-overlay .modal-box h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--text-color-dark);
+}
+
+/* Colores dinámicos para el título */
+.profile-notification-modal-overlay.error .modal-box h2 {
+    color: var(--color-danger);
+}
+
+.profile-notification-modal-overlay.success .modal-box h2 {
+    color: var(--color-success);
+}
+
+.profile-notification-modal-overlay .modal-box p {
+    margin-bottom: 2rem;
+    color: var(--text-color-light);
+    line-height: 1.6;
+}
+
+.profile-notification-modal-overlay .modal-buttons button {
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-notification-modal-overlay .btn-confirm {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.profile-notification-modal-overlay .btn-confirm:hover {
+    background-color: #e55337;
+}
+
+
+/* --- Bordes de validación para Inputs en Modo Edición --- */
+.profile-form.edit-mode .form-group input:not([readonly]).is-valid {
+    border-color: var(--color-success);
+    box-shadow: 0 0 8px var(--color-success-shadow);
+}
+
+.profile-form.edit-mode .form-group input:not([readonly]).is-invalid {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 8px var(--color-danger-shadow);
+}
+
+/* === ESTILOS MEJORADOS PARA FORMULARIO DE PERFIL === */
+
+/* Unificamos el estilo para inputs y selects */
+.profile-form .form-group input,
+.profile-form .form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--card-bg);
+    color: var(--text-color-dark);
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, padding 0.3s;
+    -webkit-appearance: none; /* Elimina estilos por defecto del navegador */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Flecha personalizada para el select (solo visible si NO es modo texto) */
+.profile-form .form-group select:not(.form-control-plaintext) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='var(--text-color-light)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+}
+
+/* Estilo para modo vista (parece texto normal) */
+.profile-form .form-control-plaintext {
+    background-color: transparent !important;
+    border-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    cursor: default;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Nos aseguramos que la validación también aplique al select */
+.profile-form.edit-mode .form-group select.is-valid,
+.profile-form.edit-mode .form-group input:not([readonly]).is-valid {
+    border-color: var(--color-success);
+    box-shadow: 0 0 8px var(--color-success-shadow);
+}
+
+.profile-form.edit-mode .form-group select.is-invalid,
+.profile-form.edit-mode .form-group input:not([readonly]).is-invalid {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 8px var(--color-danger-shadow);
+}
