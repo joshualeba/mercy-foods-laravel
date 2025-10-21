@@ -38,7 +38,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                     <span>Mi menú</span>
                 </a></li>
-                <li><a href="{{ route('perfil.index') }}" class="nav-link" data-section="perfil">
+                <li><a href="#perfil" class="nav-link" data-section="perfil">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     <span>Perfil del local</span>
                 </a></li>
@@ -71,7 +71,7 @@
                                 <h4>{{ Auth::user()->full_name }}</h4>
                                 <p>{{ Auth::user()->email }}</p>
                             </div>
-                            <a href="{{ route('perfil.index') }}" class="dropdown-item nav-link" data-section="perfil">
+                            <a href="#perfil" class="dropdown-item nav-link" data-section="perfil">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 <span>Ver perfil</span>
                             </a>
@@ -137,24 +137,6 @@
                             <div class="stat-card-footer">
                                 <a href="#" class="card-link">
                                     <span>Ver estadísticas</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon icon-perfil">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                </div>
-                                <div class="stat-card-content">
-                                    <p>Tu Perfil</p>
-                                    <h3>Completo</h3>
-                                </div>
-                            </div>
-                            <div class="stat-card-footer">
-                                <a href="#perfil" class="card-link nav-link" data-section="perfil">
-                                    <span>Editar información</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 </a>
                             </div>

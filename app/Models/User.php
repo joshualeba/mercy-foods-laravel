@@ -14,19 +14,15 @@ class User extends Authenticatable
      * Los atributos que se pueden asignar de forma masiva.
      */
     protected $fillable = [
-        'full_name',
-        'restaurant_name',
-        'email',
-        'password',
-        'role',
-        'restaurant_address',
-        'restaurant_description',
-        'cuisine_type',
-        'opening_hours',
-        'contact_phone',
-        'vehicle_type',
-        'profile_image_url',
-    ];
+         'full_name',
+         'email',
+         'password',
+         'role',
+         'restaurant_address',
+         'cuisine_type',
+         'contact_phone',
+         'vehicle_type',
+     ];
 
     /**
      * Los atributos que deben ocultarse.
