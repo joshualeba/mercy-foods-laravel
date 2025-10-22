@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1>Elige tu próximo platillo</h1>
-        <p>Explora los menús de los restaurantes locales disponibles para ti.</p>
+        <p>Explora los menús de los restaurantes locales disponibles para ti</p>
     </div>
 </div>
 
@@ -58,26 +58,33 @@
         <button type="button" class="close-modal-btn" id="close-filter-modal-btn">&times;</button>
         <h2>Filtrar Resultados</h2>
         <form id="filter-form">
+            
+            {{-- CAMBIO 1: Slider de precio máximo --}}
             <div class="input-group-modal">
-                <label>Rango de Precio</label>
-                <div class="price-range-inputs">
-                    <input type="number" id="min-price" placeholder="Mínimo" min="0">
-                    <span>-</span>
-                    <input type="number" id="max-price" placeholder="Máximo" min="0">
+                <label for="price-slider">Precio máximo</label>
+                <div class="price-slider-container">
+                    <div id="price-slider"></div>
+                    <div id="price-slider-value" style="margin-top: 10px; text-align: center; font-weight: 500;"></div>
                 </div>
             </div>
+            
+            {{-- CAMBIO 2: Lista desplegable para tipo de cocina --}}
             @if($tiposCocina->isNotEmpty())
                 <div class="input-group-modal">
-                    <label>Tipo de Cocina</label>
-                    <div class="checkbox-group">
-                        @foreach($tiposCocina as $tipo)
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="cuisine_type" value="{{ $tipo }}"> {{ ucfirst($tipo) }}
-                            </label>
-                        @endforeach
-                    </div>
+                    <label for="cuisine-type-select">Tipo de Cocina</label>
+                    <select id="cuisine-type-select" name="cuisine_type">
+                        <option value="">Cualquier tipo</option>
+                        {{-- Opciones tomadas de tu formulario de registro --}}
+                        <option value="mexicana">Mexicana</option>
+                        <option value="italiana">Italiana</option>
+                        <option value="japonesa">Japonesa</option>
+                        <option value="americana">Americana</option>
+                        <option value="cafeteria">Cafetería</option>
+                        <option value="otro">Otro</option>
+                    </select>
                 </div>
             @endif
+
             <div class="modal-buttons">
                 <button type="button" class="btn-cancel" id="clear-filters-btn">Limpiar</button>
                 <button type="button" class="btn-confirm" id="apply-filters-btn">Aplicar</button>
