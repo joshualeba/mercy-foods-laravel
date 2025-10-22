@@ -5,45 +5,83 @@
     </div>
 </div>
 
-<div class="content-placeholder">
-    @php
-        $hayPlatillos = false;
-        foreach ($restaurantes as $restaurante) {
-            if ($restaurante->platillos->isNotEmpty()) {
-                $hayPlatillos = true;
-                break;
-            }
-        }
-    @endphp
+<div class="search-filter-container">
+    <div class="search-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="search-input" placeholder="Buscar por platillo, restaurante o descripción...">
+    </div>
+    <button class="btn btn-primary" id="open-filter-modal-btn">Filtros</button>
+</div>
 
-    @if(!$hayPlatillos)
+<div class="content-placeholder">
+    @if($platillos->isEmpty())
         <div class="text-center p-5">
             <p>No hay platillos disponibles en este momento. ¡Vuelve a intentarlo más tarde!</p>
         </div>
     @else
-        <div class="platillo-grid">
-            @foreach($restaurantes as $restaurante)
-                @foreach($restaurante->platillos as $platillo)
-                    <div class="platillo-card">
-                        <div style="padding: 1rem 1rem 0 1rem; text-align: center; font-weight: 600; color: var(--text-color-light);">
-                            {{ $restaurante->full_name }}
-                        </div>
-                        <div class="platillo-card-image">
-                            <img src="{{ $platillo->imagen_url }}" alt="Imagen de {{ $platillo->nombre }}">
-                        </div>
-                        <div class="platillo-card-content">
-                            <h3>{{ $platillo->nombre }}</h3>
-                            <p>{{ $platillo->descripcion }}</p>
-                            <div class="platillo-card-footer">
-                                <span class="platillo-card-price">${{ number_format($platillo->precio, 2) }}</span>
-                            </div>
-                        </div>
-                        <div class="platillo-card-actions">
-                            <button class="btn btn-primary btn-sm" style="width: 100%;">Ordenar</button>
+        <div class="platillo-grid" id="platillos-container">
+            @foreach($platillos as $platillo)
+                <div class="platillo-card"
+                     data-nombre="{{ strtolower($platillo->nombre) }}"
+                     data-descripcion="{{ strtolower($platillo->descripcion) }}"
+                     data-restaurante="{{ strtolower($platillo->user->full_name) }}"
+                     data-precio="{{ $platillo->precio }}"
+                     data-cocina="{{ $platillo->user->cuisine_type }}">
+                    
+                    <div style="padding: 1rem 1rem 0 1rem; text-align: center; font-weight: 600; color: var(--text-color-light);">
+                        {{ $platillo->user->full_name }}
+                    </div>
+                    <div class="platillo-card-image">
+                        <img src="{{ $platillo->imagen_url }}" alt="Imagen de {{ $platillo->nombre }}">
+                    </div>
+                    <div class="platillo-card-content">
+                        <h3>{{ $platillo->nombre }}</h3>
+                        <p>{{ $platillo->descripcion }}</p>
+                        <div class="platillo-card-footer">
+                            <span class="platillo-card-price">${{ number_format($platillo->precio, 2) }}</span>
                         </div>
                     </div>
-                @endforeach
+                    <div class="platillo-card-actions">
+                        <button class="btn btn-primary btn-sm" style="width: 100%;">Ordenar</button>
+                    </div>
+                </div>
             @endforeach
         </div>
+        <div id="no-results-message" class="no-results-message" style="display: none;">
+            <p>No se encontraron platillos que coincidan con tu búsqueda o filtros.</p>
+        </div>
     @endif
+</div>
+
+<div class="confirmation-modal-overlay" id="filter-modal">
+    <div class="modal-box">
+        <button type="button" class="close-modal-btn" id="close-filter-modal-btn">&times;</button>
+        <h2>Filtrar Resultados</h2>
+        <form id="filter-form">
+            <div class="input-group-modal">
+                <label>Rango de Precio</label>
+                <div class="price-range-inputs">
+                    <input type="number" id="min-price" placeholder="Mínimo" min="0">
+                    <span>-</span>
+                    <input type="number" id="max-price" placeholder="Máximo" min="0">
+                </div>
+            </div>
+            @if($tiposCocina->isNotEmpty())
+                <div class="input-group-modal">
+                    <label>Tipo de Cocina</label>
+                    <div class="checkbox-group">
+                        @foreach($tiposCocina as $tipo)
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="cuisine_type" value="{{ $tipo }}"> {{ ucfirst($tipo) }}
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" id="clear-filters-btn">Limpiar</button>
+                <button type="button" class="btn-confirm" id="apply-filters-btn">Aplicar</button>
+            </div>
+        </form>
+    </div>
 </div>

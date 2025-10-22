@@ -9,30 +9,30 @@ use Illuminate\Support\Facades\Storage;
 
 class ClienteController extends Controller
 {
-    /**
-     * Muestra los restaurantes y sus platillos disponibles.
-     */
     public function index()
     {
-        // Obtenemos todos los usuarios que son restaurantes
-        // y cargamos sus platillos que están marcados como "disponibles".
-        $restaurantes = User::where('role', 'restaurante')
-                            ->with(['platillos' => function ($query) {
-                                $query->where('disponible', true);
-                            }])
+        // Obtenemos todos los platillos que están disponibles y cargamos la información de su restaurante (usuario)
+        $platillos = Platillo::where('disponible', true)
+                            ->with('user') // Carga la relación con el restaurante
                             ->get();
 
-        // Ajustamos las URLs de las imágenes para que se muestren correctamente
-        $restaurantes->each(function ($restaurante) {
-            $restaurante->platillos->each(function ($platillo) {
-                if ($platillo->imagen_url) {
-                    $platillo->imagen_url = Storage::url($platillo->imagen_url);
-                }
-            });
+        // Obtenemos una lista única de los tipos de cocina de los restaurantes que tienen platillos
+        $tiposCocina = User::where('role', 'restaurante')
+                            ->whereHas('platillos', function ($query) {
+                                $query->where('disponible', true);
+                            })
+                            ->pluck('cuisine_type')
+                            ->unique()
+                            ->filter(); // Elimina valores nulos o vacíos
+
+        // Ajustamos las URLs de las imágenes
+        $platillos->each(function ($platillo) {
+            if ($platillo->imagen_url) {
+                $platillo->imagen_url = Storage::url($platillo->imagen_url);
+            }
         });
 
-        // Pasamos los datos a una nueva vista que crearemos a continuación
-        return view('cliente.ordenar', compact('restaurantes'));
+        return view('cliente.ordenar', compact('platillos', 'tiposCocina'));
     }
 
     /**
