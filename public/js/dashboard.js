@@ -25,43 +25,65 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     // --- NAVEGACIÓN PRINCIPAL DEL DASHBOARD ---
-    document.querySelectorAll('.nav-link').forEach(link => {
+    const mainContentInner = document.querySelector('.main-content-inner');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            
             const url = this.getAttribute('href');
             const sectionId = this.getAttribute('data-section');
-            document.querySelectorAll('.nav-link').forEach(navLink => navLink.classList.toggle('active', navLink.getAttribute('data-section') === sectionId));
+            const ajaxWrapper = document.getElementById('ajax-content-wrapper');
 
+            // 1. Actualiza el enlace activo en el menú
+            navLinks.forEach(navLink => navLink.classList.remove('active'));
+            this.classList.add('active');
+
+            // 2. Decide si es un enlace local (#) o una carga AJAX
             if (url.startsWith('#')) {
-                mainContentContainer.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
-                const ajaxWrapper = document.getElementById('ajax-content-wrapper');
-                if(ajaxWrapper) ajaxWrapper.innerHTML = "";
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) targetSection.classList.add('active');
+                // Oculta el contenedor AJAX si estaba visible
+                if (ajaxWrapper) ajaxWrapper.style.display = 'none';
+
+                // Muestra solo la sección estática correspondiente
+                mainContentInner.querySelectorAll('.dashboard-section').forEach(section => {
+                    section.style.display = (section.id === sectionId) ? 'block' : 'none';
+                });
+
             } else {
-                mainContentContainer.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
-                fetch(url)
-                    .then(response => response.text())
-                    .then(html => {
-                        let ajaxWrapper = document.getElementById('ajax-content-wrapper');
-                        if (!ajaxWrapper) {
-                            ajaxWrapper = document.createElement('div');
-                            ajaxWrapper.id = 'ajax-content-wrapper';
-                            mainContentContainer.appendChild(ajaxWrapper);
-                        }
-                        ajaxWrapper.innerHTML = html;
-                        const notification = document.querySelector('.notification.show');
-                            if (notification) {
-                                setTimeout(() => {
-                                    notification.classList.remove('show');
-                                }, 5000);
+                // Oculta todas las secciones estáticas
+                mainContentInner.querySelectorAll('.dashboard-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Muestra y carga el contenido en el contenedor AJAX
+                if (ajaxWrapper) {
+                    ajaxWrapper.innerHTML = '<div class="content-placeholder"><p>Cargando...</p></div>'; // Feedback visual
+                    ajaxWrapper.style.display = 'block';
+
+                    fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error en la respuesta del servidor.');
                             }
-                    })
-                    .catch(error => console.error('Error al cargar la sección:', error));
+                            return response.text();
+                        })
+                        .then(html => {
+                            ajaxWrapper.innerHTML = html;
+                            // Si el contenido cargado tiene scripts, los ejecutamos
+                            executeScripts(ajaxWrapper);
+                        })
+                        .catch(error => {
+                            console.error('Error al cargar la sección:', error);
+                            ajaxWrapper.innerHTML = '<div class="content-placeholder text-center"><p style="color: var(--color-danger);">Error al cargar el contenido. Intenta de nuevo.</p></div>';
+                        });
+                }
             }
 
-            if (window.innerWidth <= 991) document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('profile-dropdown')?.classList.remove('active');
+            // 3. Cierra el menú lateral en vista móvil
+            if (window.innerWidth <= 991) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
         });
     });
 

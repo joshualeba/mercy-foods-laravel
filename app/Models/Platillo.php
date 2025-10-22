@@ -14,4 +14,12 @@ class Platillo extends Model
         'imagen_url',
         'disponible',
     ];
+
+    /**
+     * Define la relación inversa: Un platillo pertenece a un usuario (restaurante).
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
