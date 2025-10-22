@@ -25,7 +25,7 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="#inicio" class="nav-link active" data-section="inicio">
+                <li><a href="{{ route('cliente.inicio') }}" class="nav-link active" data-section="inicio">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                     <span>Inicio</span>
                 </a></li>
@@ -48,7 +48,7 @@
             </div>
         </aside>
 
-        <main class="main-content">
+        <main class="main-content" id="main-content">
             <header class="topbar">
                 <button class="menu-toggle" id="menu-toggle">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -85,17 +85,6 @@
             </header>
 
             <div class="main-content-inner">
-                <section id="inicio" class="dashboard-section active">
-                    <div class="welcome-message">
-                        <h1>Bienvenido/a, {{ Auth::user()->full_name }}</h1>
-                        <p>Es un gusto tenerte de vuelta</p>
-                    </div>
-                    <div class="content-placeholder">
-                        <h2>Panel principal</h2>
-                        <p>Aquí irá un resumen de tus pedidos, restaurantes recomendados, etc.</p>
-                    </div>
-                </section>
-
                 <section id="pedidos" class="dashboard-section">
                     <h1>Mis pedidos</h1>
                     <div class="content-placeholder">
@@ -110,7 +99,9 @@
                     </div>
                 </section>
 
-                <div id="ajax-content-wrapper"></div>
+                <div id="ajax-content-wrapper">
+                    {!! $initialContent ?? '' !!}
+                </div>
             </div>
         </main>
     </div>

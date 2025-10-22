@@ -328,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dashboardContainer.addEventListener('click', function(e) {
             const addBtn = e.target.closest('#add-platillo-btn');
             const detailsBtn = e.target.closest('.btn-details');
+            const actionCard = e.target.closest('.action-card:not(.disabled)');
 
             if (addBtn) {
                 if (platilloModal) {
@@ -337,6 +338,14 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (detailsBtn) {
                 const platilloId = detailsBtn.dataset.id;
                 openDetailsModal(platilloId);
+            } else if (actionCard) {
+                const section = actionCard.dataset.section;
+                if (section) {
+                    const navLink = document.querySelector(`.nav-link[data-section="${section}"]`);
+                    if (navLink) {
+                        navLink.click();
+                    }
+                }
             }
         });
     }
@@ -797,5 +806,114 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
 });
+
+// Usamos MutationObserver para detectar cuándo se carga el contenido de "Ordenar"
+const orderSectionObserver = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        if (mutation.addedNodes.length) {
+            // Si el contenedor de platillos existe, inicializamos los filtros
+            if (document.getElementById('platillos-container')) {
+                initializeOrderSection();
+                // Una vez inicializado, ya no necesitamos observar
+                orderSectionObserver.disconnect();
+            }
+        }
+    }
+});
+
+// Observamos el contenedor principal donde se carga el contenido AJAX
+const ajaxContent = document.getElementById('ajax-content-wrapper');
+if (ajaxContent) {
+    orderSectionObserver.observe(ajaxContent, {
+        childList: true,
+        subtree: true
+    });
+}
+
+function initializeOrderSection() {
+    const searchInput = document.getElementById('search-input');
+    const platillosContainer = document.getElementById('platillos-container');
+    const allPlatilloCards = platillosContainer.querySelectorAll('.platillo-card');
+    const noResultsMessage = document.getElementById('no-results-message');
+
+    // --- Lógica del Modal ---
+    const filterModal = document.getElementById('filter-modal');
+    const openModalBtn = document.getElementById('open-filter-modal-btn');
+    const closeModalBtn = document.getElementById('close-filter-modal-btn');
+    const applyFiltersBtn = document.getElementById('apply-filters-btn');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+
+    if (openModalBtn) {
+        openModalBtn.addEventListener('click', () => filterModal.classList.add('active'));
+    }
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => filterModal.classList.remove('active'));
+    }
+    if (filterModal) {
+        filterModal.addEventListener('click', (e) => {
+            if (e.target === filterModal) filterModal.classList.remove('active');
+        });
+    }
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', () => {
+            applySearchAndFilters();
+            filterModal.classList.remove('active');
+        });
+    }
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            document.getElementById('filter-form').reset();
+            applySearchAndFilters();
+        });
+    }
+
+    // --- Lógica de Búsqueda y Filtro ---
+    const applySearchAndFilters = () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        // Obtener valores de los filtros
+        const minPrice = parseFloat(document.getElementById('min-price').value) || 0;
+        const maxPrice = parseFloat(document.getElementById('max-price').value) || Infinity;
+        const selectedCuisines = Array.from(document.querySelectorAll('input[name="cuisine_type"]:checked'))
+                                      .map(cb => cb.value);
+
+        let visibleCount = 0;
+
+        allPlatilloCards.forEach(card => {
+            const nombre = card.dataset.nombre;
+            const descripcion = card.dataset.descripcion;
+            const restaurante = card.dataset.restaurante;
+            const precio = parseFloat(card.dataset.precio);
+            const cocina = card.dataset.cocina;
+
+            // 1. Comprobar búsqueda
+            const matchesSearch = searchTerm === '' || 
+                                  nombre.includes(searchTerm) || 
+                                  descripcion.includes(searchTerm) || 
+                                  restaurante.includes(searchTerm);
+
+            // 2. Comprobar precio
+            const matchesPrice = precio >= minPrice && precio <= maxPrice;
+
+            // 3. Comprobar tipo de cocina
+            const matchesCuisine = selectedCuisines.length === 0 || selectedCuisines.includes(cocina);
+
+            // Mostrar la tarjeta solo si cumple todas las condiciones
+            if (matchesSearch && matchesPrice && matchesCuisine) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Mostrar u ocultar el mensaje de "no hay resultados"
+        noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+    };
+
+    // Event listener para la búsqueda en tiempo real
+    if (searchInput) {
+        searchInput.addEventListener('input', applySearchAndFilters);
+    }
+}

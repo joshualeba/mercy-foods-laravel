@@ -5,7 +5,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlatilloController;
 use App\Http\Controllers\RestauranteProfileController;
-
+use App\Http\Controllers\ClienteController;
 
 Route::get('/', function () {
     return view('index');
@@ -30,9 +30,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/cliente-dashboard', function () {
-        return view('cliente-dashboard', ['user' => Auth::user()]);
-    });
+    Route::get('/cliente-dashboard', [ClienteController::class, 'dashboard'])->name('cliente.dashboard');
 
     Route::get('/restaurante-dashboard', function () {
         return view('restaurante-dashboard');
@@ -44,6 +42,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Rutas para Platillos (ya existentes)
     Route::resource('platillos', PlatilloController::class)->except(['create', 'edit']); // Ajustado para API RESTful
+
+    Route::get('/inicio', [ClienteController::class, 'inicio'])->name('cliente.inicio');
+    Route::get('/ordenar', [ClienteController::class, 'index'])->name('cliente.restaurantes');
 
     // RUTAS PARA EL PERFIL DEL RESTAURANTE ---
     Route::get('/perfil-restaurante', [RestauranteProfileController::class, 'index'])->name('restaurante.perfil.index');
