@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http-Controllers\Cliente;
-
-use App\Http-Controllers\Controller;
+namespace App\Http\Controllers\Cliente;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Platillo;
 use App\Models\User;
@@ -11,37 +10,40 @@ class RestaurantController extends Controller
 {
     public function index(Request $request)
     {
-        $tiposDeComida = Platillo::select('tipo_comida')
-            ->whereNotNull('tipo_comida')
+        // Obtener todos los tipos de cocina de los restaurantes registrados
+        $tiposDeCocina = User::where('role', 'restaurante')
+            ->whereNotNull('cuisine_type')
             ->distinct()
-            ->orderBy('tipo_comida')
-            ->pluck('tipo_comida');
+            ->orderBy('cuisine_type')
+            ->pluck('cuisine_type');
 
-        // Empezamos la consulta desde los Platillos disponibles
-        $query = Platillo::with('user') // <- ¡CAMBIO CLAVE! Cargamos la relación aquí
+        // Consulta para obtener los platillos
+        $query = Platillo::with('user')
             ->where('disponible', true)
             ->whereHas('user', function ($q) {
                 $q->where('role', 'restaurante');
             });
 
-        // Filtro 1: Búsqueda por término general
+        // Filtro por término de búsqueda
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('nombre', 'like', "%{$searchTerm}%")
-                  ->orWhere('descripcion', 'like', "%{$searchTerm}%")
-                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
-                      $userQuery->where('full_name', 'like', "%{$searchTerm}%");
-                  });
+                ->orWhere('descripcion', 'like', "%{$searchTerm}%")
+                ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                    $userQuery->where('full_name', 'like', "%{$searchTerm}%");
+                });
             });
         }
 
-        // Filtro 2: Por tipo de comida
+        // Filtro por tipo de cocina
         if ($request->filled('tipo_comida')) {
-            $query->where('tipo_comida', $request->input('tipo_comida'));
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('cuisine_type', $request->input('tipo_comida'));
+            });
         }
 
-        // Filtro 3: Por rango de precio
+        // Filtro por rango de precio
         if ($request->filled('min_precio')) {
             $query->where('precio', '>=', $request->input('min_precio'));
         }
@@ -49,17 +51,19 @@ class RestaurantController extends Controller
             $query->where('precio', '<=', $request->input('max_precio'));
         }
 
-        // Ordenamos los resultados por el nombre del restaurante y luego por el nombre del platillo
+        // Ordenar resultados
         $platillos = $query->join('users', 'platillos.user_id', '=', 'users.id')
                             ->orderBy('users.full_name', 'asc')
                             ->orderBy('platillos.nombre', 'asc')
-                            ->select('platillos.*') // Seleccionamos solo las columnas de platillos para evitar conflictos
+                            ->select('platillos.*')
                             ->get();
 
+        // Respuesta para peticiones AJAX
         if ($request->ajax()) {
             return view('cliente.partials.lista-platillos', compact('platillos'))->render();
         }
 
-        return view('cliente.restaurantes', compact('platillos', 'tiposDeComida'));
+        // Respuesta para la carga inicial de la página
+        return view('cliente.restaurantes', compact('platillos', 'tiposDeCocina'));
     }
 }
