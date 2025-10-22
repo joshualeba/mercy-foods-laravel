@@ -5,7 +5,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlatilloController;
 use App\Http\Controllers\RestauranteProfileController;
-use App\Http\Controllers\Cliente\RestaurantController;
+
 
 Route::get('/', function () {
     return view('index');
@@ -48,9 +48,6 @@ Route::middleware(['auth'])->group(function () {
     // RUTAS PARA EL PERFIL DEL RESTAURANTE ---
     Route::get('/perfil-restaurante', [RestauranteProfileController::class, 'index'])->name('restaurante.perfil.index');
     Route::put('/perfil-restaurante', [RestauranteProfileController::class, 'update'])->name('restaurante.perfil.update');
-
-    // Ruta para la sección de restaurantes del cliente
-    Route::get('/restaurantes', [RestaurantController::class, 'index'])->name('cliente.restaurantes');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);
