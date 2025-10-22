@@ -415,7 +415,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Actualiza el enlace activo en el menú
             navLinks.forEach(navLink => navLink.classList.remove('active'));
-            this.classList.add('active');
+            const sidebarLink = document.querySelector(`#sidebar .nav-link[data-section="${sectionId}"]`);
+            if (sidebarLink) {
+                sidebarLink.classList.add('active');
+            }
 
             // Decide si es un enlace local (#) o una carga AJAX
             if (url.startsWith('#')) {
