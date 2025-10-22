@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const matchesCuisine = selectedCuisines.length === 0 || selectedCuisines.includes(cocina);
 
                 if (matchesSearch && matchesPrice && matchesCuisine) {
-                    card.style.display = 'flex'; // Usamos flex para mantener el layout
+                    card.style.display = 'flex';
                     visibleCount++;
                 } else {
                     card.style.display = 'none';
@@ -111,6 +111,8 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.addEventListener('input', applySearchAndFilters);
         }
     };
+
+    initializeOrderSection();
     
     // --- NAVEGACIÓN PRINCIPAL DEL DASHBOARD ---
     const navLinks = document.querySelectorAll('.nav-link');
@@ -145,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Muestra y carga el contenido en el contenedor AJAX
                 if (ajaxWrapper) {
-                    ajaxWrapper.innerHTML = '<div class="content-placeholder"><p>Cargando...</p></div>'; // Feedback visual
+                    ajaxWrapper.innerHTML = '<div class="content-placeholder"><p>Cargando...</p></div>';
                     ajaxWrapper.style.display = 'block';
 
                     fetch(url)
@@ -159,13 +161,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             ajaxWrapper.innerHTML = html;
                             executeScripts(ajaxWrapper);
 
-                            // AQUÍ ESTÁ LA MAGIA:
                             // Después de cargar el contenido, llamamos a la función que le da vida.
                             if (sectionId === 'ordenar') {
                                 initializeOrderSection();
                             }
-                            // Aquí podrías agregar más 'if' para otras secciones en el futuro
-                            // else if (sectionId === 'menu') { initializeMenuSection(); }
                         })
                         .catch(error => {
                             console.error('Error al cargar la sección:', error);
@@ -180,8 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    
     
     // --- MANEJO DE MODALES ---
 
