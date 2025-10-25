@@ -1,0 +1,121 @@
+<div class="profile-section-container">
+    <h1>Mi perfil</h1>
+
+    <form id="profile-form" action="{{ route('cliente.perfil.update') }}" class="profile-form view-mode" novalidate>
+        @csrf
+        @method('PUT')
+
+        <div class="profile-card">
+            <h2>Datos personales</h2>
+            <div class="profile-grid">
+                {{-- Nombre --}}
+                <div class="form-group span-2">
+                    <label for="profile-full_name">Nombre</label>
+                    <input type="text" id="profile-full_name" name="full_name" value="{{ $user->full_name }}" readonly>
+                </div>
+                {{-- Dirección --}}
+                <div class="form-group span-2">
+                    <label for="profile-address">Dirección de entrega</label>
+                    <input type="text" id="profile-address" name="address" value="{{ $user->address }}" maxlength="200" readonly>
+                    <small class="form-hint edit-mode-field" style="display: none;">Máximo 200 caracteres.</small>
+                    <small class="error-message"></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <h2>Datos de acceso</h2>
+            <div class="profile-grid">
+                {{-- Correo electrónico --}}
+                <div class="form-group span-2">
+                    <label for="profile-email">Correo electrónico</label>
+                    <input type="email" id="profile-email" name="email" value="{{ $user->email }}" readonly>
+                </div>
+            </div>
+
+            {{-- Campos para cambiar contraseña (ocultos en modo vista) --}}
+            <div class="password-change-fields edit-mode-field" style="display: none;">
+                <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
+
+                {{-- Contraseña actual --}}
+                <div class="form-group">
+                    <label for="profile-current_password">Contraseña actual</label>
+                    <div class="input-icon-wrapper">
+                        <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
+                        <i class="toggle-password fas fa-eye"></i>
+                    </div>
+                    <small class="error-message"></small>
+                </div>
+
+                {{-- Nueva contraseña --}}
+                <div class="form-group">
+                    <label for="profile-new_password">Nueva contraseña</label>
+                    <div class="input-icon-wrapper">
+                        <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
+                        <i class="toggle-password fas fa-eye"></i>
+                    </div>
+                    <small class="error-message"></small>
+                </div>
+
+                {{-- Confirmar nueva contraseña --}}
+                <div class="form-group">
+                    <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
+                    <div class="input-icon-wrapper">
+                        <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
+                        <i class="toggle-password fas fa-eye"></i>
+                    </div>
+                    <small class="error-message"></small>
+                </div>
+
+                {{-- Lista de Requisitos de Contraseña --}}
+                <div id="password-requirements">
+                    <ul class="password-checklist">
+                        <li id="length">8-25 caracteres</li>
+                        <li id="uppercase">Una mayúscula</li>
+                        <li id="special">Un caracter especial (!@#$%)</li>
+                    </ul>
+                </div>
+            </div>
+
+            {{-- Botones de acción --}}
+            <div class="profile-actions">
+                 <button type="button" class="btn btn-primary view-mode-btn" id="edit-profile-btn">Editar perfil</button>
+                 <button type="submit" class="btn btn-confirm edit-mode-btn" id="save-profile-btn" style="display:none;">Guardar cambios</button>
+                 <button type="button" class="btn btn-cancel edit-mode-btn" id="cancel-profile-btn" style="display:none;">Cancelar</button>
+            </div>
+    </form>
+</div>
+
+<div class="confirmation-modal-overlay" id="success-modal">
+    <div class="modal-box">
+        <div class="icon success">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>¡Éxito!</h2>
+        <p id="success-message">Tus cambios se han guardado correctamente.</p>
+        <div class="modal-buttons">
+            <button class="btn-confirm btn-modal-close">Aceptar</button>
+        </div>
+    </div>
+</div>
+
+<div class="confirmation-modal-overlay" id="error-modal">
+    <div class="modal-box">
+        <div class="icon error">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <h2>¡Oops! Hubo un error</h2>
+        <p id="error-message">No se pudieron guardar los cambios. Por favor, revisa los datos e intenta de nuevo.</p>
+        <div class="modal-buttons">
+            <button class="btn-confirm btn-modal-close">Entendido</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    if (typeof initializeProfileSection === 'function') {
+        initializeProfileSection();
+    } else {
+        console.error('La función initializeProfileSection no está definida en dashboard.js');
+    }
+</script>

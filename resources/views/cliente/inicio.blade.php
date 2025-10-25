@@ -6,7 +6,7 @@
 </div>
 
 @if($platillosSugeridos->isNotEmpty())
-    <h3 class="section-title">Sugerencias del día</h3>
+    <h3 class="section-title">Te sugerimos los siguientes platillos...</h3>
     <div class="platillo-grid">
         @foreach($platillosSugeridos as $platillo)
             <div class="platillo-card">

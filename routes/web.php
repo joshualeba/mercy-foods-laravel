@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlatilloController;
 use App\Http\Controllers\RestauranteProfileController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ClienteProfileController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     return view('index');
@@ -20,10 +22,6 @@ Route::get('/registro', function () {
 });
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::get('/restaurante-detalle', function () {
-    return view('restaurante-detalle');
-});
 
 // Rutas para procesar el formulario de login y registro
 Route::post('/login', [AuthController::class, 'login']);
@@ -49,6 +47,14 @@ Route::middleware(['auth'])->group(function () {
     // RUTAS PARA EL PERFIL DEL RESTAURANTE ---
     Route::get('/perfil-restaurante', [RestauranteProfileController::class, 'index'])->name('restaurante.perfil.index');
     Route::put('/perfil-restaurante', [RestauranteProfileController::class, 'update'])->name('restaurante.perfil.update');
+
+    // RUTAS PARA EL PERFIL DEL CLIENTE ---
+    Route::get('/perfil-cliente', [ClienteProfileController::class, 'index'])->name('cliente.perfil.index');
+    Route::put('/perfil-cliente', [ClienteProfileController::class, 'update'])->name('cliente.perfil.update');
+
+    // RUTAS PARA LA PASARELA DE PAGO ---
+    Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
+    Route::post('/procesar-pago', [PaymentController::class, 'process'])->name('cliente.pago.procesar');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);

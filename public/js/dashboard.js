@@ -15,6 +15,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const dashboardContainer = document.querySelector('.dashboard-container');
     const mainContentContainer = document.querySelector('.main-content-inner');
     const sidebar = document.getElementById('sidebar');
+    const successModal = document.getElementById('success-modal');
+    const errorModal = document.getElementById('error-modal');
+
+    const manageNotificationModal = (modal, message = null) => {
+        if (!modal) return;
+
+        const messageElement = modal.querySelector('p');
+        if (message && messageElement) {
+            messageElement.textContent = message;
+        }
+
+        modal.classList.add('active');
+
+        const closeButton = modal.querySelector('.btn-modal-close');
+        if (closeButton) {
+            closeButton.onclick = () => modal.classList.remove('active');
+        }
+
+        // Clic fuera para cerrar
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                modal.classList.remove('active');
+            }
+        });
+    };
 
     // --- FUNCIÓN PARA EJECUTAR SCRIPTS EN CONTENIDO AJAX ---
     const executeScripts = (container) => {
@@ -152,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let originalValues = {};
 
-        const addressInput = document.getElementById('profile-restaurant_address');
+        const addressInput = document.getElementById('profile-address') || document.getElementById('profile-restaurant_address');
         const cuisineInput = document.getElementById('profile-cuisine_type');
         const phoneInput = document.getElementById('profile-contact_phone');
         const attentionScheduleInput = document.getElementById('profile-attention_schedule');
@@ -186,7 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const phoneRegex = /^\d{10}$/;
 
         const validators = {
-            'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200,
+            'profile-address': (val) => val === null || val.length <= 200,
+            'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200, 
             'profile-cuisine_type': (val) => val.trim().length > 0 && val.length <= 50,
             'profile-contact_phone': (val) => phoneRegex.test(val),
             'profile-attention_schedule': (val) => val.length <= 255,
@@ -226,7 +252,9 @@ document.addEventListener('DOMContentLoaded', function() {
             profileForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
         };
         
-        [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput].forEach(input => {
+        [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput]
+        .filter(input => input)
+        .forEach(input => {
             if (input) {
                 input.addEventListener('input', () => validateField(input));
             }
@@ -401,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // =================================================================
-    // === NAVEGACIÓN PRINCIPAL DEL DASHBOARD (ÚNICA) ===
+    // === NAVEGACIÓN PRINCIPAL DEL DASHBOARD ===
     // =================================================================
     const navLinks = document.querySelectorAll('.nav-link');
 
@@ -456,11 +484,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             ajaxWrapper.innerHTML = html;
                             executeScripts(ajaxWrapper);
 
-                            // Después de cargar el contenido, inicializa la sección correspondiente
                             if (sectionId === 'ordenar') {
                                 initializeOrderSection();
                             } else if (sectionId === 'perfil') {
                                 initializeProfileSection();
+                            } else if (sectionId === 'pago') {
+                                initializePaymentSection();
                             }
                         })
                         .catch(error => {
@@ -840,3 +869,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// =================================================================
+// === INICIALIZADOR DE LA SECCIÓN DE PAGO =========================
+// =================================================================
+const initializePaymentSection = () => {
+    const paymentForm = document.getElementById('payment-form');
+    if (!paymentForm) return;
+
+    paymentForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const submitBtn = document.getElementById('submit-payment-btn');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Procesando...';
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json',
+            }
+        })
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(({ status, body }) => {
+            if (status >= 200 && status < 300) {
+                manageNotificationModal(successModal, body.message);
+            } else {
+                manageNotificationModal(errorModal, body.message || 'Ocurrió un error inesperado.');
+            }
+        })
+        .catch(error => {
+            console.error('Error en el fetch del pago:', error);
+            manageNotificationModal(errorModal, 'No se pudo conectar con el servidor.');
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        });
+    });
+};

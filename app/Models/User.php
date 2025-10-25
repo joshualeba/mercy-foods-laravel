@@ -22,6 +22,7 @@ class User extends Authenticatable
          'cuisine_type',
          'contact_phone',
          'vehicle_type',
+         'address',
      ];
 
     /**
