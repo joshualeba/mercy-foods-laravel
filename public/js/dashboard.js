@@ -751,6 +751,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const detailsBtn = e.target.closest('.btn-details');
             const actionCard = e.target.closest('.action-card:not(.disabled)');
 
+            // --- LISTENER DE CLICS PRINCIPAL Y DELEGADO ---
+            if (dashboardContainer) {
+                dashboardContainer.addEventListener('click', function(e) {
+                    const addPaymentBtn = e.target.closest('#add-payment-method-from-profile');
+                    if (addPaymentBtn) {
+                        const paymentNavLink = document.querySelector('.nav-link[data-section="pago"]');
+                        if (paymentNavLink) {
+                            paymentNavLink.click();
+                        }
+                    }
+                });
+            }
+
             if (addBtn) {
                 if (platilloModal) {
                     platilloModal.classList.add('active');
@@ -909,16 +922,35 @@ function showModal(title, message, isSuccess) {
 
 /**
  * Inicializa la lógica de la sección de métodos de pago,
- * incluyendo la validación del formulario.
+ * incluyendo la validación y el envío del formulario.
  */
 function initializePaymentSection() {
     const form = document.getElementById('payment-form');
     if (!form) return;
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Evitamos el envío por defecto
+    // Inicialización de Cleave.js para formatear los inputs
+    const cardNumberCleave = new Cleave('#card_number', {
+        creditCard: true,
+        delimiter: ' ',
+        onCreditCardTypeChanged: function (type) {
+            // Lógica para mostrar el logo de la tarjeta (opcional)
+        }
+    });
 
-        // === INICIO DE LA VALIDACIÓN ===
+    const cardExpiryCleave = new Cleave('#card_expiry', {
+        date: true,
+        datePattern: ['m', 'y']
+    });
+
+    const cardCvcCleave = new Cleave('#card_cvc', {
+        numericOnly: true,
+        blocks: [4]
+    });
+
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
         let isValid = true;
         const fields = [
             { id: 'card_name', name: 'nombre', min: 5, max: 50 },
@@ -929,7 +961,7 @@ function initializePaymentSection() {
 
         fields.forEach(fieldInfo => {
             const input = document.getElementById(fieldInfo.id);
-            const errorMessage = input.parentElement.querySelector('.error-message');
+            const errorMessageContainer = input.closest('.form-group').querySelector('.error-message');
             let message = '';
 
             if (!input.value.trim()) {
@@ -942,42 +974,64 @@ function initializePaymentSection() {
 
             if (message) {
                 isValid = false;
-                errorMessage.textContent = message;
+                errorMessageContainer.textContent = message;
                 input.classList.add('is-invalid');
             } else {
-                errorMessage.textContent = '';
+                errorMessageContainer.textContent = '';
                 input.classList.remove('is-invalid');
             }
         });
-        // === FIN DE LA VALIDACIÓN ===
 
         if (!isValid) {
-            // Si el formulario no es válido, mostramos un modal de error
-            showModal('Validación Fallida', 'Por favor, corrige los errores en el formulario antes de continuar.', false);
-            return; // Detenemos la ejecución
+            showModal('Validación Fallida', 'Por favor, corrige los errores en el formulario.', false);
+            return;
         }
 
-        // Si la validación es exitosa, puedes proceder a enviar los datos.
-        // Aquí iría tu lógica de envío con fetch() o similar.
-        // Por ahora, simularemos un éxito y un fracaso para probar el modal.
-
-        // Simulamos el comportamiento de pago
-        const cardNumber = document.getElementById('card_number').value;
         const submitButton = document.getElementById('submit-payment-btn');
-        submitButton.disabled = true; // Deshabilitamos el botón para evitar doble envío
+        const formData = new FormData(form);
+        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+
+        submitButton.disabled = true;
         submitButton.textContent = 'Procesando...';
 
-        setTimeout(() => {
-            if (cardNumber.startsWith('4242')) {
-                // Simulación de éxito
-                showModal('Pago Exitoso', 'Tu método de pago ha sido guardado correctamente.', true);
-            } else {
-                // Simulación de fallo
+        // Lógica de simulación y envío real
+        const cardNumber = document.getElementById('card_number').value;
+        if (!cardNumber.startsWith('4242')) {
+            setTimeout(() => {
                 showModal('Pago Rechazado', 'La tarjeta fue rechazada. Por favor, intenta con otra.', false);
+                submitButton.disabled = false;
+                submitButton.textContent = 'Guardar Método de Pago';
+            }, 1500);
+            return;
+        }
+
+        // Si la tarjeta es la de prueba, procedemos a guardar en el backend
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '',
+                'Accept': 'application/json',
             }
-            // Reactivamos el botón
+        })
+        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+        .then(({ ok, data }) => {
+            if (ok) {
+                showModal('¡Éxito!', data.message, true);
+                // Opcional: limpiar el formulario después de guardar
+                form.reset();
+            } else {
+                // Muestra el error que viene del backend
+                showModal('Error al guardar', data.message || 'No se pudo guardar la tarjeta.', false);
+            }
+        })
+        .catch(error => {
+            console.error('Error en el fetch:', error);
+            showModal('Error de Conexión', 'No se pudo comunicar con el servidor. Intenta más tarde.', false);
+        })
+        .finally(() => {
             submitButton.disabled = false;
             submitButton.textContent = 'Guardar Método de Pago';
-        }, 2000); // Simulamos una espera de 2 segundos
+        });
     });
 }
