@@ -12,11 +12,13 @@ class RepartidorController extends Controller
      */
     public function dashboard()
     {
+        // Simplemente retorna la vista principal del dashboard.
+        // El resto de la navegación se manejará con JS.
         return view('repartidor-dashboard');
     }
 
     /**
-     * Carga dinámicamente las secciones del dashboard.
+     * Carga dinámicamente las secciones del dashboard (si es necesario en el futuro).
      */
     public function loadSection($section)
     {
