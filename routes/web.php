@@ -54,7 +54,6 @@ Route::middleware(['auth'])->group(function () {
 
     // RUTAS PARA LA PASARELA DE PAGO ---
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
-    Route::post('/procesar-pago', [PaymentController::class, 'process'])->name('cliente.pago.procesar');
 
     Route::post('/pago', [App\Http\Controllers\PaymentController::class, 'store'])->name('cliente.pago.procesar');
 });

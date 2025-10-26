@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Validator;
 class PaymentController extends Controller
 {
     /**
+     * Muestra la vista del formulario de pago.
+     */
+    public function index()
+    {
+        // Obtiene la información del usuario autenticado
+        $user = Auth::user();
+        
+        // Devuelve la vista 'cliente.pago' y le pasa los datos del usuario
+        return view('cliente.pago', compact('user'));
+    }
+
+    /**
      * Almacena el método de pago del cliente.
      */
     public function store(Request $request)
@@ -26,8 +38,6 @@ class PaymentController extends Controller
         }
 
         // 2. Simulación de la pasarela de pago
-        // En una aplicación real, aquí llamarías a la API de Stripe, PayPal, etc.
-        // Usamos el número de tarjeta para simular éxito o fallo.
         $cardNumber = str_replace(' ', '', $request->input('card_number'));
 
         if (substr($cardNumber, 0, 4) !== '4242') {
@@ -45,7 +55,7 @@ class PaymentController extends Controller
             return response()->json(['success' => true, 'message' => '¡Tu método de pago se ha guardado con éxito!']);
 
         } catch (\Exception $e) {
-            // Manejo de errores por si algo falla en la base de datos
+            // Manejo de errores
             return response()->json(['success' => false, 'message' => 'Ocurrió un error inesperado al guardar tus datos.'], 500);
         }
     }

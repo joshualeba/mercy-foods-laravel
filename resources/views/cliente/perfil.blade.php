@@ -84,6 +84,34 @@
                  <button type="button" class="btn btn-cancel edit-mode-btn" id="cancel-profile-btn" style="display:none;">Cancelar</button>
             </div>
     </form>
+
+    <hr class="my-4">
+
+        {{-- SECCIÓN DE MÉTODO DE PAGO --}}
+        <div class="payment-method-section">
+            <h5 class="mb-3">Método de pago</h5>
+
+            {{-- Si el usuario YA TIENE un método de pago guardado --}}
+            @if(Auth::user()->card_last_four)
+                <div class="card">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="card-type-icon">💳</span>
+                            <span>Tarjeta que termina en <strong>{{ Auth::user()->card_last_four }}</strong></span>
+                        </div>
+                        <span class="text-muted">Expira: {{ Auth::user()->card_expiry }}</span>
+                    </div>
+                </div>
+            @else
+            {{-- Si el usuario NO TIENE un método de pago --}}
+                <div class="text-center">
+                    <p>No tienes ningún método de pago guardado.</p>
+                    <button id="add-payment-method-from-profile" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Agregar nuevo método de pago
+                    </button>
+                </div>
+            @endif
+        </div>
 </div>
 
 <div class="confirmation-modal-overlay" id="success-modal">
