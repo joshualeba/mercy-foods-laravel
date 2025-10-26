@@ -56,6 +56,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
 
     Route::post('/pago', [App\Http\Controllers\PaymentController::class, 'store'])->name('cliente.pago.procesar');
+
+    Route::get('/repartidor/dashboard', [App\Http\Controllers\RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
+    Route::get('/repartidor/section/{section}', [App\Http\Controllers\RepartidorController::class, 'loadSection'])->name('repartidor.section');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);

@@ -1,76 +1,69 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Repartidor - Mercy Food</title>
-    
-    <link rel="shortcut icon" href="{{ asset('multimedia/logo.png') }}" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Dashboard del Repartidor - Mercy Foods</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 </head>
 <body>
-
-    <button class="menu-toggle" id="menu-toggle">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-    </button>
-
-    <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
+    <div class="dashboard-container" data-role="repartidor">
+        <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="{{ asset('multimedia/logo.png') }}" alt="Mercy Food Logo" class="sidebar-logo">
-                <h2>Mercy Food</h2>
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('multimedia/logo.png') }}" alt="Logo Mercy Foods" class="logo">
+                </a>
+                <h2>Repartidor</h2>
             </div>
-            <ul class="sidebar-nav">
-                <li><a href="/repartidor-dashboard" class="active">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    <span>Inicio</span>
-                </a></li>
-                <li><a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
-                    <span>Pedidos Disponibles</span>
-                </a></li>
-                <li><a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <span>Historial de Entregas</span>
-                </a></li>
-                <li><a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                    <span>Mis Ganancias</span>
-                </a></li>
-            </ul>
-            <div class="logout-link" id="logout-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                <span>Cerrar Sesión</span>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-section="pedidos"><i class="fas fa-box"></i> Pedidos Asignados</a></li>
+                    <li><a href="#" class="nav-link" data-section="historial"><i class="fas fa-history"></i> Historial de Entregas</a></li>
+                    <li><a href="#" class="nav-link" data-section="perfil"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                    <li><a href="#" class="nav-link" data-section="soporte"><i class="fas fa-question-circle"></i> Soporte</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+                </form>
             </div>
         </aside>
 
         <main class="main-content">
-            <header class="dashboard-header">
-                <div class="welcome-message">
-                    <h1 id="welcome-title"></h1>
-                    <p>¡A repartir felicidad! Revisa los pedidos disponibles.</p>
+            <header class="main-header">
+                <div class="header-left">
+                    <button id="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h1 id="section-title">Pedidos Asignados</h1>
+                </div>
+                <div class="header-right">
+                    <div class="theme-switcher">
+                        <i class="fas fa-sun"></i>
+                        <label class="switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div class="user-info">
+                        <span>{{ Auth::user()->name }}</span>
+                        <i class="fas fa-user-circle"></i>
+                    </div>
                 </div>
             </header>
 
-            <section class="content-placeholder">
-                <h2>Panel del Repartidor</h2>
-                <p>Aquí verás un mapa con los pedidos cercanos, notificaciones y tu estado actual.</p>
-            </section>
+            <div id="dynamic-content">
+                {{-- El contenido se cargará aquí vía JavaScript --}}
+            </div>
         </main>
     </div>
 
-    <div class="confirmation-modal-overlay" id="confirmation-modal">
-        <div class="modal-box">
-            <h2>Confirmar cierre de sesión</h2>
-            <p>¿Estás seguro de que quieres salir de tu cuenta?</p>
-            <div class="modal-buttons">
-                <button class="btn-cancel" id="cancel-logout-btn">Cancelar</button>
-                <button class="btn-confirm" id="confirm-logout-btn">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
+    {{-- USAMOS EL MISMO SCRIPT PARA TODOS --}}
     <script src="{{ asset('js/dashboard.js') }}"></script>
 </body>
 </html>
