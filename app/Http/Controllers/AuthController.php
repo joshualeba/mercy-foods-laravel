@@ -43,7 +43,7 @@ class AuthController extends Controller
 
         // --- RESPUESTA JSON PARA LOGIN FALLIDO ---
         return response()->json([
-            'message' => 'Credenciales incorrectas...'
+            'message' => 'Correo electrónico o contraseña incorrectos.'
         ], 401);
     }
 

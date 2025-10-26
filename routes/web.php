@@ -8,6 +8,7 @@ use App\Http\Controllers\RestauranteProfileController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ClienteProfileController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\RepartidorProfileController;
 
 Route::get('/', function () {
     return view('index');
@@ -57,8 +58,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pago', [App\Http\Controllers\PaymentController::class, 'store'])->name('cliente.pago.procesar');
 
     // RUTAS PARA EL PERFIL DEL REPARTIDOR ---
-    Route::get('/repartidor/profile', [App\Http\Controllers\RepartidorProfileController::class, 'show'])->name('repartidor.profile.show');
     Route::get('/repartidor/dashboard', [App\Http\Controllers\RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
+    Route::get('/perfil-repartidor', [RepartidorProfileController::class, 'index'])->name('repartidor.perfil.index');
+    Route::put('/perfil-repartidor', [RepartidorProfileController::class, 'update'])->name('repartidor.perfil.update');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);

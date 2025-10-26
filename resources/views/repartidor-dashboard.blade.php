@@ -7,6 +7,7 @@
     <title>Panel de repartidor - Mercy Food</title>
     <link rel="shortcut icon" href="{{ asset('multimedia/logo.png') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
 </head>
@@ -38,7 +39,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     <span>Historial de entregas</span>
                 </a></li>
-                <li><a href="#perfil" class="nav-link" data-section="perfil">
+                <li><a href="{{ route('repartidor.perfil.index') }}" class="nav-link" data-section="perfil">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     <span>Mi Perfil</span>
                 </a></li>
@@ -137,9 +138,7 @@
                         <p>Aquí podrás ver todas las entregas que has completado.</p>
                     </div>
                 </section>
-                <section id="mi-perfil" class="dashboard-section">
-                    {{-- El contenido del perfil se cargará aquí dinámicamente --}}
-                </section>
+                <div id="ajax-content-wrapper"></div>
             </div>
         </main>
     </div>
