@@ -12,9 +12,17 @@ class RepartidorController extends Controller
      */
     public function dashboard()
     {
-        // Simplemente retorna la vista principal del dashboard.
-        // El resto de la navegación se manejará con JS.
-        return view('repartidor-dashboard');
+        // Datos de ejemplo para las estadísticas.
+        // Más adelante, deberás obtener estos datos de tu base de datos.
+        $entregasHoy = 8;
+        $gananciasHoy = 550.75;
+        $pedidosPendientes = 2;
+
+        return view('repartidor-dashboard', compact(
+            'entregasHoy',
+            'gananciasHoy',
+            'pedidosPendientes'
+        ));
     }
 
     /**
