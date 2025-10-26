@@ -3,39 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
-class RepartidorController extends Controller
+class RepartidorProfileController extends Controller
 {
     /**
-     * Muestra el dashboard principal del repartidor.
+     * Muestra el formulario del perfil del repartidor.
+     * Esta función no se llama directamente por una ruta,
+     * sino a través del RepartidorController.
      */
-    public function dashboard()
+    public function show()
     {
-        // Datos de ejemplo para las estadísticas.
-        // Más adelante, deberás obtener estos datos de tu base de datos.
-        $entregasHoy = 8;
-        $gananciasHoy = 550.75;
-        $pedidosPendientes = 2;
-
-        return view('repartidor-dashboard', compact(
-            'entregasHoy',
-            'gananciasHoy',
-            'pedidosPendientes'
-        ));
+        return view('repartidor.perfil');
     }
 
     /**
-     * Carga dinámicamente las secciones del dashboard (si es necesario en el futuro).
+     * Actualiza la información del perfil del repartidor.
      */
-    public function loadSection($section)
+    public function update(Request $request)
     {
-        $viewPath = 'repartidor.' . $section;
+        $user = Auth::user();
 
-        if (View::exists($viewPath)) {
-            return view($viewPath);
+        $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'phone_number' => ['required', 'string', 'max:20'],
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user->full_name = $request->full_name; 
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
         }
 
-        return response()->json(['error' => 'La sección no fue encontrada.'], 404);
+        $user->save();
+
+        return back()->with('status', '¡perfil actualizado con éxito!');
     }
 }

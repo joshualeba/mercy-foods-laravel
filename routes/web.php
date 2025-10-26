@@ -54,9 +54,10 @@ Route::middleware(['auth'])->group(function () {
 
     // RUTAS PARA LA PASARELA DE PAGO ---
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
-
     Route::post('/pago', [App\Http\Controllers\PaymentController::class, 'store'])->name('cliente.pago.procesar');
 
+    // RUTAS PARA EL PERFIL DEL REPARTIDOR ---
+    Route::get('/repartidor/profile', [App\Http\Controllers\RepartidorProfileController::class, 'show'])->name('repartidor.profile.show');
     Route::get('/repartidor/dashboard', [App\Http\Controllers\RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
 });
 

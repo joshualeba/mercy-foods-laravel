@@ -84,9 +84,47 @@
                 <section id="inicio" class="dashboard-section active">
                     <div class="welcome-message">
                         <h1>Bienvenido/a, {{ Auth::user()->full_name }}</h1>
-                        <p>Listo para llevar los mejores sabores a su destino.</p>
+                        <p>Listo/a para llevar los mejores sabores a su destino?</p>
                     </div>
-                    </section>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-pedidos">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Entregas de hoy</p>
+                                    <h3>{{ $entregasHoy ?? 0 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-ganancias">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Ganancias del día</p>
+                                    <h3>${{ number_format($gananciasHoy ?? 0, 2) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-menu">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Pedidos pendientes</p>
+                                    <h3>{{ $pedidosPendientes ?? 0 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 <section id="pedidos" class="dashboard-section">
                     <h1>Pedidos Disponibles</h1>
                     <div class="content-placeholder">
@@ -99,11 +137,8 @@
                         <p>Aquí podrás ver todas las entregas que has completado.</p>
                     </div>
                 </section>
-                <section id="perfil" class="dashboard-section">
-                    <h1>Mi Perfil</h1>
-                    <div class="content-placeholder">
-                        <p>Aquí podrás editar tu información personal y datos de tu vehículo.</p>
-                    </div>
+                <section id="mi-perfil" class="dashboard-section">
+                    {{-- El contenido del perfil se cargará aquí dinámicamente --}}
                 </section>
             </div>
         </main>
