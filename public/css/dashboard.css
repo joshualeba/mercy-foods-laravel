@@ -1847,3 +1847,46 @@ input:checked+.switch-slider:before {
     width: 100px;
     margin-top: 10px;
 }
+
+/* Mejora para los inputs del formulario en el dashboard */
+.profile-card .form-control {
+    border-radius: 8px; /* Bordes más redondeados */
+    border: 1px solid #ccc;
+    padding: 12px 15px;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+}
+
+.profile-card .form-control:focus {
+    border-color: #e389 અનુભવ; /* Un color naranja que combine con tu marca */
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(227, 137, 2, .25);
+}
+
+/* Estilo para el botón de pago cuando está procesando */
+#submit-payment-btn.processing {
+    position: relative;
+    color: transparent !important; /* Oculta el texto original */
+    pointer-events: none; /* Evita clics múltiples */
+}
+
+#submit-payment-btn.processing::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: -0.6rem;
+    margin-left: -0.6rem;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border .75s linear infinite; /* Animación del spinner */
+}
+
+/* Keyframes para la animación del spinner (si no la tienes ya) */
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
+}
