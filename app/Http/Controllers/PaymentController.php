@@ -3,52 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
-    // Muestra la vista del formulario de pago
-    public function index()
+    /**
+     * Almacena el método de pago del cliente.
+     */
+    public function store(Request $request)
     {
-        return view('cliente.pago');
-    }
-
-    // Procesa la simulación de pago
-    public function process(Request $request)
-    {
+        // 1. Validar los datos que llegan del formulario
         $validator = Validator::make($request->all(), [
-            'card_name' => 'required|string|max:100',
-            'card_number' => 'required|string|min:19|max:19',
-            'card_expiry' => 'required|string|size:5',
+            'card_name' => 'required|string|max:255|min:5',
+            'card_number' => 'required|string|min:19|max:19', // 16 dígitos + 3 espacios
+            'card_expiry' => 'required|string|min:5|max:5',
             'card_cvc' => 'required|string|min:3|max:4',
-        ], [
-            'card_number.min' => 'El número de tarjeta debe tener 16 dígitos.',
-            'card_number.max' => 'El número de tarjeta debe tener 16 dígitos.'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 422);
+            return response()->json(['success' => false, 'message' => 'Datos inválidos. Por favor, revisa el formulario.'], 422);
         }
 
-        $cardNumber = str_replace(' ', '', $request->card_number);
+        // 2. Simulación de la pasarela de pago
+        // En una aplicación real, aquí llamarías a la API de Stripe, PayPal, etc.
+        // Usamos el número de tarjeta para simular éxito o fallo.
+        $cardNumber = str_replace(' ', '', $request->input('card_number'));
 
-        if ($cardNumber === '4242424242424242') {
-            return response()->json([
-                'success' => true, 
-                'message' => '¡Método de pago guardado con éxito!'
-            ]);
+        if (substr($cardNumber, 0, 4) !== '4242') {
+            return response()->json(['success' => false, 'message' => 'La tarjeta fue rechazada por el banco.'], 400);
         }
 
-        if ($cardNumber === '1111111111111111') {
-            return response()->json([
-                'success' => false, 
-                'message' => 'Pago rechazado por el banco emisor.'
-            ], 400);
-        }
+        try {
+            // 3. Guardar la información de forma segura
+            $user = Auth::user();
+            $user->card_name = $request->input('card_name');
+            $user->card_expiry = $request->input('card_expiry');
+            $user->card_last_four = substr($cardNumber, -4); // Guardamos solo los últimos 4 dígitos
+            $user->save();
 
-        return response()->json([
-            'success' => false, 
-            'message' => 'El número de tarjeta es inválido. Intenta con otro.'
-        ], 400);
+            return response()->json(['success' => true, 'message' => '¡Tu método de pago se ha guardado con éxito!']);
+
+        } catch (\Exception $e) {
+            // Manejo de errores por si algo falla en la base de datos
+            return response()->json(['success' => false, 'message' => 'Ocurrió un error inesperado al guardar tus datos.'], 500);
+        }
     }
 }

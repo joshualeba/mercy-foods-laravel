@@ -870,46 +870,114 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// =================================================================
-// === INICIALIZADOR DE LA SECCIÓN DE PAGO =========================
-// =================================================================
-const initializePaymentSection = () => {
-    const paymentForm = document.getElementById('payment-form');
-    if (!paymentForm) return;
+/**
+ * Muestra el modal de notificación con un título y mensaje específicos.
+ * @param {string} title - El título del modal.
+ * @param {string} message - El mensaje a mostrar en el cuerpo del modal.
+ * @param {boolean} isSuccess - Si es `true`, el título se verá en verde; si es `false`, en rojo.
+ */
+function showModal(title, message, isSuccess) {
+    const modalOverlay = document.getElementById('notification-modal-overlay');
+    const modalTitle = document.getElementById('notification-modal-title');
+    const modalMessage = document.getElementById('notification-modal-message');
 
-    paymentForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+    if (!modalOverlay || !modalTitle || !modalMessage) {
+        console.error('No se encontraron los elementos del modal en el DOM.');
+        return;
+    }
 
-        const submitBtn = document.getElementById('submit-payment-btn');
-        const originalBtnText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Procesando...';
+    // Actualizar contenido del modal
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
 
-        const formData = new FormData(this);
+    // Cambiar color del título según el resultado
+    modalTitle.style.color = isSuccess ? 'var(--success-color)' : 'var(--error-color)';
 
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json',
+    // Mostrar el modal
+    modalOverlay.classList.add('active');
+
+    // Lógica para cerrar el modal
+    const closeModal = () => modalOverlay.classList.remove('active');
+    
+    // Asignar eventos a los botones de cierre
+    const closeBtn = document.getElementById('notification-modal-close-btn');
+    const acceptBtn = document.getElementById('notification-modal-accept-btn');
+    
+    if(closeBtn) closeBtn.onclick = closeModal;
+    if(acceptBtn) acceptBtn.onclick = closeModal;
+}
+
+/**
+ * Inicializa la lógica de la sección de métodos de pago,
+ * incluyendo la validación del formulario.
+ */
+function initializePaymentSection() {
+    const form = document.getElementById('payment-form');
+    if (!form) return;
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitamos el envío por defecto
+
+        // === INICIO DE LA VALIDACIÓN ===
+        let isValid = true;
+        const fields = [
+            { id: 'card_name', name: 'nombre', min: 5, max: 50 },
+            { id: 'card_number', name: 'número de tarjeta', min: 19, max: 19 },
+            { id: 'card_expiry', name: 'expiración', min: 5, max: 5 },
+            { id: 'card_cvc', name: 'CVC', min: 3, max: 4 }
+        ];
+
+        fields.forEach(fieldInfo => {
+            const input = document.getElementById(fieldInfo.id);
+            const errorMessage = input.parentElement.querySelector('.error-message');
+            let message = '';
+
+            if (!input.value.trim()) {
+                message = `El campo ${fieldInfo.name} es obligatorio.`;
+            } else if (input.value.length < fieldInfo.min) {
+                message = `El ${fieldInfo.name} debe tener al menos ${fieldInfo.min} caracteres.`;
+            } else if (input.value.length > fieldInfo.max) {
+                message = `El ${fieldInfo.name} no puede exceder los ${fieldInfo.max} caracteres.`;
             }
-        })
-        .then(response => response.json().then(data => ({ status: response.status, body: data })))
-        .then(({ status, body }) => {
-            if (status >= 200 && status < 300) {
-                manageNotificationModal(successModal, body.message);
+
+            if (message) {
+                isValid = false;
+                errorMessage.textContent = message;
+                input.classList.add('is-invalid');
             } else {
-                manageNotificationModal(errorModal, body.message || 'Ocurrió un error inesperado.');
+                errorMessage.textContent = '';
+                input.classList.remove('is-invalid');
             }
-        })
-        .catch(error => {
-            console.error('Error en el fetch del pago:', error);
-            manageNotificationModal(errorModal, 'No se pudo conectar con el servidor.');
-        })
-        .finally(() => {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalBtnText;
         });
+        // === FIN DE LA VALIDACIÓN ===
+
+        if (!isValid) {
+            // Si el formulario no es válido, mostramos un modal de error
+            showModal('Validación Fallida', 'Por favor, corrige los errores en el formulario antes de continuar.', false);
+            return; // Detenemos la ejecución
+        }
+
+        // Si la validación es exitosa, puedes proceder a enviar los datos.
+        // Aquí iría tu lógica de envío con fetch() o similar.
+        // Por ahora, simularemos un éxito y un fracaso para probar el modal.
+
+        // Simulamos el comportamiento de pago
+        const cardNumber = document.getElementById('card_number').value;
+        const submitButton = document.getElementById('submit-payment-btn');
+        submitButton.disabled = true; // Deshabilitamos el botón para evitar doble envío
+        submitButton.textContent = 'Procesando...';
+
+        setTimeout(() => {
+            if (cardNumber.startsWith('4242')) {
+                // Simulación de éxito
+                showModal('Pago Exitoso', 'Tu método de pago ha sido guardado correctamente.', true);
+            } else {
+                // Simulación de fallo
+                showModal('Pago Rechazado', 'La tarjeta fue rechazada. Por favor, intenta con otra.', false);
+            }
+            // Reactivamos el botón
+            submitButton.disabled = false;
+            submitButton.textContent = 'Guardar Método de Pago';
+        }, 2000); // Simulamos una espera de 2 segundos
     });
-};
+}

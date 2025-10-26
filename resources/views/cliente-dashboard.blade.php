@@ -124,6 +124,22 @@
         </div>
     </div>
 
+    {{-- Modal para notificaciones --}}
+    <div class="modal-overlay" id="notification-modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="notification-modal-title"></h3>
+                <button class="close-modal" id="notification-modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="notification-modal-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="notification-modal-accept-btn">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
 </body>

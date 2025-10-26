@@ -1,14 +1,15 @@
 <div class="profile-section-container">
-    <h1>Método de Pago</h1>
+    <h1>Método de pago</h1>
     <p>Añade un método de pago para finalizar tus órdenes futuras.</p>
 
     <div class="profile-card">
-        <h2>Información de la Tarjeta</h2>
-        <form id="payment-form" action="{{ route('cliente.pago.procesar') }}" novalidate>
+        <h2>Información de la tarjeta</h2>
+        {{-- Se añade la clase profile-form para heredar los estilos --}}
+        <form id="payment-form" class="profile-form" action="{{ route('cliente.pago.procesar') }}" novalidate>
             @csrf
             <div class="form-group span-2">
                 <label for="card_name">Nombre en la tarjeta</label>
-                <input type="text" id="card_name" name="card_name" required placeholder="Juan M. Pérez" class="form-control">
+                <input type="text" id="card_name" name="card_name" required placeholder="Bepe Hernández" class="form-control">
                 <small class="error-message"></small>
             </div>
 
@@ -24,6 +25,7 @@
                 Usa `1111 1111 1111 1111` para un pago rechazado.
             </small>
 
+            {{-- Se añade un profile-grid para alinear los campos --}}
             <div class="profile-grid">
                 <div class="form-group">
                     <label for="card_expiry">Expiración (MM/AA)</label>
@@ -44,6 +46,7 @@
     </div>
 </div>
 
+{{-- El script no se modifica, se mantiene igual --}}
 <script>
     // Pequeños scripts para formatear los inputs de la tarjeta
     const cardNumberInput = document.getElementById('card_number');
