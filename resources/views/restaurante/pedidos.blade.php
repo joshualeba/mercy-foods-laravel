@@ -1,5 +1,5 @@
 <div class="pedidos-header">
-    <h1>Gestionar Pedidos</h1>
+    <h1>Gestionar pedidos</h1>
 </div>
 
 <div class="order-board">
@@ -33,7 +33,7 @@
 
     <div class="order-column">
         <div class="order-column-header">
-            <h2>En Preparación</h2>
+            <h2>En preparación</h2>
              <span class="order-count">{{ $pedidosEnPreparacion->count() }}</span>
         </div>
         <div class="order-cards-container">
@@ -61,7 +61,7 @@
 
     <div class="order-column">
         <div class="order-column-header">
-            <h2>Listos para Recoger</h2>
+            <h2>Listos para recoger</h2>
             <span class="order-count">{{ $pedidosListos->count() }}</span>
         </div>
         <div class="order-cards-container">

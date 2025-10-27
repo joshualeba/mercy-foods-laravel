@@ -38,4 +38,9 @@ class Pedido extends Model
     {
         return $this->hasMany(DetallePedido::class);
     }
+
+    public function repartidor()
+    {
+        return $this->belongsTo(User::class, 'repartidor_id');
+    }
 }

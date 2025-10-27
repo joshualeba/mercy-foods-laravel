@@ -23,23 +23,40 @@ class PedidoController extends Controller
         return view('restaurante.pedidos', compact('pedidosNuevos', 'pedidosEnPreparacion', 'pedidosListos'));
     }
 
-    /**
-     * Actualiza el estado de un pedido específico.
-     */
     public function actualizarEstado(Request $request, Pedido $pedido)
     {
-        // Verificamos que el pedido pertenezca al restaurante
+        // Verificamos que el pedido pertenezca al restaurante autenticado
         if ($pedido->restaurante_id !== Auth::id()) {
             return response()->json(['message' => 'No autorizado'], 403);
         }
 
         $request->validate([
-            'estado' => 'required|string|in:en_preparacion,listo_para_recoger,entregado,cancelado',
+            'estado' => 'required|string|in:en_preparacion,listo_para_recoger',
         ]);
 
         $pedido->estado = $request->estado;
         $pedido->save();
 
+        // Si el pedido está listo, buscamos un repartidor
+        if ($request->estado === 'listo_para_recoger') {
+            $this->asignarRepartidor($pedido);
+        }
+
         return response()->json(['message' => 'Estado del pedido actualizado con éxito.']);
+    }
+
+    /**
+     * Asigna el repartidor más cercano (simulado).
+     */
+    protected function asignarRepartidor(Pedido $pedido)
+    {
+        // Simulación: encontrar el primer repartidor disponible
+        $repartidor = User::where('role', 'repartidor')->first();
+
+        if ($repartidor) {
+            $pedido->repartidor_id = $repartidor->id;
+            $pedido->estado = 'en_camino'; // Cambiamos el estado a "en_camino"
+            $pedido->save();
+        }
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\ClienteProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RepartidorProfileController;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\RepartidorController;
 
 Route::get('/', function () {
     return view('index');
@@ -59,9 +60,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pago', [App\Http\Controllers\PaymentController::class, 'store'])->name('cliente.pago.procesar');
 
     // RUTAS PARA EL PERFIL DEL REPARTIDOR ---
-    Route::get('/repartidor/dashboard', [App\Http\Controllers\RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
-    Route::get('/perfil-repartidor', [RepartidorProfileController::class, 'index'])->name('repartidor.perfil.index');
-    Route::put('/perfil-repartidor', [RepartidorProfileController::class, 'update'])->name('repartidor.perfil.update');
+    Route::get('/repartidor/dashboard', [RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
+    Route::get('/repartidor/pedidos', [RepartidorController::class, 'verPedidos'])->name('repartidor.pedidos');
+    Route::get('/repartidor/perfil', [RepartidorProfileController::class, 'index'])->name('repartidor.perfil.index');
+    Route::put('/repartidor/perfil', [RepartidorProfileController::class, 'update'])->name('repartidor.perfil.update');
 
     // Rutas de pedidos para restaurantes
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('restaurante.pedidos.index');
