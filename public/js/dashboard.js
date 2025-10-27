@@ -757,21 +757,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const addBtn = e.target.closest('#add-platillo-btn');
             const detailsBtn = e.target.closest('.btn-details');
             const actionCard = e.target.closest('.action-card:not(.disabled)');
+            const addPaymentBtn = e.target.closest('#add-payment-method-from-profile');
 
-            // --- LISTENER DE CLICS PRINCIPAL Y DELEGADO ---
-            if (dashboardContainer) {
-                dashboardContainer.addEventListener('click', function(e) {
-                    const addPaymentBtn = e.target.closest('#add-payment-method-from-profile');
-                    if (addPaymentBtn) {
-                        const paymentNavLink = document.querySelector('.nav-link[data-section="pago"]');
-                        if (paymentNavLink) {
-                            paymentNavLink.click();
-                        }
-                    }
-                });
-            }
-
-            if (addBtn) {
+            if (addPaymentBtn) {
+                const paymentNavLink = document.querySelector('.nav-link[data-section="pago"]');
+                if (paymentNavLink) {
+                    paymentNavLink.click();
+                }
+            } else if (addBtn) {
                 if (platilloModal) {
                     platilloModal.classList.add('active');
                     dashboardContainer.classList.add('blurred');
@@ -790,6 +783,75 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    function aceptarPedido(boton, id) {
+        Swal.fire({
+            title: '¿Aceptar este pedido?',
+            text: "Una vez aceptado, deberás recogerlo y entregarlo.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#FF6347',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, aceptar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Deshabilitamos el botón para evitar dobles clics
+                boton.disabled = true;
+                boton.textContent = 'Aceptando...';
+
+                fetch(`/repartidor/pedidos/${id}/aceptar`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok) {
+                        Swal.fire('¡Aceptado!', data.message, 'success');
+                        // Recargamos la sección de pedidos para ver los cambios
+                        const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
+                        if (pedidosLink) {
+                            pedidosLink.click();
+                        } else {
+                            // Si no encuentra el link, simplemente recarga la página como fallback
+                            window.location.reload();
+                        }
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                        // Si falla, volvemos a habilitar el botón
+                        boton.disabled = false;
+                        boton.textContent = 'Aceptar Pedido';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
+                    boton.disabled = false;
+                    boton.textContent = 'Aceptar Pedido';
+                });
+            }
+        });
+    }
+
+    // --- LÓGICA PARA ACEPTAR PEDIDOS (REPARTIDOR) ---
+    document.body.addEventListener('click', function(e) {
+        const boton = e.target.closest('.btn-aceptar-pedido');
+            
+        if (boton) {
+            e.preventDefault();
+            const pedidoId = boton.dataset.id;
+                
+            if (!pedidoId) {
+                console.error('No se encontró el ID del pedido');
+                return;
+            }
+                
+            aceptarPedido(boton, pedidoId);
+        }
+    });
 
     // --- LÓGICA GENERAL DEL DASHBOARD (TEMA, PERFIL, LOGOUT, ETC.) ---
     const themeToggle = document.getElementById('theme-toggle');
@@ -1343,11 +1405,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Event delegation para los botones "Ordenar"
+    // Event delegation para acciones en todo el body
     document.body.addEventListener('click', (e) => {
-        if (e.target && e.target.classList.contains('btn-ordenar')) {
-            const card = e.target.closest('.platillo-card');
-            const platilloId = e.target.dataset.id;
+        const ordenarBtn = e.target.closest('.btn-ordenar');
+        const aceptarPedidoBtn = e.target.closest('.btn-aceptar-pedido');
+
+        // Si se hizo clic en "Ordenar"
+        if (ordenarBtn) {
+            const card = ordenarBtn.closest('.platillo-card');
+            const platilloId = ordenarBtn.dataset.id;
             const platilloName = card.querySelector('h3').textContent;
             const platilloPrice = parseFloat(card.querySelector('.platillo-card-price, .platillo-precio').textContent.replace('$', ''));
 
@@ -1356,15 +1422,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (existingItem) {
                 existingItem.quantity++;
             } else {
-                cart.push({
-                    id: platilloId,
-                    name: platilloName,
-                    price: platilloPrice,
-                    quantity: 1
-                });
+                cart.push({ id: platilloId, name: platilloName, price: platilloPrice, quantity: 1 });
             }
-            
-            // Notificación de éxito
+
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -1375,6 +1435,19 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             updateCart();
+
+        // Si se hizo clic en "Aceptar Pedido"
+        } else if (aceptarPedidoBtn) {
+            e.preventDefault();
+            const pedidoId = aceptarPedidoBtn.dataset.id;
+
+            if (!pedidoId) {
+                console.error('No se encontró el ID del pedido');
+                return;
+            }
+
+            // Llama a la función que movimos en el paso 1
+            aceptarPedido(aceptarPedidoBtn, pedidoId);
         }
     });
 

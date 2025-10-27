@@ -24,12 +24,34 @@ class RepartidorController extends Controller
     {
         $repartidor = Auth::user();
 
+        // Pedidos listos que ningún repartidor ha tomado
+        $pedidosDisponibles = Pedido::where('estado', 'listo_para_recoger')
+                                    ->whereNull('repartidor_id')
+                                    ->with(['restaurante', 'cliente'])
+                                    ->latest()
+                                    ->get();
+
+        // Pedidos que el repartidor actual ya aceptó y tiene que recoger/entregar
         $pedidosPorRecoger = Pedido::where('repartidor_id', $repartidor->id)
                                     ->where('estado', 'en_camino')
                                     ->with(['restaurante', 'cliente'])
                                     ->latest()
                                     ->get();
 
-        return view('repartidor.pedidos', compact('pedidosPorRecoger'));
+        return view('repartidor.pedidos', compact('pedidosDisponibles', 'pedidosPorRecoger'));
+    }
+
+    public function aceptarPedido(Request $request, Pedido $pedido)
+    {
+        // Verificamos que el pedido esté disponible
+        if ($pedido->estado === 'listo_para_recoger' && is_null($pedido->repartidor_id)) {
+            $pedido->repartidor_id = Auth::id();
+            $pedido->estado = 'en_camino';
+            $pedido->save();
+
+            return response()->json(['message' => '¡Pedido aceptado! Dirígete a recogerlo.']);
+        }
+
+        return response()->json(['message' => 'Este pedido ya no está disponible.'], 409); // 409 Conflict
     }
 }

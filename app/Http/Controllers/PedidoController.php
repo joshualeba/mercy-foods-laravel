@@ -39,11 +39,6 @@ class PedidoController extends Controller
         $pedido->estado = $request->estado;
         $pedido->save();
 
-        // Si el pedido está listo, buscamos un repartidor
-        if ($request->estado === 'listo_para_recoger') {
-            $this->asignarRepartidor($pedido);
-        }
-
         return response()->json(['message' => 'Estado del pedido actualizado con éxito.']);
     }
 
