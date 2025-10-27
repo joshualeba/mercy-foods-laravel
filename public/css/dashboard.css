@@ -1967,3 +1967,13 @@ input:checked+.switch-slider:before {
         grid-column: auto;
     }
 }
+
+.nombre-del-restaurante-destacado {
+    display: inline-block; 
+    padding: 0.3rem 0.8rem; 
+    font-weight: 600; 
+    color: #fff; 
+    background-color: var(--primary-color); 
+    border-radius: 15px; 
+    font-size: 0.9em;
+}

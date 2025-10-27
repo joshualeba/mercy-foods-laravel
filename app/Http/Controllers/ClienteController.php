@@ -44,7 +44,7 @@ class ClienteController extends Controller
         $platillosSugeridos = Platillo::where('disponible', true)
                                     ->with('user') // Precargamos la info del restaurante
                                     ->inRandomOrder()
-                                    ->take(3)
+                                    ->take(5)
                                     ->get();
 
         // Procesamos las URLs de las imágenes

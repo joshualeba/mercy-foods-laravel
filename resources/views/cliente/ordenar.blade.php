@@ -28,17 +28,19 @@
                      data-precio="{{ $platillo->precio }}"
                      data-cocina="{{ $platillo->user->cuisine_type }}">
                     
-                    <div style="padding: 1rem 1rem 0 1rem; text-align: center; font-weight: 600; color: var(--text-color-light);">
-                        {{ $platillo->user->full_name }}
+                    <div style="text-align: center; padding: 1rem 0;">
+                        <span style="background-color: #FF6347; color: white; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 600; display: inline-block;">
+                            {{ $platillo->user->full_name }}
+                        </span>
                     </div>
                     <div class="platillo-card-image">
                         <img src="{{ $platillo->imagen_url }}" alt="Imagen de {{ $platillo->nombre }}">
                     </div>
                     <div class="platillo-card-content">
                         <h3>{{ $platillo->nombre }}</h3>
-                        <p>{{ $platillo->descripcion }}</p>
                         <div class="platillo-card-footer">
                             <span class="platillo-card-price">${{ number_format($platillo->precio, 2) }}</span>
+                            <button class="btn btn-sm" style="background-color: #333; color: white; border: 1px solid #555; margin-left: 10px;">Ver más</button>
                         </div>
                     </div>
                     <div class="platillo-card-actions">

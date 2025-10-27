@@ -1041,3 +1041,54 @@ function initializePaymentSection() {
         });
     });
 }
+
+// --- Lógica para el Modal de Detalles del Platillo ---
+document.addEventListener('DOMContentLoaded', function () {
+    const platilloModal = document.getElementById('platilloModal');
+    if (!platilloModal) return; // Si el modal no existe en la página actual, no hagas nada.
+
+    const closeBtn = platilloModal.querySelector('.close');
+
+    // Función para abrir el modal y llenarlo de datos
+    const openPlatilloModal = (card) => {
+        // Extraemos los datos de los atributos data-* de la tarjeta
+        const nombre = card.dataset.nombre;
+        const descripcion = card.dataset.descripcion;
+        const precio = card.dataset.precio;
+        const imagen = card.dataset.imagen;
+        const restaurante = card.dataset.restaurante;
+
+        // Llenamos el modal con la información
+        platilloModal.querySelector('#modal-platillo-nombre').textContent = nombre;
+        platilloModal.querySelector('#modal-platillo-imagen').src = imagen;
+        platilloModal.querySelector('#modal-platillo-restaurante').textContent = `de ${restaurante}`;
+        platilloModal.querySelector('#modal-platillo-descripcion').textContent = descripcion;
+        platilloModal.querySelector('#modal-platillo-precio').textContent = `$${precio}`;
+
+        // Mostramos el modal
+        platilloModal.style.display = 'block';
+    };
+
+    // Función para cerrar el modal
+    const closePlatilloModal = () => {
+        platilloModal.style.display = 'none';
+    };
+
+    // Asignamos el evento de clic a todos los botones "Ver más"
+    document.querySelectorAll('.ver-mas-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const card = this.closest('.platillo-card'); // Buscamos la tarjeta padre
+            openPlatilloModal(card);
+        });
+    });
+
+    // Evento para cerrar el modal con el botón 'x'
+    closeBtn.addEventListener('click', closePlatilloModal);
+
+    // Evento para cerrar el modal si se hace clic fuera de él
+    window.addEventListener('click', function (event) {
+        if (event.target == platilloModal) {
+            closePlatilloModal();
+        }
+    });
+});
