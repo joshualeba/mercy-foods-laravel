@@ -59,4 +59,34 @@ class PedidoController extends Controller
             $pedido->save();
         }
     }
+
+    /**
+     * Muestra la lista de pedidos para el cliente autenticado.
+     */
+    public function verPedidosCliente()
+    {
+        $cliente = Auth::user();
+
+        // Obtenemos los pedidos del cliente y los separamos por estado
+        $pedidosEnPreparacion = $cliente->pedidosCliente()
+                                        ->whereIn('estado', ['pendiente', 'en_preparacion'])
+                                        ->with('restaurante')
+                                        ->latest()
+                                        ->get();
+                                        
+        $pedidosEnCamino = $cliente->pedidosCliente()
+                                   ->whereIn('estado', ['listo_para_recoger', 'en_camino'])
+                                   ->with('restaurante')
+                                   ->latest()
+                                   ->get();
+
+        $pedidosEntregados = $cliente->pedidosCliente()
+                                     ->where('estado', 'entregado')
+                                     ->with('restaurante')
+                                     ->latest()
+                                     ->take(5) // Mostramos solo los últimos 5 entregados
+                                     ->get();
+
+        return view('cliente.pedidos', compact('pedidosEnPreparacion', 'pedidosEnCamino', 'pedidosEntregados'));
+    }
 }

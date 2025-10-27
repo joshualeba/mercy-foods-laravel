@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     // RUTAS PARA EL PERFIL DEL CLIENTE ---
     Route::get('/perfil-cliente', [ClienteProfileController::class, 'index'])->name('cliente.perfil.index');
     Route::put('/perfil-cliente', [ClienteProfileController::class, 'update'])->name('cliente.perfil.update');
+    Route::get('/cliente/pedidos', [PedidoController::class, 'verPedidosCliente'])->name('cliente.pedidos.index');
 
     // RUTAS PARA LA PASARELA DE PAGO ---
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
