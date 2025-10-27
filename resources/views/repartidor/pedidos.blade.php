@@ -57,7 +57,7 @@
                     <div class="order-card-footer">
                          <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
                         <div class="order-actions">
-                            <button class="btn btn-primary btn-sm">Marcar como recogido</button>
+                            <button class="btn btn-primary btn-sm btn-marcar-recogido" data-id="{{ $pedido->id }}">Marcar como recogido</button>
                         </div>
                     </div>
                 </div>

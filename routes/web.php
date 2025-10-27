@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/repartidor/perfil', [RepartidorProfileController::class, 'index'])->name('repartidor.perfil.index');
     Route::put('/repartidor/perfil', [RepartidorProfileController::class, 'update'])->name('repartidor.perfil.update');
     Route::put('/repartidor/pedidos/{pedido}/aceptar', [RepartidorController::class, 'aceptarPedido'])->name('repartidor.pedidos.aceptar');
+    Route::put('/repartidor/pedidos/{pedido}/recogido', [RepartidorController::class, 'marcarRecogido'])->name('repartidor.pedidos.recogido');
 
     // Rutas de pedidos para restaurantes
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('restaurante.pedidos.index');

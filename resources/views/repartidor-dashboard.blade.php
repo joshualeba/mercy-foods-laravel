@@ -36,10 +36,6 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     <span>Pedidos disponibles</span>
                 </a></li>
-                <li><a href="#historial" class="nav-link" data-section="historial">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <span>Historial de entregas</span>
-                </a></li>
                 <li><a href="{{ route('repartidor.perfil.index') }}" class="nav-link" data-section="perfil">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     <span>Mi Perfil</span>
@@ -128,15 +124,9 @@
                     </div>
                 </section>
                 <section id="pedidos" class="dashboard-section">
-                    <h1>Pedidos Disponibles</h1>
+                    <h1>Pedidos disponibles</h1>
                     <div class="content-placeholder">
                         <p>Aquí se mostrará la lista de pedidos que puedes aceptar.</p>
-                    </div>
-                </section>
-                 <section id="historial" class="dashboard-section">
-                    <h1>Historial de Entregas</h1>
-                    <div class="content-placeholder">
-                        <p>Aquí podrás ver todas las entregas que has completado.</p>
                     </div>
                 </section>
                 <div id="ajax-content-wrapper"></div>

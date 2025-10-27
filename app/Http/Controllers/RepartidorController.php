@@ -54,4 +54,18 @@ class RepartidorController extends Controller
 
         return response()->json(['message' => 'Este pedido ya no está disponible.'], 409); // 409 Conflict
     }
+
+    public function marcarRecogido(Request $request, Pedido $pedido)
+    {
+        // Verificamos que el pedido le pertenezca al repartidor autenticado
+        if ($pedido->repartidor_id !== Auth::id()) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
+        // Cambiamos el estado a 'entregado' y guardamos
+        $pedido->estado = 'entregado';
+        $pedido->save();
+
+        return response()->json(['message' => '¡Pedido marcado como recogido! El cliente ha sido notificado.']);
+    }
 }
