@@ -1042,12 +1042,17 @@ function initializePaymentSection() {
     });
 }
 
-// --- Lógica para el Modal de Detalles del Platillo ---
+// --- Lógica para el Modal de Detalles del Platillo en la sección Ordenar ---
 document.addEventListener('DOMContentLoaded', function () {
-    const platilloModal = document.getElementById('platilloModal');
-    if (!platilloModal) return; // Si el modal no existe en la página actual, no hagas nada.
+    const mainContent = document.querySelector('.main-content');
+    const platilloModal = document.getElementById('platillo-modal-details');
 
-    const closeBtn = platilloModal.querySelector('.close');
+    if (!mainContent || !platilloModal) {
+        return;
+    }
+
+    const closeBtn = platilloModal.querySelector('#close-platillo-modal-btn');
+    const dashboardContainer = document.querySelector('.dashboard-container');
 
     // Función para abrir el modal y llenarlo de datos
     const openPlatilloModal = (card) => {
@@ -1066,28 +1071,28 @@ document.addEventListener('DOMContentLoaded', function () {
         platilloModal.querySelector('#modal-platillo-precio').textContent = `$${precio}`;
 
         // Mostramos el modal
-        platilloModal.style.display = 'block';
+        platilloModal.classList.add('active');
+        dashboardContainer.classList.add('blurred');
     };
 
     // Función para cerrar el modal
     const closePlatilloModal = () => {
-        platilloModal.style.display = 'none';
+        platilloModal.classList.remove('active');
+        dashboardContainer.classList.remove('blurred');
     };
 
-    // Asignamos el evento de clic a todos los botones "Ver más"
-    document.querySelectorAll('.ver-mas-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const card = this.closest('.platillo-card'); // Buscamos la tarjeta padre
-            openPlatilloModal(card);
-        });
+    // Usamos delegación de eventos en un contenedor padre
+    mainContent.addEventListener('click', function(event) {
+        const verMasBtn = event.target.closest('.ver-mas-btn');
+        if (verMasBtn) {
+            openPlatilloModal(verMasBtn);
+        }
     });
 
-    // Evento para cerrar el modal con el botón 'x'
+    // Evento para cerrar el modal
     closeBtn.addEventListener('click', closePlatilloModal);
-
-    // Evento para cerrar el modal si se hace clic fuera de él
-    window.addEventListener('click', function (event) {
-        if (event.target == platilloModal) {
+    platilloModal.addEventListener('click', function (event) {
+        if (event.target === platilloModal) {
             closePlatilloModal();
         }
     });

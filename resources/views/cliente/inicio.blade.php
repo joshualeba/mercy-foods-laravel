@@ -21,8 +21,18 @@
                 <div class="platillo-card-content">
                     <h3>{{ $platillo->nombre }}</h3>
                     <div class="platillo-card-footer">
-                        <span class="platillo-card-price">${{ number_format($platillo->precio, 2) }}</span>
-                    </div>
+                    <span class="platillo-precio">${{ number_format($platillo->precio, 2) }}</span>
+                    {{-- Poner el botón aquí --}}
+                    <button class="btn btn-sm ver-mas-btn"
+                            style="background-color: #333; color: white; border: 1px solid #555; margin-left: 10px;"
+                            data-nombre="{{ $platillo->nombre }}"
+                            data-descripcion="{{ $platillo->descripcion }}"
+                            data-precio="{{ number_format($platillo->precio, 2) }}"
+                            data-imagen="{{ $platillo->imagen_url }}"
+                            data-restaurante="{{ $platillo->user->full_name }}">
+                        Ver más
+                    </button>
+                </div>
                 </div>
                 <div class="platillo-card-actions">
                     <button class="btn btn-primary btn-sm" style="width: 100%;">Ordenar</button>

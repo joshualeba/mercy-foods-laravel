@@ -142,5 +142,22 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
+
+    {{-- Modal para detalles del platillo --}}
+    <div class="confirmation-modal-overlay" id="platillo-modal-details">
+        <div class="modal-box">
+            <button class="close-modal" id="close-platillo-modal-btn">&times;</button>
+            <div class="platillo-modal-content">
+                <img id="modal-platillo-imagen" src="" alt="Imagen del platillo" class="platillo-modal-img">
+                <h3 id="modal-platillo-nombre"></h3>
+                <p class="platillo-modal-restaurante" id="modal-platillo-restaurante"></p>
+                <p id="modal-platillo-descripcion"></p>
+                <div class="platillo-modal-footer">
+                    <span class="platillo-modal-precio" id="modal-platillo-precio"></span>
+                    <button class="btn btn-primary">Ordenar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
