@@ -95,31 +95,13 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                                 </div>
                                 <div class="stat-card-content">
-                                    <p>Pedidos Activos</p>
-                                    <h3>0</h3>
+                                    <p>Pedidos activos</p>
+                                    <h3 id="active-orders-count">--</h3>
                                 </div>
                             </div>
                             <div class="stat-card-footer">
-                                <a href="#pedidos" class="card-link nav-link" data-section="pedidos">
+                                <a href="{{ route('restaurante.pedidos.index') }}" class="card-link nav-link" data-section="pedidos">
                                     <span>Gestionar pedidos</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon icon-menu">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                                </div>
-                                <div class="stat-card-content">
-                                    <p>Platillos en tu menú</p>
-                                    <h3>{{ Auth::user()->platillos->count() }}</h3>
-                                </div>
-                            </div>
-                            <div class="stat-card-footer">
-                                <a href="{{ route('platillos.index') }}" class="card-link nav-link" data-section="menu">
-                                    <span>Administrar menú</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 </a>
                             </div>
@@ -132,7 +114,7 @@
                                 </div>
                                 <div class="stat-card-content">
                                     <p>Ingresos del día</p>
-                                    <h3>$0.00</h3>
+                                    <h3 id="today-income">$ --</h3>
                                 </div>
                             </div>
                             <div class="stat-card-footer">
@@ -149,12 +131,12 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 </div>
                                 <div class="stat-card-content">
-                                    <p>Tu Perfil</p>
-                                    <h3>Completo</h3>
+                                    <p>Tu perfil</p>
+                                    <h3 id="profile-status">--</h3>
                                 </div>
                             </div>
                             <div class="stat-card-footer">
-                                <a href="#perfil" class="card-link nav-link" data-section="perfil">
+                                <a href="{{ route('restaurante.perfil.index') }}" class="card-link nav-link" data-section="perfil">
                                     <span>Editar información</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 </a>
@@ -305,5 +287,33 @@
     </div>
 
     <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function fetchDashboardStats() {
+                fetch('{{ route('restaurante.stats') }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('active-orders-count').textContent = data.activeOrders;
+                        document.getElementById('today-income').textContent = '$' + data.todayIncome;
+                        document.getElementById('profile-status').textContent = data.profileStatus;
+
+                        // Cambia el color del texto del perfil si está incompleto
+                        const profileStatusEl = document.getElementById('profile-status');
+                        if (data.profileStatus === 'Incompleto') {
+                            profileStatusEl.style.color = 'var(--primary-color)';
+                        } else {
+                            profileStatusEl.style.color = 'var(--color-success)';
+                        }
+                    })
+                    .catch(error => console.error('Error al cargar las estadísticas:', error));
+            }
+
+            // Carga los datos al iniciar
+            fetchDashboardStats();
+
+            // Actualiza los datos cada medio segundo
+            setInterval(fetchDashboardStats, 500);
+        });
+    </script>
 </body>
 </html>

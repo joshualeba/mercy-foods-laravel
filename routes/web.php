@@ -11,6 +11,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RepartidorProfileController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\RepartidorController;
+use App\Http\Controllers\RestauranteDashboardController;
 
 Route::get('/', function () {
     return view('index');
@@ -50,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     // RUTAS PARA EL PERFIL DEL RESTAURANTE ---
     Route::get('/perfil-restaurante', [RestauranteProfileController::class, 'index'])->name('restaurante.perfil.index');
     Route::put('/perfil-restaurante', [RestauranteProfileController::class, 'update'])->name('restaurante.perfil.update');
+    Route::get('/restaurante/stats', [RestauranteDashboardController::class, 'getStats'])->name('restaurante.stats');
 
     // RUTAS PARA EL PERFIL DEL CLIENTE ---
     Route::get('/perfil-cliente', [ClienteProfileController::class, 'index'])->name('cliente.perfil.index');
