@@ -140,8 +140,33 @@
         </div>
     </div>
 
+    <div class="cart-fab" id="cart-fab" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+
+    <div class="confirmation-modal-overlay" id="cart-modal">
+        <div class="modal-box" style="max-width: 600px; text-align: left;">
+            <button class="close-modal-btn" id="close-cart-btn">&times;</button>
+            <h2>Mi Carrito de Compras</h2>
+            <div id="cart-items-container" style="max-height: 40vh; overflow-y: auto; padding-right: 15px;">
+                {{-- Los items del carrito se insertarán aquí con JavaScript --}}
+            </div>
+            <div class="cart-summary" style="margin-top: 20px; text-align: right;">
+                <h4>Total: <span id="cart-total">$0.00</span></h4>
+            </div>
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button class="btn btn-primary" id="checkout-btn" disabled>Realizar Pedido</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script>
+        const processCartUrl = '{{ route("carrito.procesar") }}';
+    </script>
 
     {{-- Modal para detalles del platillo --}}
     <div class="confirmation-modal-overlay" id="platillo-modal-details">
@@ -154,7 +179,13 @@
                 <p id="modal-platillo-descripcion"></p>
                 <div class="platillo-modal-footer">
                     <span class="platillo-modal-precio" id="modal-platillo-precio"></span>
-                    <button class="btn btn-primary">Ordenar</button>
+                    <button class="btn btn-primary btn-ordenar-modal" 
+                            id="modal-ordenar-btn"
+                            data-id=""
+                            data-nombre=""
+                            data-precio="">
+                        Ordenar
+                    </button>
                 </div>
             </div>
         </div>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Pedido;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\DetallePedido;
+use App\Models\Platillo;
 
 class PedidoController extends Controller
 {
@@ -88,5 +90,56 @@ class PedidoController extends Controller
                                      ->get();
 
         return view('cliente.pedidos', compact('pedidosEnPreparacion', 'pedidosEnCamino', 'pedidosEntregados'));
+    }
+
+    public function crearDesdeCarrito(Request $request)
+    {
+        $cartItems = $request->input('cart');
+        $user = Auth::user();
+
+        if (empty($cartItems)) {
+            return response()->json(['message' => 'El carrito está vacío.'], 400);
+        }
+
+        $total = 0;
+        $restauranteId = null;
+
+        foreach ($cartItems as $item) {
+            $platillo = Platillo::find($item['id']);
+            if (!$platillo) {
+                return response()->json(['message' => 'Platillo no encontrado.'], 404);
+            }
+            // Asignamos el restaurante del primer platillo
+            if ($restauranteId === null) {
+                $restauranteId = $platillo->user_id;
+            }
+            // Validamos que todos los platillos sean del mismo restaurante
+            if ($restauranteId !== $platillo->user_id) {
+                return response()->json(['message' => 'No puedes ordenar de múltiples restaurantes a la vez.'], 400);
+            }
+            $total += $platillo->precio * $item['quantity'];
+        }
+        
+        // Crear el pedido principal
+        $pedido = Pedido::create([
+            'cliente_id' => $user->id,
+            'restaurante_id' => $restauranteId,
+            'total' => $total,
+            'estado' => 'pendiente',
+            'direccion_entrega' => $user->address, // Asume que el usuario tiene una dirección guardada
+        ]);
+
+        // Crear los detalles del pedido
+        foreach ($cartItems as $item) {
+            $platillo = Platillo::find($item['id']);
+            DetallePedido::create([
+                'pedido_id' => $pedido->id,
+                'platillo_id' => $platillo->id,
+                'cantidad' => $item['quantity'],
+                'precio_unitario' => $platillo->precio,
+            ]);
+        }
+
+        return response()->json(['message' => '¡Pedido realizado con éxito!', 'pedido_id' => $pedido->id]);
     }
 }

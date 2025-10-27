@@ -1053,13 +1053,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const closeBtn = platilloModal.querySelector('#close-platillo-modal-btn');
     const dashboardContainer = document.querySelector('.dashboard-container');
+    const modalOrdenarBtn = document.getElementById('modal-ordenar-btn');
 
     // Función para abrir el modal y llenarlo de datos
     const openPlatilloModal = (card) => {
         // Extraemos los datos de los atributos data-* de la tarjeta
+        const platilloId = card.dataset.id;
         const nombre = card.dataset.nombre;
         const descripcion = card.dataset.descripcion;
         const precio = card.dataset.precio;
+        const precioNumerico = precio.replace(/,/g, ''); // Eliminar comas del formato
         const imagen = card.dataset.imagen;
         const restaurante = card.dataset.restaurante;
 
@@ -1069,6 +1072,11 @@ document.addEventListener('DOMContentLoaded', function () {
         platilloModal.querySelector('#modal-platillo-restaurante').textContent = `de ${restaurante}`;
         platilloModal.querySelector('#modal-platillo-descripcion').textContent = descripcion;
         platilloModal.querySelector('#modal-platillo-precio').textContent = `$${precio}`;
+
+        // Actualizamos los data attributes del botón Ordenar del modal
+        modalOrdenarBtn.dataset.id = platilloId;
+        modalOrdenarBtn.dataset.nombre = nombre;
+        modalOrdenarBtn.dataset.precio = precioNumerico;
 
         // Mostramos el modal
         platilloModal.classList.add('active');
@@ -1096,4 +1104,239 @@ document.addEventListener('DOMContentLoaded', function () {
             closePlatilloModal();
         }
     });
+
+    // 🛒 NUEVO: Manejar el clic en el botón "Ordenar" del modal
+    if (modalOrdenarBtn) {
+        modalOrdenarBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const platilloId = this.dataset.id;
+            const platilloName = this.dataset.nombre;
+            const platilloPrice = parseFloat(this.dataset.precio);
+
+            console.log('Ordenar desde modal:', { platilloId, platilloName, platilloPrice });
+
+            if (!platilloId || !platilloName || !platilloPrice) {
+                console.error('Faltan datos del platillo en el modal');
+                return;
+            }
+
+            // Buscar si ya existe en el carrito (usando la misma lógica del carrito global)
+            if (typeof cart !== 'undefined') {
+                const existingItem = cart.find(item => item.id === platilloId);
+
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({
+                        id: platilloId,
+                        name: platilloName,
+                        price: platilloPrice,
+                        quantity: 1
+                    });
+                }
+
+                // Notificación de éxito
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: '¡Agregado al carrito!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                // Actualizar el carrito (esta función debe estar disponible globalmente)
+                if (typeof updateCart === 'function') {
+                    updateCart();
+                }
+
+                // Cerrar el modal después de agregar
+                closePlatilloModal();
+            } else {
+                console.error('El carrito no está inicializado');
+            }
+        });
+    }
 });
+
+        
+    // =================================================================
+    // === LÓGICA DEL CARRITO DE COMPRAS ===
+    // =================================================================
+    const cartFab = document.getElementById('cart-fab');
+    const cartCount = document.getElementById('cart-count');
+    const cartModal = document.getElementById('cart-modal');
+    const closeCartBtn = document.getElementById('close-cart-btn');
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const cartTotal = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    let cart = [];
+    let updateCart = () => {};
+
+    // Función para actualizar el carrito y la UI
+    updateCart = () => {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+
+        if (totalItems > 0) {
+            cartFab.style.display = 'flex';
+        } else {
+            cartFab.style.display = 'none';
+        }
+
+        // Actualizar el modal
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
+            checkoutBtn.disabled = true;
+        } else {
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                itemElement.innerHTML = `
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <p>$${parseFloat(item.price).toFixed(2)}</p>
+                    </div>
+                    <div class="cart-item-actions">
+                        <input type="number" value="${item.quantity}" min="1" data-id="${item.id}" class="item-quantity">
+                        <button class="remove-item" data-id="${item.id}">&times;</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+                total += item.price * item.quantity;
+            });
+            checkoutBtn.disabled = false;
+        }
+
+        cartTotal.textContent = `$${total.toFixed(2)}`;
+    };
+
+    // Evento para abrir y cerrar el modal del carrito
+    cartFab.addEventListener('click', () => cartModal.classList.add('active'));
+    closeCartBtn.addEventListener('click', () => cartModal.classList.remove('active'));
+    cartModal.addEventListener('click', (e) => {
+        if (e.target === cartModal) {
+            cartModal.classList.remove('active');
+        }
+    });
+
+    // Event delegation para los botones "Ordenar"
+    document.body.addEventListener('click', (e) => {
+        if (e.target && e.target.classList.contains('btn-ordenar')) {
+            const card = e.target.closest('.platillo-card');
+            const platilloId = e.target.dataset.id;
+            const platilloName = card.querySelector('h3').textContent;
+            const platilloPrice = parseFloat(card.querySelector('.platillo-card-price, .platillo-precio').textContent.replace('$', ''));
+
+            const existingItem = cart.find(item => item.id === platilloId);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    id: platilloId,
+                    name: platilloName,
+                    price: platilloPrice,
+                    quantity: 1
+                });
+            }
+            
+            // Notificación de éxito
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: '¡Agregado al carrito!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+
+            updateCart();
+        }
+    });
+
+    // Event delegation para acciones dentro del carrito (eliminar, cambiar cantidad)
+    cartItemsContainer.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target.classList.contains('remove-item')) {
+            const platilloId = target.dataset.id;
+            cart = cart.filter(item => item.id !== platilloId);
+            updateCart();
+        }
+    });
+
+    cartItemsContainer.addEventListener('change', (e) => {
+        const target = e.target;
+        if (target.classList.contains('item-quantity')) {
+            const platilloId = target.dataset.id;
+            const newQuantity = parseInt(target.value, 10);
+            const itemInCart = cart.find(item => item.id === platilloId);
+
+            if (itemInCart && newQuantity > 0) {
+                itemInCart.quantity = newQuantity;
+            } else {
+                // Si la cantidad es 0 o inválida, lo eliminamos
+                cart = cart.filter(item => item.id !== platilloId);
+            }
+            updateCart();
+        }
+    });
+
+    checkoutBtn.addEventListener('click', () => {
+        checkoutBtn.disabled = true;
+        checkoutBtn.textContent = 'Procesando...';
+
+        fetch(processCartUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ cart: cart })
+        })
+        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+        .then(({ ok, data }) => {
+            if (ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Pedido Realizado!',
+                    text: data.message,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                cart = []; // Vaciar carrito
+                updateCart();
+                cartModal.classList.remove('active');
+                
+                // Opcional: Redirigir a "Mis Pedidos"
+                setTimeout(() => {
+                    document.querySelector('.nav-link[data-section="pedidos"]').click();
+                }, 2000);
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.message || 'No se pudo procesar el pedido.',
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Conexión',
+                text: 'No se pudo comunicar con el servidor.',
+            });
+        })
+        .finally(() => {
+            checkoutBtn.disabled = false;
+            checkoutBtn.textContent = 'Realizar Pedido';
+        });
+    });

@@ -46,13 +46,23 @@
                                     data-descripcion="{{ $platillo->descripcion }}"
                                     data-precio="{{ number_format($platillo->precio, 2) }}"
                                     data-imagen="{{ $platillo->imagen_url }}"
-                                    data-restaurante="{{ $platillo->user->full_name }}">
+                                    data-restaurante="{{ $platillo->user->full_name }}" 
+                                    data-id="{{ $platillo->id }}">
                                 Ver más
                             </button>
                         </div>
                     </div>
                     <div class="platillo-card-actions">
-                        <button class="btn btn-primary btn-sm" style="width: 100%;">Ordenar</button>
+                        <button class="btn btn-primary btn-sm btn-ordenar" 
+                                style="width: 100%;"
+                                data-nombre="{{ $platillo->nombre }}"
+                                data-descripcion="{{ $platillo->descripcion }}"
+                                data-precio="{{ number_format($platillo->precio, 2) }}"
+                                data-imagen="{{ $platillo->imagen_url }}"
+                                data-restaurante="{{ $platillo->user->full_name }}" 
+                                data-id="{{ $platillo->id }}">
+                            Ordenar
+                        </button>
                     </div>
                 </div>
             @endforeach

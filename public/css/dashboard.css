@@ -2063,3 +2063,94 @@ input:checked+.switch-slider:before {
     font-weight: 700;
     color: var(--primary-color);
 }
+
+/* ============================================= */
+/* === ESTILOS PARA EL CARRITO DE COMPRAS    === */
+/* ============================================= */
+
+.cart-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1050;
+    transition: transform 0.3s ease;
+}
+
+.cart-fab:hover {
+    transform: scale(1.1);
+}
+
+.cart-fab svg {
+    color: white;
+    width: 28px;
+    height: 28px;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #000;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 2px solid var(--card-bg);
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cart-item-details h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.cart-item-details p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cart-item-actions input {
+    width: 50px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--main-bg);
+    color: var(--text-color-dark);
+}
+
+.cart-item-actions button {
+    background: transparent;
+    border: none;
+    color: var(--color-danger);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
