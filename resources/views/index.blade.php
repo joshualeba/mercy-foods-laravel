@@ -148,8 +148,67 @@
         <section class="testimonials-carousel">
             <div class="container">
                 <h2 class="section-title text-center">Lo que dicen nuestros clientes</h2>
-                <div class="swiper testimonials-slider">
-                    <div class="swiper-wrapper"><div class="swiper-slide"><div class="testimonial-card"><p>"¡Increíble servicio! La comida llegó caliente y rápido."</p><div class="testimonial-author">- Ana Sofía L.</div></div></div><div class="swiper-slide"><div class="testimonial-card"><p>"Me encanta apoyar a los restaurantes de mi zona. ¡Recomendado!"</p><div class="testimonial-author">- Carlos G.</div></div></div><div class="swiper-slide"><div class="testimonial-card"><p>"La mejor opción para no cocinar. Siempre puntuales."</p><div class="testimonial-author">- Mariana P.</div></div></div><div class="swiper-slide"><div class="testimonial-card"><p>"Descubrí una joya de restaurante local gracias a la app."</p><div class="testimonial-author">- Javier M.</div></div></div><div class="swiper-slide"><div class="testimonial-card"><p>"El proceso de pago es súper seguro y fácil. Cero complicaciones."</p><div class="testimonial-author">- Fernanda R.</div></div></div><div class="swiper-slide"><div class="testimonial-card"><p>"Perfecto para pedir comida para toda la familia. Hay para todos."</p><div class="testimonial-author">- Ricardo V.</div></div></div></div>
+                <div class="testimonials-wrapper">
+                    <div class="swiper testimonials-slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-initials-frame">
+                                        <div class="testimonial-initials"><span>AS</span></div>
+                                    </div>
+                                    <p>"¡Increíble servicio! La comida llegó caliente y rápido."</p>
+                                    <div class="testimonial-author">- Ana Sofía L.</div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-initials-frame">
+                                        <div class="testimonial-initials"><span>CG</span></div>
+                                    </div>
+                                    <p>"Me encanta apoyar a los restaurantes de mi zona. ¡Recomendado!"</p>
+                                    <div class="testimonial-author">- Carlos G.</div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-initials-frame">
+                                        <div class="testimonial-initials"><span>MP</span></div>
+                                    </div>
+                                    <p>"La mejor opción para no cocinar. Siempre puntuales."</p>
+                                    <div class="testimonial-author">- Mariana P.</div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-initials-frame">
+                                        <div class="testimonial-initials"><span>JM</span></div>
+                                    </div>
+                                    <p>"Descubrí una joya de restaurante local gracias a la app."</p>
+                                    <div class="testimonial-author">- Javier M.</div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-initials-frame">
+                                        <div class="testimonial-initials"><span>FR</span></div>
+                                    </div>
+                                    <p>"El proceso de pago es súper seguro y fácil. Cero complicaciones."</p>
+                                    <div class="testimonial-author">- Fernanda R.</div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-initials-frame">
+                                        <div class="testimonial-initials"><span>RV</span></div>
+                                    </div>
+                                    <p>"Perfecto para pedir comida para toda la familia. Hay para todos."</p>
+                                    <div class="testimonial-author">- Ricardo V.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
             </div>
         </section>
