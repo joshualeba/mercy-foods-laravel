@@ -1945,3 +1945,25 @@ input:checked+.switch-slider:before {
     gap: 15px;
     margin-top: 30px;
 }
+
+/* ============================================= */
+/* === AJUSTES RESPONSIVOS PARA PERFIL Y PAGO === */
+/* ============================================= */
+@media (max-width: 768px) {
+
+    /* Reduce el tamaño del título "Método de pago agregados" */
+    .profile-card h2 {
+        font-size: 1.1rem; /* Un tamaño más pequeño y legible en móviles */
+    }
+
+    /* Hace que el grid de 2 columnas se convierta en una sola */
+    .profile-grid {
+        grid-template-columns: 1fr; /* Apila los elementos verticalmente */
+        gap: 1rem; /* Reduce el espacio entre ellos */
+    }
+
+    /* Elimina el span de 2 columnas para que todo ocupe una sola */
+    .form-group.span-2 {
+        grid-column: auto;
+    }
+}

@@ -267,13 +267,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const formElements = profileForm.querySelectorAll('input:not([type="password"]), select');
 
             formElements.forEach(el => {
+                // Si el elemento no tiene un 'name', no es parte del formulario que se envía.
+                // Esto excluye los campos de la tarjeta que solo son de visualización.
+                if (!el.name) {
+                    return;
+                }
+
                 if (el.id === 'profile-full_name' || el.id === 'profile-email') {
                     el.readOnly = true;
                     return;
                 }
                 
                 if (el.tagName === 'SELECT') {
-                    el.disabled = !isEditing;
+                    el.disabled = !isEditing; // Usar 'disabled' para selects es más robusto.
                     el.classList.toggle('form-control-plaintext', !isEditing);
                 } else {
                     el.readOnly = !isEditing;
