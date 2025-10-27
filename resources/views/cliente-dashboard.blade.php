@@ -148,7 +148,7 @@
     <div class="confirmation-modal-overlay" id="cart-modal">
         <div class="modal-box" style="max-width: 600px; text-align: left;">
             <button class="close-modal-btn" id="close-cart-btn">&times;</button>
-            <h2>Mi Carrito de Compras</h2>
+            <h2>Mi carrito de compras</h2>
             <div id="cart-items-container" style="max-height: 40vh; overflow-y: auto; padding-right: 15px;">
                 {{-- Los items del carrito se insertarán aquí con JavaScript --}}
             </div>
@@ -156,7 +156,7 @@
                 <h4>Total: <span id="cart-total">$0.00</span></h4>
             </div>
             <div class="modal-buttons" style="margin-top: 20px;">
-                <button class="btn btn-primary" id="checkout-btn" disabled>Realizar Pedido</button>
+                <button class="btn btn-primary" id="checkout-btn" disabled>Realizar pedido</button>
             </div>
         </div>
     </div>

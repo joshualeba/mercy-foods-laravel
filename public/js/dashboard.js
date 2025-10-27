@@ -1203,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p>$${parseFloat(item.price).toFixed(2)}</p>
                     </div>
                     <div class="cart-item-actions">
-                        <input type="number" value="${item.quantity}" min="1" data-id="${item.id}" class="item-quantity">
+                        <input type="text" inputmode="numeric" value="${item.quantity}" data-id="${item.id}" class="item-quantity">
                         <button class="remove-item" data-id="${item.id}">&times;</button>
                     </div>
                 `;
