@@ -1408,82 +1408,72 @@ document.addEventListener('DOMContentLoaded', function () {
     // Evento para el botón "Realizar Pedido"
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
-        // Primero, calculamos el total para mostrarlo en el modal
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const totalFormatted = `$${total.toFixed(2)}`;
-        cartModal.classList.remove('active');
-
-        // Usamos Swal.fire para mostrar el modal de confirmación
-        Swal.fire({
-            title: 'Confirmar tu pedido',
-            html: `¿Estás seguro/a de que deseas realizar el pago por un total de <strong>${totalFormatted}</strong>?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#FF6347',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Aceptar y pagar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            // Esta parte se ejecuta DESPUÉS de que el usuario presiona un botón
-            // Si el usuario confirma...
-            if (result.isConfirmed) {
-                checkoutBtn.disabled = true;
-                checkoutBtn.textContent = 'Procesando...';
-
-                fetch(processCartUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({ cart: cart })
-                })
-                .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                .then(({ ok, data }) => {
-                    if (ok) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Pedido Realizado!',
-                            text: data.message,
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                        cart = []; // Vaciar carrito
-                        updateCart();
+            // Paso 1: Verificar si el usuario tiene un método de pago.
+            fetch(verifyPaymentUrl) // Esta variable ya está definida en tu vista.
+                .then(response => response.json())
+                .then(data => {
+                    // Si SÍ tiene método de pago, procede con la confirmación normal.
+                    if (data.hasPaymentMethod) {
+                        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                        const totalFormatted = `$${total.toFixed(2)}`;
                         cartModal.classList.remove('active');
-                        
-                        setTimeout(() => {
-                            const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
-                            if (pedidosLink) {
-                                pedidosLink.click();
-                            }
-                        }, 2000);
 
-                    } else {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: data.message || 'No se pudo procesar el pedido.',
+                            title: 'Confirmar tu pedido',
+                            html: `¿Estás seguro/a de que deseas realizar el pago por <strong>${totalFormatted}</strong>?`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#FF6347',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Aceptar y pagar',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // (El resto de la lógica de pago es la misma que ya tenías)
+                                checkoutBtn.disabled = true;
+                                checkoutBtn.textContent = 'Procesando...';
+
+                                fetch(processCartUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                        'Accept': 'application/json',
+                                    },
+                                    body: JSON.stringify({ cart: cart })
+                                })
+                                .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                                .then(({ ok, data }) => {
+                                    if (ok) {
+                                        Swal.fire({ icon: 'success', title: '¡Pedido Realizado!', text: data.message, showConfirmButton: false, timer: 2000 });
+                                        cart = [];
+                                        updateCart();
+                                        setTimeout(() => document.querySelector('.nav-link[data-section="pedidos"]').click(), 2000);
+                                    } else {
+                                        Swal.fire({ icon: 'error', title: 'Oops...', text: data.message || 'No se pudo procesar el pedido.' });
+                                    }
+                                })
+                                .catch(error => Swal.fire({ icon: 'error', title: 'Error de Conexión', text: 'No se pudo comunicar con el servidor.' }))
+                                .finally(() => {
+                                    checkoutBtn.disabled = false;
+                                    checkoutBtn.textContent = 'Realizar Pedido';
+                                });
+                            }
                         });
+                    } else {
+                        // Si NO tiene método de pago, muestra el nuevo modal.
+                        cartModal.classList.remove('active'); // Cierra el carrito
+                        const addPaymentModal = document.getElementById('add-payment-modal');
+                        if (addPaymentModal) {
+                            addPaymentModal.classList.add('active');
+                        }
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error de Conexión',
-                        text: 'No se pudo comunicar con el servidor.',
-                    });
-                })
-                .finally(() => {
-                    checkoutBtn.disabled = false;
-                    checkoutBtn.textContent = 'Realizar Pedido';
+                    console.error('Error al verificar el método de pago:', error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo verificar tu método de pago. Intenta de nuevo.' });
                 });
-            }
-            // Si el usuario hace clic en "Cancelar", no se hace nada y el modal simplemente se cierra.
         });
-    });
     }
 
 
@@ -1507,3 +1497,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // --- LÓGICA PARA EL MODAL DE AGREGAR PAGO ---
+    const addPaymentModal = document.getElementById('add-payment-modal');
+    const goToPaymentBtn = document.getElementById('go-to-payment-btn');
+
+    // 1. Lógica para el botón "Agregar método de pago"
+    if (goToPaymentBtn) {
+        goToPaymentBtn.addEventListener('click', () => {
+            // Cierra el modal actual
+            if (addPaymentModal) {
+                addPaymentModal.classList.remove('active');
+            }
+            
+            // Busca el enlace del sidebar que lleva a la sección de pago
+            const paymentNavLink = document.querySelector('.nav-link[data-section="pago"]');
+            
+            // Simula un clic en ese enlace para cargar la sección
+            if (paymentNavLink) {
+                paymentNavLink.click();
+            }
+        });
+    }
+
+    // 2. Lógica para cerrar el modal si se hace clic fuera de él
+    if (addPaymentModal) {
+         addPaymentModal.addEventListener('click', (e) => {
+            if (e.target === addPaymentModal) {
+                addPaymentModal.classList.remove('active');
+            }
+        });
+    }
+});
