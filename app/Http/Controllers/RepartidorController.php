@@ -20,6 +20,7 @@ class RepartidorController extends Controller
         return view('repartidor-dashboard', compact('entregasHoy', 'gananciasHoy', 'pedidosPendientes'));
     }
 
+    // Dentro del método verPedidos, busca esta sección y modifícala
     public function verPedidos()
     {
         $repartidor = Auth::user();
@@ -38,7 +39,47 @@ class RepartidorController extends Controller
                                     ->latest()
                                     ->get();
 
-        return view('repartidor.pedidos', compact('pedidosDisponibles', 'pedidosPorRecoger'));
+        // NUEVO: Pedidos que el repartidor ya recogió y están listos para entregar
+        $pedidosRecogidos = Pedido::where('repartidor_id', $repartidor->id)
+                                    ->where('estado', 'recogido')
+                                    ->with(['restaurante', 'cliente'])
+                                    ->latest()
+                                    ->get();
+
+        // Pedidos que el repartidor ya entregó
+        $pedidosEntregados = Pedido::where('repartidor_id', $repartidor->id)
+                                    ->where('estado', 'entregado')
+                                    ->with(['restaurante', 'cliente'])
+                                    ->latest()
+                                    ->get();
+
+        return view('repartidor.pedidos', compact('pedidosDisponibles', 'pedidosPorRecoger', 'pedidosRecogidos', 'pedidosEntregados'));
+    }
+
+    // Modifica el método marcarRecogido para que el estado sea 'recogido'
+    public function marcarRecogido(Request $request, Pedido $pedido)
+    {
+        if ($pedido->repartidor_id !== Auth::id()) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
+        $pedido->estado = 'recogido'; // <-- CAMBIO IMPORTANTE
+        $pedido->save();
+
+        return response()->json(['message' => '¡Pedido marcado como recogido!']);
+    }
+
+    // AGREGA este nuevo método para marcar como entregado
+    public function marcarEntregado(Request $request, Pedido $pedido)
+    {
+        if ($pedido->repartidor_id !== Auth::id()) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
+        $pedido->estado = 'entregado';
+        $pedido->save();
+
+        return response()->json(['message' => '¡Pedido entregado! El cliente ha sido notificado.']);
     }
 
     public function aceptarPedido(Request $request, Pedido $pedido)
@@ -53,19 +94,5 @@ class RepartidorController extends Controller
         }
 
         return response()->json(['message' => 'Este pedido ya no está disponible.'], 409); // 409 Conflict
-    }
-
-    public function marcarRecogido(Request $request, Pedido $pedido)
-    {
-        // Verificamos que el pedido le pertenezca al repartidor autenticado
-        if ($pedido->repartidor_id !== Auth::id()) {
-            return response()->json(['message' => 'No autorizado'], 403);
-        }
-
-        // Cambiamos el estado a 'entregado' y guardamos
-        $pedido->estado = 'entregado';
-        $pedido->save();
-
-        return response()->json(['message' => '¡Pedido marcado como recogido! El cliente ha sido notificado.']);
     }
 }

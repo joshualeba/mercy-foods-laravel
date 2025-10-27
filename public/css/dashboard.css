@@ -2207,3 +2207,10 @@ input:checked+.switch-slider:before {
         margin-top: 0.5rem;
     }
 }
+
+@media (max-width: 768px) {
+    .order-board {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+}

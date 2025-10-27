@@ -853,6 +853,87 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // --- LÓGICA PARA MARCAR PEDIDOS (REPARTIDOR) ---
+    document.body.addEventListener('click', function(e) {
+        const recogidoBtn = e.target.closest('.btn-marcar-recogido');
+        const entregadoBtn = e.target.closest('.btn-marcar-entregado');
+
+        if (recogidoBtn) {
+            e.preventDefault();
+            const pedidoId = recogidoBtn.dataset.id;
+            actualizarEstadoPedido(pedidoId, 'recogido', recogidoBtn);
+        }
+
+        if (entregadoBtn) {
+            e.preventDefault();
+            const pedidoId = entregadoBtn.dataset.id;
+            actualizarEstadoPedido(pedidoId, 'entregado', entregadoBtn);
+        }
+    });
+
+    function actualizarEstadoPedido(id, estado, boton) {
+        let url = `/repartidor/pedidos/${id}/${estado}`;
+        let title, text, confirmButtonText;
+
+        if (estado === 'recogido') {
+            title = '¿Confirmar recolección?';
+            text = 'Asegúrate de tener el pedido correcto antes de continuar.';
+            confirmButtonText = 'Sí, lo tengo';
+        } else {
+            title = '¿Confirmar entrega?';
+            text = 'El pedido se marcará como finalizado.';
+            confirmButtonText = 'Sí, entregar';
+        }
+
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                boton.disabled = true;
+                boton.textContent = 'Actualizando...';
+
+                fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok) {
+                        Swal.fire('¡Éxito!', data.message, 'success');
+                        // Recargar la sección de pedidos para ver los cambios
+                        const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
+                        if (pedidosLink) {
+                            pedidosLink.click();
+                        } else {
+                            window.location.reload();
+                        }
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                        boton.disabled = false;
+                        boton.textContent = (estado === 'recogido') ? 'Marcar como recogido' : 'Marcar como entregado';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
+                    boton.disabled = false;
+                    boton.textContent = (estado === 'recogido') ? 'Marcar como recogido' : 'Marcar como entregado';
+                });
+            }
+        });
+    }
+
+
     // --- LÓGICA GENERAL DEL DASHBOARD (TEMA, PERFIL, LOGOUT, ETC.) ---
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {

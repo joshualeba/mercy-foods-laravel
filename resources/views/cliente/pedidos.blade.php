@@ -66,10 +66,10 @@
         </div>
     </div>
 
-    {{-- Columna: Entregados --}}
+    {{-- Columna: Recibidos --}}
     <div class="order-column">
         <div class="order-column-header">
-            <h2>Entregados</h2>
+            <h2>Recibidos</h2>
             <span class="order-count">{{ $pedidosEntregados->count() }}</span>
         </div>
         <div class="order-cards-container">
@@ -77,7 +77,7 @@
                 <div class="order-card" data-id="{{ $pedido->id }}">
                     <div class="order-card-header">
                         <h3>Pedido #{{ $pedido->id }}</h3>
-                        <span>Entregado {{ $pedido->updated_at->diffForHumans() }}</span>
+                        <span>Recibido {{ $pedido->updated_at->diffForHumans() }}</span>
                     </div>
                     <div class="order-card-body">
                         <p><strong>Restaurante:</strong> {{ $pedido->restaurante->full_name }}</p>
@@ -88,7 +88,7 @@
                     </div>
                 </div>
             @empty
-                <p>Aún no tienes pedidos entregados.</p>
+                <p>Aún no tienes pedidos recibidos.</p>
             @endforelse
         </div>
     </div>
