@@ -1,5 +1,5 @@
 <div class="profile-section-container">
-    <h1>Mi perfil de repartidor</h1>
+    <h1>Mi perfil</h1>
 
     <form id="profile-form" action="{{ route('repartidor.perfil.update') }}" class="profile-form view-mode" novalidate>
         @csrf

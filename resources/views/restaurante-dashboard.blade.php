@@ -31,7 +31,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                     <span>Inicio</span>
                 </a></li>
-                <li><a href="#pedidos" class="nav-link" data-section="pedidos">
+                <li><a href="{{ route('restaurante.pedidos.index') }}" class="nav-link" data-section="pedidos">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                     <span>Gestionar pedidos</span>
                 </a></li>
@@ -163,119 +163,7 @@
                     </div>
                 </section>
                 <section id="pedidos" class="dashboard-section">
-                    <h1>Gestionar pedidos</h1>
-
-                    <div class="order-board">
-                        <div class="order-column">
-                            <div class="order-column-header">
-                                <h2>Nuevos</h2>
-                                <span class="order-count">2</span>
-                            </div>
-                            <div class="order-cards-container">
-                                <div class="order-card">
-                                    <div class="order-card-header">
-                                        <h3>Pedido #1021</h3>
-                                        <span>hace 2 min</span>
-                                    </div>
-                                    <div class="order-card-body">
-                                        <p><strong>Cliente:</strong> Ana Sofía L.</p>
-                                        <div class="order-card-items">
-                                            <ul>
-                                                <li>1x Pizza Pepperoni</li>
-                                                <li>2x Refresco de Cola</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="order-card-footer">
-                                        <span class="order-total">$250.00</span>
-                                        <div class="order-actions">
-                                            <button class="btn btn-primary btn-sm">Aceptar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="order-card">
-                                    <div class="order-card-header">
-                                        <h3>Pedido #1020</h3>
-                                        <span>hace 5 min</span>
-                                    </div>
-                                    <div class="order-card-body">
-                                        <p><strong>Cliente:</strong> Carlos G.</p>
-                                        <div class="order-card-items">
-                                            <ul>
-                                                <li>1x Sushi Roll Express</li>
-                                                <li>1x Tacos "El Campeón"</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="order-card-footer">
-                                        <span class="order-total">$310.50</span>
-                                        <div class="order-actions">
-                                            <button class="btn btn-primary btn-sm">Aceptar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="order-column">
-                            <div class="order-column-header">
-                                <h2>En Preparación</h2>
-                                <span class="order-count">1</span>
-                            </div>
-                            <div class="order-cards-container">
-                                <div class="order-card">
-                                    <div class="order-card-header">
-                                        <h3>Pedido #1019</h3>
-                                        <span>hace 10 min</span>
-                                    </div>
-                                    <div class="order-card-body">
-                                        <p><strong>Cliente:</strong> Mariana P.</p>
-                                        <div class="order-card-items">
-                                            <ul>
-                                                <li>3x Tacos al Pastor</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="order-card-footer">
-                                        <span class="order-total">$90.00</span>
-                                        <div class="order-actions">
-                                            <button class="btn btn-primary btn-sm">Marcar como Listo</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="order-column">
-                            <div class="order-column-header">
-                                <h2>Listos para Recoger</h2>
-                                <span class="order-count">1</span>
-                            </div>
-                            <div class="order-cards-container">
-                                <div class="order-card">
-                                    <div class="order-card-header">
-                                        <h3>Pedido #1018</h3>
-                                        <span>hace 15 min</span>
-                                    </div>
-                                    <div class="order-card-body">
-                                        <p><strong>Cliente:</strong> Javier M.</p>
-                                        <div class="order-card-items">
-                                            <ul>
-                                                <li>1x Hamburguesa Clásica</li>
-                                                <li>1x Papas a la Francesa</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="order-card-footer">
-                                        <span class="order-total">$180.00</span>
-                                        <div class="order-actions">
-                                            <button class="btn btn-sm">Entregado</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {{-- El contenido se cargará dinámicamente desde el controlador --}}
                 </section>
 
                 <div id="ajax-content-wrapper"></div>

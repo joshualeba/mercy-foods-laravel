@@ -9,6 +9,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ClienteProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RepartidorProfileController;
+use App\Http\Controllers\PedidoController;
 
 Route::get('/', function () {
     return view('index');
@@ -61,6 +62,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/repartidor/dashboard', [App\Http\Controllers\RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
     Route::get('/perfil-repartidor', [RepartidorProfileController::class, 'index'])->name('repartidor.perfil.index');
     Route::put('/perfil-repartidor', [RepartidorProfileController::class, 'update'])->name('repartidor.perfil.update');
+
+    // Rutas de pedidos para restaurantes
+    Route::get('/pedidos', [PedidoController::class, 'index'])->name('restaurante.pedidos.index');
+    Route::put('/pedidos/{pedido}/estado', [PedidoController::class, 'actualizarEstado'])->name('pedidos.actualizarEstado');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);
