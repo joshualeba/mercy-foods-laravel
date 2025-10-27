@@ -2181,3 +2181,29 @@ input:checked+.switch-slider:before {
     text-align: center;
     padding: 0;
 }
+
+/* ============================================= */
+/* === ESTILOS PARA MENSAJE DE ESTADO PEDIDO === */
+/* ============================================= */
+.order-status-message {
+    background-color: var(--main-bg);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-color-light);
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .order-card-footer {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .order-status-message {
+        width: 100%;
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+}

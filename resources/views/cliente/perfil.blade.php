@@ -90,6 +90,7 @@
             <h2>Método de pago agregados a esta cuenta</h2>
 
             @if(Auth::user()->card_last_four)
+                {{-- Contenedor que muestra los datos de la tarjeta --}}
                 <div class="profile-grid">
                     {{-- Nombre del titular --}}
                     <div class="form-group span-2">
@@ -109,8 +110,16 @@
                         <input type="text" value="{{ Auth::user()->card_expiry }}" readonly>
                     </div>
                 </div>
+
+                {{-- Botón para eliminar el método de pago (centrado) --}}
+                <div class="text-center" style="padding: 1rem 0;">
+                    <button id="delete-payment-method-btn" class="btn btn-danger" style="border-radius: 8px; padding: 10px 20px;">
+                        <i class="fas fa-trash-alt"></i> Eliminar este método de pago
+                    </button>
+                </div>
+
             @else
-                {{-- Botón para agregar método si no existe --}}
+                {{-- Mensaje y botón para agregar método si no existe --}}
                 <div class="text-center" style="padding: 1rem 0;">
                     <p>No tienes ningún método de pago guardado.</p>
                     <button id="add-payment-method-from-profile" class="btn btn-primary" style="border-radius: 8px; padding: 10px 20px;">

@@ -59,4 +59,14 @@ class PaymentController extends Controller
             return response()->json(['success' => false, 'message' => 'Ocurrió un error inesperado al guardar tus datos.'], 500);
         }
     }
+
+    public function verify()
+    {
+        $user = Auth::user();
+
+        // Verificamos si la columna 'card_last_four' tiene un valor
+        $hasPaymentMethod = !is_null($user->card_last_four);
+
+        return response()->json(['hasPaymentMethod' => $hasPaymentMethod]);
+    }
 }

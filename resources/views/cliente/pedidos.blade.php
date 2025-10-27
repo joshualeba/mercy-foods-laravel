@@ -18,11 +18,18 @@
                     </div>
                     <div class="order-card-body">
                         <p><strong>Restaurante:</strong> {{ $pedido->restaurante->full_name }}</p>
-                        <p><strong>Estado:</strong> {{ ucfirst(str_replace('_', ' ', $pedido->estado)) }}</p>
+                            <p><strong>Estado:</strong> {{ ucfirst(str_replace('_', ' ', $pedido->estado)) }}</p>
+                            @if ($pedido->estado == 'pendiente')
+                                <button class="btn btn-danger btn-sm mt-2 cancel-order-btn" data-id="{{ $pedido->id }}">
+                                    Cancelar pedido
+                                </button>
+                            @endif
                     </div>
                     <div class="order-card-footer">
                         <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
-                        <small>Tu pedido está siendo preparado...</small>
+                        <div class="order-status-message">
+                            <small>Tu pedido está siendo preparado...</small>
+                        </div>
                     </div>
                 </div>
             @empty

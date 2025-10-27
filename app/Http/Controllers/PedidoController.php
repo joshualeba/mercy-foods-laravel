@@ -142,4 +142,27 @@ class PedidoController extends Controller
 
         return response()->json(['message' => '¡Pedido realizado con éxito!', 'pedido_id' => $pedido->id]);
     }
+
+    public function cancelar($id)
+    {
+        // Buscamos el pedido por su ID
+        $pedido = \App\Models\Pedido::find($id);
+
+        // Verificamos si el pedido existe y si pertenece al usuario autenticado
+        if (!$pedido || $pedido->cliente_id !== auth()->id()) {
+            return response()->json(['message' => 'Pedido no encontrado.'], 404);
+        }
+
+        // Solo permitimos cancelar pedidos que estén en estado 'pendiente'
+        if ($pedido->estado !== 'pendiente') {
+            return response()->json(['message' => 'Este pedido ya no se puede cancelar.'], 400);
+        }
+
+        // Cambiamos el estado a 'cancelado' y guardamos
+        $pedido->estado = 'cancelado';
+        $pedido->save();
+
+        // Devolvemos una respuesta de éxito
+        return response()->json(['message' => '¡Pedido cancelado correctamente!']);
+    }
 }

@@ -55,11 +55,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perfil-cliente', [ClienteProfileController::class, 'index'])->name('cliente.perfil.index');
     Route::put('/perfil-cliente', [ClienteProfileController::class, 'update'])->name('cliente.perfil.update');
     Route::get('/cliente/pedidos', [PedidoController::class, 'verPedidosCliente'])->name('cliente.pedidos.index');
+    Route::post('/cliente/pedidos/{id}/cancelar', [App\Http\Controllers\PedidoController::class, 'cancelar'])->name('cliente.pedidos.cancelar');
     Route::post('/carrito/procesar', [App\Http\Controllers\PedidoController::class, 'crearDesdeCarrito'])->name('carrito.procesar');
+    Route::post('/cliente/perfil/eliminar-pago', [App\Http\Controllers\ClienteProfileController::class, 'eliminarMetodoPago'])->name('cliente.pago.eliminar');
 
     // RUTAS PARA LA PASARELA DE PAGO ---
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
     Route::post('/pago', [App\Http\Controllers\PaymentController::class, 'store'])->name('cliente.pago.procesar');
+    Route::get('/verificar-pago', [PaymentController::class, 'verify'])->name('cliente.pago.verificar');
 
     // RUTAS PARA EL PERFIL DEL REPARTIDOR ---
     Route::get('/repartidor/dashboard', [RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');

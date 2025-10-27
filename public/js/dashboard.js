@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (input) input.classList.add('is-invalid');
 
                         if (errorContainer) {
-                            errorContainer.textContent = error.errors[key][0];
+                            errorContainer.textContent = error.errors[key][0];  
                         }
                     }
                     showProfileNotification('Error de validación', firstErrorMessage, true);
@@ -423,6 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        initializeDeletePayment();
         setProfileEditMode(false);
     };
 
@@ -833,6 +834,123 @@ document.addEventListener('DOMContentLoaded', function() {
         menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
     }
 
+    // Delegación de eventos para los botones de cancelar pedido
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('cancel-order-btn')) {
+            const pedidoId = e.target.dataset.id;
+            
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, cancelar pedido',
+                cancelButtonText: 'No, mantener'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/cliente/pedidos/${pedidoId}/cancelar`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                    .then(({ ok, data }) => {
+                        if (ok) {
+                            Swal.fire(
+                                '¡Cancelado!',
+                                data.message,
+                                'success'
+                            );
+                            // Actualizamos la interfaz
+                            const button = e.target;
+                            const card = button.closest('.order-card'); // Encuentra la tarjeta del pedido
+                            const statusElement = card.querySelector('p:nth-of-type(2)'); // El segundo <p> es el estado
+                            
+                            if (statusElement) {
+                                statusElement.innerHTML = '<strong>Estado:</strong> Cancelado';
+                            }
+                            
+                            button.remove(); // Quitamos el botón después de cancelar
+                        } else {
+                            Swal.fire(
+                                'Error',
+                                data.message || 'No se pudo cancelar el pedido.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire(
+                            'Error de Conexión',
+                            'No se pudo comunicar con el servidor.',
+                            'error'
+                        );
+                    });
+                }
+            });
+        }
+    });
+
+    // Lógica para eliminar el método de pago en la sección de perfil
+    const initializeDeletePayment = () => {
+        const deletePaymentBtn = document.getElementById('delete-payment-method-btn');
+
+        if (deletePaymentBtn) {
+            deletePaymentBtn.addEventListener('click', () => {
+                Swal.fire({
+                    title: '¿Estás seguro/a?',
+                    text: "Tu método de pago se eliminará permanentemente.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/cliente/perfil/eliminar-pago', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                        .then(({ ok, data }) => {
+                            if (ok) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Eliminado!',
+                                    text: data.message,
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: data.message || 'No se pudo eliminar el método de pago.'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error de Conexión',
+                                text: 'No se pudo comunicar con el servidor.'
+                            });
+                        });
+                    }
+                });
+            });
+        }
+    };
 });
 
 // =================================================================
@@ -1287,56 +1405,105 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    checkoutBtn.addEventListener('click', () => {
-        checkoutBtn.disabled = true;
-        checkoutBtn.textContent = 'Procesando...';
+    // Evento para el botón "Realizar Pedido"
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+        // Primero, calculamos el total para mostrarlo en el modal
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalFormatted = `$${total.toFixed(2)}`;
+        cartModal.classList.remove('active');
 
-        fetch(processCartUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ cart: cart })
-        })
-        .then(response => response.json().then(data => ({ ok: response.ok, data })))
-        .then(({ ok, data }) => {
-            if (ok) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Pedido Realizado!',
-                    text: data.message,
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-                cart = []; // Vaciar carrito
-                updateCart();
-                cartModal.classList.remove('active');
-                
-                // Opcional: Redirigir a "Mis Pedidos"
-                setTimeout(() => {
-                    document.querySelector('.nav-link[data-section="pedidos"]').click();
-                }, 2000);
+        // Usamos Swal.fire para mostrar el modal de confirmación
+        Swal.fire({
+            title: 'Confirmar tu pedido',
+            html: `¿Estás seguro/a de que deseas realizar el pago por un total de <strong>${totalFormatted}</strong>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#FF6347',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Aceptar y pagar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            // Esta parte se ejecuta DESPUÉS de que el usuario presiona un botón
+            // Si el usuario confirma...
+            if (result.isConfirmed) {
+                checkoutBtn.disabled = true;
+                checkoutBtn.textContent = 'Procesando...';
 
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: data.message || 'No se pudo procesar el pedido.',
+                fetch(processCartUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ cart: cart })
+                })
+                .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Pedido Realizado!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        cart = []; // Vaciar carrito
+                        updateCart();
+                        cartModal.classList.remove('active');
+                        
+                        setTimeout(() => {
+                            const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
+                            if (pedidosLink) {
+                                pedidosLink.click();
+                            }
+                        }, 2000);
+
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message || 'No se pudo procesar el pedido.',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de Conexión',
+                        text: 'No se pudo comunicar con el servidor.',
+                    });
+                })
+                .finally(() => {
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.textContent = 'Realizar Pedido';
                 });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error de Conexión',
-                text: 'No se pudo comunicar con el servidor.',
-            });
-        })
-        .finally(() => {
-            checkoutBtn.disabled = false;
-            checkoutBtn.textContent = 'Realizar Pedido';
+            // Si el usuario hace clic en "Cancelar", no se hace nada y el modal simplemente se cierra.
         });
     });
+    }
+
+
+    const addPaymentModal = document.getElementById('add-payment-modal');
+    const goToPaymentBtn = document.getElementById('go-to-payment-btn');
+
+    // Ir a la sección de método de pago
+    if (goToPaymentBtn) {
+        goToPaymentBtn.addEventListener('click', () => {
+            addPaymentModal.classList.remove('active');
+            // Simula un clic en el enlace del sidebar
+            document.querySelector('.nav-link[data-section="pago"]').click();
+        });
+    }
+
+    // Cerrar modal de "agregar pago" si se da clic fuera
+    if (addPaymentModal) {
+         addPaymentModal.addEventListener('click', (e) => {
+            if (e.target === addPaymentModal) {
+                addPaymentModal.classList.remove('active');
+            }
+        });
+    }

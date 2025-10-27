@@ -57,4 +57,25 @@ class ClienteProfileController extends Controller
             'address' => $user->address,
         ]);
     }
+
+    public function eliminarMetodoPago()
+    {
+        // Obtenemos al usuario autenticado
+        $user = auth()->user();
+
+        // Verificamos si realmente tiene un método de pago para eliminar
+        if ($user->card_last_four) {
+            // Establecemos los campos de la tarjeta a null (solo los que existen)
+            $user->card_last_four = null;
+            $user->card_expiry = null;
+            // La columna card_name no existe, por eso la quitamos de aquí.
+            
+            // Guardamos los cambios en la base de datos
+            $user->save();
+
+            return response()->json(['message' => 'Método de pago eliminado correctamente.']);
+        }
+
+        return response()->json(['message' => 'No se encontró ningún método de pago para eliminar.'], 404);
+    }
 }

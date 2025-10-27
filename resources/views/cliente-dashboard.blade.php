@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body data-theme="light">
 
@@ -166,6 +167,7 @@
     <script src="{{ asset('js/dashboard.js') }}"></script>
     <script>
         const processCartUrl = '{{ route("carrito.procesar") }}';
+        const verifyPaymentUrl = '{{ route("cliente.pago.verificar") }}';
     </script>
 
     {{-- Modal para detalles del platillo --}}
@@ -190,5 +192,29 @@
             </div>
         </div>
     </div>
+
+    {{-- Nuevo Modal para Confirmar Pedido --}}
+    <div class="confirmation-modal-overlay" id="confirm-order-modal">
+        <div class="modal-box">
+            <h2>Confirmar tu pedido</h2>
+            <p>¿Estás seguro/a de que deseas realizar el pago por un total de <strong id="confirm-total-amount"></strong>?</p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="cancel-order-btn">Cancelar</button>
+                <button class="btn-confirm" id="confirm-order-btn">Aceptar y pagar</button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Nuevo Modal para agregar Método de Pago --}}
+    <div class="confirmation-modal-overlay" id="add-payment-modal">
+        <div class="modal-box">
+            <h2>Método de pago requerido</h2>
+            <p>Para continuar, necesitas agregar un método de pago a tu cuenta.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="go-to-payment-btn">Agregar método de pago</button>
+            </div>
+        </div>
+    </div>
+</body>
 </body>
 </html>
