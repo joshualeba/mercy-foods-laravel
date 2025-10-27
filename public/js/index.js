@@ -40,65 +40,78 @@ const swiper = new Swiper('.testimonials-slider', {
 // --- LÓGICA PRINCIPAL DE LA PÁGINA ---
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- LÓGICA PARA EL ACORDEÓN DE FAQ ---
     const faqAccordionContainer = document.querySelector('#faq-modal .faq-accordion');
     let faqsLoaded = false;
 
-    // Función para manejar el click en las preguntas (la funcionalidad que faltaba)
-    const setupFaqEventListeners = () => {
-        const faqItems = document.querySelectorAll('.faq-item');
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            question.addEventListener('click', () => {
-                const answer = item.querySelector('.faq-answer');
-                const isOpen = item.classList.contains('active');
+    const faqs = [
+        {
+            question: '¿Cómo funciona Mercy Food para los clientes?',
+            answer: 'Es muy fácil. Simplemente buscas tu platillo o restaurante favorito en nuestra plataforma, seleccionas lo que quieres ordenar del menú, pagas de forma segura a través de la aplicación y uno de nuestros repartidores afiliados te lo llevará directamente a tu puerta. ¡Así de simple apoyas a los negocios locales!'
+        },
+        {
+            question: '¿Qué métodos de pago son aceptados y qué tan seguros son?',
+            answer: 'Aceptamos las principales tarjetas de crédito y débito. La seguridad es nuestra máxima prioridad, por lo que toda tu información de pago viaja encriptada y procesamos las transacciones cumpliendo con los más altos estándares de seguridad para proteger tus datos en todo momento.'
+        },
+        {
+            question: 'Tengo un restaurante, ¿cómo puedo asociarme con Mercy Food?',
+            answer: '¡Nos encantaría que te unieras! El proceso es sencillo: ve a nuestra página de registro, selecciona la opción "Soy restaurante" y completa la información de tu negocio. Nuestro equipo revisará tu solicitud para darte acceso a las herramientas con las que podrás gestionar tu menú, recibir pedidos y aumentar tus ventas llegando a miles de nuevos clientes.'
+        },
+        {
+            question: 'Quiero ser repartidor, ¿qué necesito para empezar?',
+            answer: 'Para ser repartidor de Mercy Food, solo necesitas ser mayor de edad, tener un vehículo (motocicleta, bicicleta o automóvil) y un smartphone. Regístrate en nuestra plataforma seleccionando "Soy repartidor", completa tu perfil y, una vez aprobado, podrás empezar a recibir notificaciones de pedidos para generar ingresos con un horario totalmente flexible.'
+        },
+        {
+            question: '¿Qué debo hacer si hay un problema con mi pedido?',
+            answer: 'Si tienes algún inconveniente, como un retraso o un error en tu orden, por favor contacta a nuestro equipo de soporte a través del chat en vivo disponible en la aplicación. Nuestro objetivo es ayudarte a resolver cualquier problema de la manera más rápida y eficiente posible para garantizar tu satisfacción.'
+        }
+    ];
 
-                // Cierra todos los demás items
-                faqItems.forEach(i => {
-                    i.classList.remove('active');
-                    i.querySelector('.faq-answer').style.maxHeight = '0px';
-                });
+    const loadFaqs = () => {
+        if (faqsLoaded || !faqAccordionContainer) return;
 
-                // Si el item no estaba abierto, lo abre
-                if (!isOpen) {
-                    item.classList.add('active');
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
+        faqAccordionContainer.innerHTML = '';
+        faqs.forEach(faq => {
+            const item = document.createElement('div');
+            item.className = 'faq-item';
+            item.innerHTML = `
+                <button class="faq-question">
+                    <span>${faq.question}</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>${faq.answer}</p>
+                </div>
+            `;
+            faqAccordionContainer.appendChild(item);
+        });
+        faqsLoaded = true;
+    };
+
+    if (faqAccordionContainer) {
+        faqAccordionContainer.addEventListener('click', function (e) {
+            const question = e.target.closest('.faq-question');
+            if (!question) return;
+
+            const item = question.closest('.faq-item');
+            const answer = item.querySelector('.faq-answer');
+            const isOpen = item.classList.contains('active');
+
+            faqAccordionContainer.querySelectorAll('.faq-item').forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-answer').style.maxHeight = null;
                 }
             });
-        });
-    };
-    
-    // Función para cargar los datos de la API
-    const loadFaqs = () => {
-        if (faqsLoaded) return;
 
-        fetch('/faq') // Usando la ruta de web.php
-            .then(response => response.json())
-            .then(data => {
-                faqAccordionContainer.innerHTML = '';
-                data.faqs.forEach(faq => {
-                    const item = document.createElement('div');
-                    item.className = 'faq-item';
-                    item.innerHTML = `
-                        <button class="faq-question">
-                            <span>${faq.question}</span>
-                            <span class="faq-icon">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>${faq.answer}</p>
-                        </div>
-                    `;
-                    faqAccordionContainer.appendChild(item);
-                });
-                faqsLoaded = true;
-                // Una vez creados los elementos, les añadimos la funcionalidad de clic
-                setupFaqEventListeners(); 
-            })
-            .catch(error => {
-                console.error('Error al cargar las FAQs:', error);
-                faqAccordionContainer.innerHTML = '<p style="color: white;">No se pudieron cargar las preguntas frecuentes.</p>';
-            });
-    };
+            if (!isOpen) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            } else {
+                item.classList.remove('active');
+                answer.style.maxHeight = null;
+            }
+        });
+    }
 
     // --- MANEJO UNIFICADO DE TODOS LOS MODALES ---
     const setupModal = (modalId, openBtnId, beforeOpenCallback = null) => {
