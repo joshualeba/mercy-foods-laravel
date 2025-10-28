@@ -23,9 +23,9 @@ class RepartidorController extends Controller
                             ->count();
         
         $gananciasHoy = Pedido::where('repartidor_id', $user->id)
-                            ->where('estado', 'entregado')
-                            ->whereDate('updated_at', today())
-                            ->sum('total');
+                    ->where('estado', 'entregado')
+                    ->whereDate('updated_at', today())
+                    ->sum('costo_envio');
         
         $pedidosPendientes = Pedido::where('repartidor_id', $user->id)
                                 ->whereIn('estado', ['en_camino', 'recogido'])

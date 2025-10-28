@@ -21,7 +21,7 @@ class RestauranteDashboardController extends Controller
         $todayIncome = $user->pedidosRestaurante()
             ->where('estado', 'entregado')
             ->whereDate('updated_at', Carbon::today())
-            ->sum('total');
+            ->sum('subtotal');
 
         // 3. Verificar si el perfil está completo
         $profileComplete = $user->restaurant_address &&

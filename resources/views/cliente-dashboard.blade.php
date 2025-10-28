@@ -153,8 +153,20 @@
             <div id="cart-items-container" style="max-height: 40vh; overflow-y: auto; padding-right: 15px;">
                 {{-- Los items del carrito se insertarán aquí con JavaScript --}}
             </div>
-            <div class="cart-summary" style="margin-top: 20px; text-align: right;">
-                <h4>Total: <span id="cart-total">$0.00</span></h4>
+            <div class="cart-summary" style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal">$0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Tarifa de servicio y envío:</span>
+                    <span id="cart-service-fee">$0.00</span>
+                </div>
+                <hr>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem;">
+                    <span>Total:</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
             </div>
             <div class="modal-buttons" style="margin-top: 20px;">
                 <button class="btn btn-primary" id="checkout-btn" disabled>Realizar pedido</button>

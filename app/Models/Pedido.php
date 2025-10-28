@@ -10,6 +10,9 @@ class Pedido extends Model
         'cliente_id',
         'restaurante_id',
         'total',
+        'subtotal',       
+        'costo_envio',          
+        'comision_plataforma', 
         'estado',
         'direccion_entrega',
         'notas'
@@ -17,6 +20,9 @@ class Pedido extends Model
 
     protected $casts = [
         'total' => 'decimal:2',
+        'subtotal' => 'decimal:2',          
+        'costo_envio' => 'decimal:2',         
+        'comision_plataforma' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];

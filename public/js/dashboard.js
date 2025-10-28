@@ -1506,13 +1506,15 @@ document.addEventListener('DOMContentLoaded', function () {
             cartFab.style.display = 'none';
         }
 
-        // Actualizar el modal
         cartItemsContainer.innerHTML = '';
-        let total = 0;
+        let subtotal = 0;
 
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
             checkoutBtn.disabled = true;
+            document.getElementById('cart-subtotal').textContent = '$0.00';
+            document.getElementById('cart-service-fee').textContent = '$0.00';
+            cartTotal.textContent = '$0.00';
         } else {
             cart.forEach(item => {
                 const itemElement = document.createElement('div');
@@ -1528,11 +1530,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
                 cartItemsContainer.appendChild(itemElement);
-                total += item.price * item.quantity;
+                subtotal += item.price * item.quantity;
             });
             checkoutBtn.disabled = false;
         }
 
+        const serviceFee = subtotal * 0.18; // 15% + 3%
+        const total = subtotal + serviceFee;
+
+        document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('cart-service-fee').textContent = `$${serviceFee.toFixed(2)}`;
         cartTotal.textContent = `$${total.toFixed(2)}`;
     };
 
@@ -1627,10 +1634,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     // Si SÍ tiene método de pago, procede con la confirmación normal.
                     if (data.hasPaymentMethod) {
-                        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                        const totalFormatted = `$${total.toFixed(2)}`;
+                        // Calcula el subtotal de los platillos
+                        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+                        // NUEVA LÓGICA: Calcula el total final incluyendo la tarifa de servicio (18%)
+                        const serviceFee = subtotal * 0.18;
+                        const finalTotal = subtotal + serviceFee;
+                        const totalFormatted = `$${finalTotal.toFixed(2)}`;
+
+                        // Cierra el modal del carrito
                         cartModal.classList.remove('active');
 
+                        // Muestra la alerta de confirmación con el total correcto
                         Swal.fire({
                             title: 'Confirmar tu pedido',
                             html: `¿Estás seguro/a de que deseas realizar el pago por <strong>${totalFormatted}</strong>?`,
@@ -1642,7 +1657,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             cancelButtonText: 'Cancelar'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // (El resto de la lógica de pago es la misma que ya tenías)
+                                // El resto de la lógica para procesar el pedido no cambia
                                 checkoutBtn.disabled = true;
                                 checkoutBtn.textContent = 'Procesando...';
 
@@ -1673,13 +1688,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                             }
                         });
-                    } else {
-                        // Si NO tiene método de pago, muestra el nuevo modal.
-                        cartModal.classList.remove('active'); // Cierra el carrito
-                        const addPaymentModal = document.getElementById('add-payment-modal');
-                        if (addPaymentModal) {
-                            addPaymentModal.classList.add('active');
-                        }
                     }
                 })
                 .catch(error => {

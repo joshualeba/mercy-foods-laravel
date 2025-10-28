@@ -96,7 +96,7 @@ class PedidoController extends Controller
             return response()->json(['message' => 'El carrito está vacío.'], 400);
         }
 
-        $total = 0;
+        $subtotal = 0;
         $restauranteId = null;
 
         foreach ($cartItems as $item) {
@@ -104,24 +104,30 @@ class PedidoController extends Controller
             if (!$platillo) {
                 return response()->json(['message' => 'Platillo no encontrado.'], 404);
             }
-            // Asignamos el restaurante del primer platillo
             if ($restauranteId === null) {
                 $restauranteId = $platillo->user_id;
             }
-            // Validamos que todos los platillos sean del mismo restaurante
             if ($restauranteId !== $platillo->user_id) {
                 return response()->json(['message' => 'No puedes ordenar de múltiples restaurantes a la vez.'], 400);
             }
-            $total += $platillo->precio * $item['quantity'];
+            $subtotal += $platillo->precio * $item['quantity'];
         }
-        
+
+        // Nueva lógica de precios
+        $costoEnvio = $subtotal * 0.15; // 15% para el repartidor
+        $comisionPlataforma = $subtotal * 0.03; // 3% para la plataforma
+        $total = $subtotal + $costoEnvio + $comisionPlataforma;
+
         // Crear el pedido principal
         $pedido = Pedido::create([
             'cliente_id' => $user->id,
             'restaurante_id' => $restauranteId,
+            'subtotal' => $subtotal,
+            'costo_envio' => $costoEnvio,
+            'comision_plataforma' => $comisionPlataforma,
             'total' => $total,
             'estado' => 'pendiente',
-            'direccion_entrega' => $user->address, // Asume que el usuario tiene una dirección guardada
+            'direccion_entrega' => $user->address,
         ]);
 
         // Crear los detalles del pedido
