@@ -67,22 +67,22 @@ class PedidoController extends Controller
         // Obtenemos los pedidos del cliente y los separamos por estado
         $pedidosEnPreparacion = $cliente->pedidosCliente()
                                         ->whereIn('estado', ['pendiente', 'en_preparacion'])
-                                        ->with('restaurante')
+                                        ->with(['restaurante', 'detalles.platillo'])
                                         ->latest()
                                         ->get();
                                         
         $pedidosEnCamino = $cliente->pedidosCliente()
-                                   ->whereIn('estado', ['listo_para_recoger', 'en_camino'])
-                                   ->with('restaurante')
+                                   ->whereIn('estado', ['listo_para_recoger', 'en_camino', 'recogido'])
+                                   ->with(['restaurante', 'repartidor', 'detalles.platillo'])
                                    ->latest()
                                    ->get();
 
         $pedidosEntregados = $cliente->pedidosCliente()
-                                     ->where('estado', 'entregado')
-                                     ->with('restaurante')
-                                     ->latest()
-                                     ->take(5) // Mostramos solo los últimos 5 entregados
-                                     ->get();
+                                    ->where('estado', 'entregado')
+                                    ->with(['restaurante', 'repartidor', 'detalles.platillo'])
+                                    ->latest()
+                                    ->take(5)
+                                    ->get();
 
         return view('cliente.pedidos', compact('pedidosEnPreparacion', 'pedidosEnCamino', 'pedidosEntregados'));
     }
@@ -96,9 +96,10 @@ class PedidoController extends Controller
             return response()->json(['message' => 'El carrito está vacío.'], 400);
         }
 
-        $subtotal = 0;
         $restauranteId = null;
+        $hasMultipleRestaurants = false;
 
+        // --- LÓGICA DE VERIFICACIÓN DE MÚLTIPLES RESTAURANTES ---
         foreach ($cartItems as $item) {
             $platillo = Platillo::find($item['id']);
             if (!$platillo) {
@@ -108,17 +109,31 @@ class PedidoController extends Controller
                 $restauranteId = $platillo->user_id;
             }
             if ($restauranteId !== $platillo->user_id) {
-                return response()->json(['message' => 'No puedes ordenar de múltiples restaurantes a la vez.'], 400);
+                $hasMultipleRestaurants = true;
+                break; // Salimos del bucle tan pronto como encontramos una discrepancia
             }
+        }
+
+        if ($hasMultipleRestaurants) {
+            return response()->json(['message' => 'No puedes ordenar de múltiples restaurantes a la vez.'], 400);
+        }
+        
+        // Si es solo una pre-verificación, respondemos que todo está bien hasta ahora.
+        if ($request->has('precheck')) {
+            return response()->json(['message' => 'Pre-verificación exitosa.']);
+        }
+
+        // --- A PARTIR DE AQUÍ, LA LÓGICA PARA CREAR EL PEDIDO CONTINÚA ---
+        $subtotal = 0;
+        foreach ($cartItems as $item) {
+            $platillo = Platillo::find($item['id']);
             $subtotal += $platillo->precio * $item['quantity'];
         }
 
-        // Nueva lógica de precios
-        $costoEnvio = $subtotal * 0.15; // 15% para el repartidor
-        $comisionPlataforma = $subtotal * 0.03; // 3% para la plataforma
+        $costoEnvio = $subtotal * 0.15;
+        $comisionPlataforma = $subtotal * 0.03;
         $total = $subtotal + $costoEnvio + $comisionPlataforma;
 
-        // Crear el pedido principal
         $pedido = Pedido::create([
             'cliente_id' => $user->id,
             'restaurante_id' => $restauranteId,
@@ -130,7 +145,6 @@ class PedidoController extends Controller
             'direccion_entrega' => $user->address,
         ]);
 
-        // Crear los detalles del pedido
         foreach ($cartItems as $item) {
             $platillo = Platillo::find($item['id']);
             DetallePedido::create([

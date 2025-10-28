@@ -1256,11 +1256,9 @@ function initializePaymentSection() {
 
     // Inicialización de Cleave.js para formatear los inputs
     const cardNumberCleave = new Cleave('#card_number', {
-        creditCard: true,
+        blocks: [4, 4, 4, 4],
         delimiter: ' ',
-        onCreditCardTypeChanged: function (type) {
-            // Lógica para mostrar el logo de la tarjeta (opcional)
-        }
+        numericOnly: true
     });
 
     const cardExpiryCleave = new Cleave('#card_expiry', {
@@ -1628,72 +1626,96 @@ document.addEventListener('DOMContentLoaded', function () {
     // Evento para el botón "Realizar Pedido"
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
-            // Paso 1: Verificar si el usuario tiene un método de pago.
-            fetch(verifyPaymentUrl) // Esta variable ya está definida en tu vista.
-                .then(response => response.json())
-                .then(data => {
-                    // Si SÍ tiene método de pago, procede con la confirmación normal.
-                    if (data.hasPaymentMethod) {
-                        // Calcula el subtotal de los platillos
-                        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // Primero, verifica si hay platillos de múltiples restaurantes en el backend.
+            fetch(processCartUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ cart: cart, precheck: true })
+            })
+            .then(response => response.json().then(data => ({ status: response.status, data })))
+            .then(({ status, data }) => {
+                // Si el backend detecta múltiples restaurantes (error 400 Bad Request)
+                if (status === 400 && data.message.includes('múltiples restaurantes')) {
+                    cartModal.classList.remove('active'); // <-- ¡CAMBIO CLAVE! Cierra el carrito primero.
+                    Swal.fire({ icon: 'error', title: 'Carrito Inválido', text: data.message });
+                    return Promise.reject('Carrito Inválido');
+                }
 
-                        // NUEVA LÓGICA: Calcula el total final incluyendo la tarifa de servicio (18%)
-                        const serviceFee = subtotal * 0.18;
-                        const finalTotal = subtotal + serviceFee;
-                        const totalFormatted = `$${finalTotal.toFixed(2)}`;
+                // Si pasa la validación, verificamos el método de pago.
+                return fetch(verifyPaymentUrl);
+            })
+            .then(response => response.json())
+            .then(paymentData => {
+                // Si NO tiene método de pago, mostramos el modal para agregarlo.
+                if (!paymentData.hasPaymentMethod) {
+                    cartModal.classList.remove('active');
+                    const addPaymentModal = document.getElementById('add-payment-modal');
+                    if (addPaymentModal) {
+                        addPaymentModal.classList.add('active');
+                    }
+                    return Promise.reject('No payment method');
+                }
 
-                        // Cierra el modal del carrito
-                        cartModal.classList.remove('active');
+                // Si SÍ tiene método de pago, procedemos con la confirmación.
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const serviceFee = subtotal * 0.18;
+                const finalTotal = subtotal + serviceFee;
+                const totalFormatted = `$${finalTotal.toFixed(2)}`;
+                cartModal.classList.remove('active');
 
-                        // Muestra la alerta de confirmación con el total correcto
-                        Swal.fire({
-                            title: 'Confirmar tu pedido',
-                            html: `¿Estás seguro/a de que deseas realizar el pago por <strong>${totalFormatted}</strong>?`,
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#FF6347',
-                            cancelButtonColor: '#6c757d',
-                            confirmButtonText: 'Aceptar y pagar',
-                            cancelButtonText: 'Cancelar'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // El resto de la lógica para procesar el pedido no cambia
-                                checkoutBtn.disabled = true;
-                                checkoutBtn.textContent = 'Procesando...';
+                Swal.fire({
+                    title: 'Confirmar tu pedido',
+                    html: `¿Estás seguro/a de que deseas realizar el pago por <strong>${totalFormatted}</strong>?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#FF6347',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Aceptar y pagar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        checkoutBtn.disabled = true;
+                        checkoutBtn.textContent = 'Procesando...';
 
-                                fetch(processCartUrl, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                        'Accept': 'application/json',
-                                    },
-                                    body: JSON.stringify({ cart: cart })
-                                })
-                                .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                                .then(({ ok, data }) => {
-                                    if (ok) {
-                                        Swal.fire({ icon: 'success', title: '¡Pedido Realizado!', text: data.message, showConfirmButton: false, timer: 2000 });
-                                        cart = [];
-                                        updateCart();
-                                        setTimeout(() => document.querySelector('.nav-link[data-section="pedidos"]').click(), 2000);
-                                    } else {
-                                        Swal.fire({ icon: 'error', title: 'Oops...', text: data.message || 'No se pudo procesar el pedido.' });
-                                    }
-                                })
-                                .catch(error => Swal.fire({ icon: 'error', title: 'Error de Conexión', text: 'No se pudo comunicar con el servidor.' }))
-                                .finally(() => {
-                                    checkoutBtn.disabled = false;
-                                    checkoutBtn.textContent = 'Realizar Pedido';
-                                });
+                        fetch(processCartUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify({ cart: cart })
+                        })
+                        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                        .then(({ ok, data }) => {
+                            if (ok) {
+                                Swal.fire({ icon: 'success', title: '¡Pedido Realizado!', text: data.message, showConfirmButton: false, timer: 2000 });
+                                cart = [];
+                                updateCart();
+                                setTimeout(() => document.querySelector('.nav-link[data-section="pedidos"]').click(), 2000);
+                            } else {
+                                Swal.fire({ icon: 'error', title: 'Oops...', text: data.message || 'No se pudo procesar el pedido.' });
                             }
+                        })
+                        .catch(error => Swal.fire({ icon: 'error', title: 'Error de Conexión', text: 'No se pudo comunicar con el servidor.' }))
+                        .finally(() => {
+                            checkoutBtn.disabled = false;
+                            checkoutBtn.textContent = 'Realizar Pedido';
                         });
                     }
-                })
-                .catch(error => {
-                    console.error('Error al verificar el método de pago:', error);
-                    Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo verificar tu método de pago. Intenta de nuevo.' });
                 });
+            })
+            .catch(error => {
+                // Este catch ahora maneja los 'Promise.reject' para evitar errores en la consola.
+                if (error !== 'No payment method' && error !== 'Carrito Inválido') {
+                    console.error('Error en el proceso de checkout:', error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un problema inesperado. Intenta de nuevo.' });
+                }
+            });
         });
     }
 

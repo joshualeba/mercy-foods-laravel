@@ -48,25 +48,6 @@
 
 {{-- El script no se modifica, se mantiene igual --}}
 <script>
-    // Pequeños scripts para formatear los inputs de la tarjeta
-    const cardNumberInput = document.getElementById('card_number');
-    if(cardNumberInput) {
-        cardNumberInput.addEventListener('input', function (e) {
-            e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
-        });
-    }
-
-    const cardExpiryInput = document.getElementById('card_expiry');
-    if(cardExpiryInput) {
-        cardExpiryInput.addEventListener('input', function (e) {
-            let value = e.target.value.replace(/[^\d]/g, '');
-            if (value.length > 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            e.target.value = value;
-        });
-    }
-
     if (typeof initializePaymentSection === 'function') {
         initializePaymentSection();
     } else {
