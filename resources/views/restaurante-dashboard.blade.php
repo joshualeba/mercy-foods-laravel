@@ -311,8 +311,8 @@
             // Carga los datos al iniciar
             fetchDashboardStats();
 
-            // Actualiza los datos cada medio segundo
-            setInterval(fetchDashboardStats, 500);
+            // Actualiza los datos cada 10 segundos
+            setInterval(fetchDashboardStats, 10000);
         });
     </script>
 </body>
