@@ -11,13 +11,32 @@ class RepartidorController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
+
+        // Lógica para verificar si el perfil está completo
+        $profileComplete = !empty($user->contact_phone) && !empty($user->vehicle_type);
+        $profileStatus = $profileComplete ? 'Completo' : 'Incompleto';
+
+        // Calcula estadísticas reales
+        $entregasHoy = Pedido::where('repartidor_id', $user->id)
+                            ->where('estado', 'entregado')
+                            ->whereDate('updated_at', today())
+                            ->count();
         
-        // Aquí puedes calcular las estadísticas reales
-        $entregasHoy = 0; // Implementa la lógica real
-        $gananciasHoy = 0; // Implementa la lógica real
-        $pedidosPendientes = 0; // Implementa la lógica real
+        $gananciasHoy = Pedido::where('repartidor_id', $user->id)
+                            ->where('estado', 'entregado')
+                            ->whereDate('updated_at', today())
+                            ->sum('total');
         
-        return view('repartidor-dashboard', compact('entregasHoy', 'gananciasHoy', 'pedidosPendientes'));
+        $pedidosPendientes = Pedido::where('repartidor_id', $user->id)
+                                ->whereIn('estado', ['en_camino', 'recogido'])
+                                ->count();
+
+        return view('repartidor-dashboard', compact(
+            'entregasHoy', 
+            'gananciasHoy', 
+            'pedidosPendientes', 
+            'profileStatus'
+        ));
     }
 
     // Dentro del método verPedidos, busca esta sección y modifícala

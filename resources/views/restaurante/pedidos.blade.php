@@ -17,6 +17,13 @@
                     </div>
                     <div class="order-card-body">
                         <p><strong>Cliente:</strong> {{ $pedido->cliente->full_name }}</p>
+                        <div class="order-card-items">
+                            <ul>
+                                @foreach($pedido->detalles as $detalle)
+                                    <li>{{ $detalle->cantidad }} x {{ $detalle->platillo->nombre }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                         </div>
                     <div class="order-card-footer">
                         <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
@@ -45,6 +52,13 @@
                     </div>
                     <div class="order-card-body">
                         <p><strong>Cliente:</strong> {{ $pedido->cliente->full_name }}</p>
+                        <div class="order-card-items">
+                            <ul>
+                                @foreach($pedido->detalles as $detalle)
+                                    <li>{{ $detalle->cantidad }} x {{ $detalle->platillo->nombre }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                     <div class="order-card-footer">
                         <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
@@ -73,6 +87,13 @@
                     </div>
                     <div class="order-card-body">
                         <p><strong>Cliente:</strong> {{ $pedido->cliente->full_name }}</p>
+                        <div class="order-card-items">
+                            <ul>
+                                @foreach($pedido->detalles as $detalle)
+                                    <li>{{ $detalle->cantidad }} x {{ $detalle->platillo->nombre }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                     <div class="order-card-footer">
                         <span class="order-total">${{ number_format($pedido->total, 2) }}</span>

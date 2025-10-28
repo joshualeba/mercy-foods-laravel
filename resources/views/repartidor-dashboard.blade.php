@@ -96,6 +96,12 @@
                                     <h3>{{ $entregasHoy ?? 0 }}</h3>
                                 </div>
                             </div>
+                            <div class="stat-card-footer">
+                                <a href="{{ route('repartidor.pedidos') }}" class="card-link nav-link" data-section="pedidos">
+                                    <span>Ver entregas</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
                         </div>
 
                         <div class="stat-card">
@@ -108,6 +114,12 @@
                                     <h3>${{ number_format($gananciasHoy ?? 0, 2) }}</h3>
                                 </div>
                             </div>
+                            <div class="stat-card-footer">
+                                <a href="#" class="card-link">
+                                    <span>Ver historial</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
                         </div>
 
                         <div class="stat-card">
@@ -119,6 +131,33 @@
                                     <p>Pedidos pendientes</p>
                                     <h3>{{ $pedidosPendientes ?? 0 }}</h3>
                                 </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="{{ route('repartidor.pedidos') }}" class="card-link nav-link" data-section="pedidos">
+                                    <span>Ver pedidos</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- Nueva Tarjeta de Perfil --}}
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-perfil">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Tu perfil</p>
+                                    <h3 style="color: {{ $profileStatus === 'Completo' ? 'var(--color-success)' : 'var(--primary-color)' }};">
+                                        {{ $profileStatus }}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="{{ route('repartidor.perfil.index') }}" class="card-link nav-link" data-section="perfil">
+                                    <span>Editar información</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
                             </div>
                         </div>
                     </div>

@@ -101,20 +101,21 @@
             <h2>Entregados</h2>
             <span class="order-count">{{ $pedidosEntregados->count() }}</span>
         </div>
-        <div class="order-cards-container">
+        <div class="order-cards-container scrollable-orders">
             @forelse($pedidosEntregados as $pedido)
-                <div class="order-card">
-                     <div class="order-card-header">
-                        <h3>Pedido #{{ $pedido->id }}</h3>
-                        <span>Entregado {{ $pedido->updated_at->diffForHumans() }}</span>
-                    </div>
-                    <div class="order-card-body">
-                         <p><strong>Cliente:</strong> {{ $pedido->cliente->full_name }}</p>
-                    </div>
-                    <div class="order-card-footer">
-                        <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
-                        <div class="order-actions">
-                            <small>¡Completado!</small>
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span>Pedido #{{ $pedido->id }} - {{ $pedido->cliente->full_name }}</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="order-card-body">
+                            <p><strong>Entregado a:</strong> {{ $pedido->cliente->full_name }}</p>
+                            <p><strong>Dónde:</strong> {{ $pedido->direccion_entrega }}</p>
+                        </div>
+                        <div class="order-card-footer">
+                            <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
+                            <small>¡Completado {{ $pedido->updated_at->diffForHumans() }}!</small>
                         </div>
                     </div>
                 </div>

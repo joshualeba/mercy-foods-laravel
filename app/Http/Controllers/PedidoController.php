@@ -18,9 +18,9 @@ class PedidoController extends Controller
         $restaurante = Auth::user();
 
         // Obtenemos los pedidos y los separamos por estado
-        $pedidosNuevos = $restaurante->pedidosRestaurante()->where('estado', 'pendiente')->with('cliente')->latest()->get();
-        $pedidosEnPreparacion = $restaurante->pedidosRestaurante()->where('estado', 'en_preparacion')->with('cliente')->latest()->get();
-        $pedidosListos = $restaurante->pedidosRestaurante()->where('estado', 'listo_para_recoger')->with('cliente')->latest()->get();
+        $pedidosNuevos = $restaurante->pedidosRestaurante()->where('estado', 'pendiente')->with('cliente', 'detalles.platillo')->latest()->get();
+        $pedidosEnPreparacion = $restaurante->pedidosRestaurante()->where('estado', 'en_preparacion')->with('cliente', 'detalles.platillo')->latest()->get();
+        $pedidosListos = $restaurante->pedidosRestaurante()->where('estado', 'listo_para_recoger')->with('cliente', 'detalles.platillo')->latest()->get();
 
         return view('restaurante.pedidos', compact('pedidosNuevos', 'pedidosEnPreparacion', 'pedidosListos'));
     }

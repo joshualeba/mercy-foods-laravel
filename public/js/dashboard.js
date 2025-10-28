@@ -156,8 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // ... (El resto del archivo `dashboard.js` permanece igual)
-    
     // =================================================================
     // === INICIALIZADOR DE LA SECCIÓN "PERFIL" ===
     // =================================================================
@@ -427,6 +425,65 @@ document.addEventListener('DOMContentLoaded', function() {
         setProfileEditMode(false);
     };
 
+    // === INICIALIZADOR DE ACORDEÓN PARA PEDIDOS ENTREGADOS ===
+    const initializeAccordion = () => {
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const clickedItem = this.closest('.accordion-item');
+                const clickedContent = clickedItem.querySelector('.accordion-content');
+                const clickedIcon = this.querySelector('.accordion-icon');
+                const isCurrentlyActive = clickedItem.classList.contains('active');
+                
+                // Cerrar todos los demás acordeones
+                accordionHeaders.forEach(otherHeader => {
+                    const otherItem = otherHeader.closest('.accordion-item');
+                    const otherContent = otherItem.querySelector('.accordion-content');
+                    const otherIcon = otherHeader.querySelector('.accordion-icon');
+                    
+                    if (otherItem !== clickedItem) {
+                        otherItem.classList.remove('active');
+                        otherIcon.textContent = '+';
+                        otherContent.style.maxHeight = '0';
+                    }
+                });
+                
+                // Toggle el item clickeado
+                if (isCurrentlyActive) {
+                    clickedItem.classList.remove('active');
+                    clickedIcon.textContent = '+';
+                    clickedContent.style.maxHeight = '0';
+                } else {
+                    clickedItem.classList.add('active');
+                    clickedIcon.textContent = '−';
+                    // Calculamos la altura real del contenido
+                    const realHeight = clickedContent.scrollHeight;
+                    clickedContent.style.maxHeight = (realHeight + 20) + 'px'; // +20px de margen
+                    
+                    // Scroll suave hacia el elemento expandido
+                    setTimeout(() => {
+                        const container = clickedItem.closest('.scrollable-orders');
+                        if (container) {
+                            const itemTop = clickedItem.offsetTop;
+                            const containerScroll = container.scrollTop;
+                            const containerHeight = container.clientHeight;
+                            const itemHeight = clickedItem.offsetHeight;
+                            
+                            // Si el item expandido no es completamente visible
+                            if (itemTop < containerScroll || (itemTop + itemHeight) > (containerScroll + containerHeight)) {
+                                container.scrollTo({
+                                    top: itemTop - 20, // 20px de padding superior
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+                    }, 400); // Esperamos a que termine la animación
+                }
+            });
+        });
+    };
+
     // *** EJECUTA LAS INICIALIZACIONES SI EL CONTENIDO YA ESTÁ CARGADO ***
     if (document.getElementById('platillos-container')) {
         initializeOrderSection();
@@ -497,6 +554,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 initializeProfileSection();
                             } else if (sectionId === 'pago') {
                                 initializePaymentSection();
+                            } else if (sectionId === 'pedidos') {
+                                initializeAccordion();
                             }
                         })
                         .catch(error => {
@@ -1684,4 +1743,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-

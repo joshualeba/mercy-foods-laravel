@@ -2214,3 +2214,128 @@ input:checked+.switch-slider:before {
         gap: 20px;
     }
 }
+
+/* ============================================= */
+/* === ESTILOS PARA ACORDEÓN Y SCROLL        === */
+/* ============================================= */
+
+/* Aseguramos que la columna de entregados tenga scroll */
+.order-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.order-column-header {
+    flex-shrink: 0; /* El header no se reduce */
+}
+
+.order-cards-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
+/* ESPECÍFICO para la columna de entregados con scroll */
+.scrollable-orders {
+    max-height: none !important; /* Removemos el límite de altura */
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+    scroll-behavior: smooth;
+}
+
+/* Estilos personalizados para el scrollbar */
+.scrollable-orders::-webkit-scrollbar,
+.order-cards-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-orders::-webkit-scrollbar-track,
+.order-cards-container::-webkit-scrollbar-track {
+    background: var(--main-bg);
+    border-radius: 4px;
+}
+
+.scrollable-orders::-webkit-scrollbar-thumb,
+.order-cards-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.scrollable-orders::-webkit-scrollbar-thumb:hover,
+.order-cards-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+.accordion-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    overflow: visible; /* IMPORTANTE: Cambiamos de hidden a visible */
+    transition: all 0.3s ease;
+}
+
+.accordion-item.active {
+    background-color: var(--main-bg);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-header {
+    background: transparent;
+    border: none;
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color-dark);
+    transition: background-color 0.2s ease;
+}
+
+.accordion-header:hover {
+    background-color: var(--hover-bg);
+}
+
+.accordion-icon {
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: transform 0.3s ease, color 0.3s ease;
+    color: var(--text-color);
+}
+
+.accordion-item.active .accordion-icon {
+    transform: rotate(180deg);
+    color: var(--primary-color);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0 1rem;
+}
+
+/* Cuando está activo, permitimos que se expanda completamente */
+.accordion-item.active .accordion-content {
+    padding-bottom: 1rem;
+    max-height: 1000px; /* Valor alto para permitir expansión completa */
+}
+
+.accordion-content .order-card-body,
+.accordion-content .order-card-footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.accordion-content .order-card-footer {
+    padding-bottom: 0;
+}

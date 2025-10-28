@@ -109,6 +109,24 @@
 
                         <div class="stat-card">
                             <div class="stat-card-header">
+                                <div class="stat-card-icon icon-menu">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Platillos en el menú</p>
+                                    <h3>{{ Auth::user()->platillos()->where('disponible', true)->count() }}</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="{{ route('platillos.index') }}" class="card-link nav-link" data-section="menu">
+                                    <span>Administrar menú</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
                                 <div class="stat-card-icon icon-ganancias">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                                 </div>
@@ -116,12 +134,6 @@
                                     <p>Ingresos del día</p>
                                     <h3 id="today-income">$ --</h3>
                                 </div>
-                            </div>
-                            <div class="stat-card-footer">
-                                <a href="#" class="card-link">
-                                    <span>Ver estadísticas</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </a>
                             </div>
                         </div>
 

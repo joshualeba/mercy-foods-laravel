@@ -38,12 +38,11 @@ Route::middleware(['auth'])->group(function () {
         return view('restaurante-dashboard');
     });
 
-    Route::get('/repartidor-dashboard', function () {
-        return view('repartidor-dashboard');
-    });
+    // CORREGIDO: Ahora usa el controlador en lugar de devolver la vista directamente
+    Route::get('/repartidor-dashboard', [RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
 
     // Rutas para Platillos (ya existentes)
-    Route::resource('platillos', PlatilloController::class)->except(['create', 'edit']); // Ajustado para API RESTful
+    Route::resource('platillos', PlatilloController::class)->except(['create', 'edit']);
 
     Route::get('/inicio', [ClienteController::class, 'inicio'])->name('cliente.inicio');
     Route::get('/ordenar', [ClienteController::class, 'index'])->name('cliente.restaurantes');
@@ -57,17 +56,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perfil-cliente', [ClienteProfileController::class, 'index'])->name('cliente.perfil.index');
     Route::put('/perfil-cliente', [ClienteProfileController::class, 'update'])->name('cliente.perfil.update');
     Route::get('/cliente/pedidos', [PedidoController::class, 'verPedidosCliente'])->name('cliente.pedidos.index');
-    Route::post('/cliente/pedidos/{id}/cancelar', [App\Http\Controllers\PedidoController::class, 'cancelar'])->name('cliente.pedidos.cancelar');
-    Route::post('/carrito/procesar', [App\Http\Controllers\PedidoController::class, 'crearDesdeCarrito'])->name('carrito.procesar');
-    Route::post('/cliente/perfil/eliminar-pago', [App\Http\Controllers\ClienteProfileController::class, 'eliminarMetodoPago'])->name('cliente.pago.eliminar');
+    Route::post('/cliente/pedidos/{id}/cancelar', [PedidoController::class, 'cancelar'])->name('cliente.pedidos.cancelar');
+    Route::post('/carrito/procesar', [PedidoController::class, 'crearDesdeCarrito'])->name('carrito.procesar');
+    Route::post('/cliente/perfil/eliminar-pago', [ClienteProfileController::class, 'eliminarMetodoPago'])->name('cliente.pago.eliminar');
 
     // RUTAS PARA LA PASARELA DE PAGO ---
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
-    Route::post('/pago', [App\Http\Controllers\PaymentController::class, 'store'])->name('cliente.pago.procesar');
+    Route::post('/pago', [PaymentController::class, 'store'])->name('cliente.pago.procesar');
     Route::get('/verificar-pago', [PaymentController::class, 'verify'])->name('cliente.pago.verificar');
 
     // RUTAS PARA EL PERFIL DEL REPARTIDOR ---
-    Route::get('/repartidor/dashboard', [RepartidorController::class, 'dashboard'])->name('repartidor.dashboard');
     Route::get('/repartidor/pedidos', [RepartidorController::class, 'verPedidos'])->name('repartidor.pedidos');
     Route::get('/repartidor/perfil', [RepartidorProfileController::class, 'index'])->name('repartidor.perfil.index');
     Route::put('/repartidor/perfil', [RepartidorProfileController::class, 'update'])->name('repartidor.perfil.update');
