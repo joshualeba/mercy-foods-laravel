@@ -17,32 +17,32 @@
 
 ---
 
-## 📖 Acerca del Proyecto
+## Acerca del proyecto
 
 **Mercy Food** es una aplicación web robusta y escalable que simula una plataforma de _food delivery_. El sistema está diseñado para conectar a tres tipos de usuarios principales: **Clientes**, **Restaurantes** y **Repartidores**, cada uno con su propio panel de control y funcionalidades específicas para gestionar el ciclo completo de un pedido de comida.
 
 El proyecto está construido siguiendo el patrón de arquitectura **Modelo-Vista-Controlador (MVC)**, asegurando una separación clara de responsabilidades, un código limpio y un mantenimiento sencillo.
 
-### ✨ Características Principales
+### Características principales
 
 * **Sistema de Autenticación por Roles**: Registro e inicio de sesión seguro para Clientes, Restaurantes y Repartidores.
-* **Panel de Cliente**:
+* **Panel de cliente**:
     * Explorar restaurantes y sus menús.
     * Crear, personalizar y confirmar pedidos.
     * Realizar seguimiento del estado de sus pedidos.
     * Gestionar su información de perfil y dirección.
-* **Panel de Restaurante**:
+* **Panel de restaurante**:
     * Gestión completa de su menú (Crear, Leer, Actualizar y Eliminar platillos).
     * Visualizar y actualizar el estado de los pedidos entrantes.
     * Administrar la información del perfil del restaurante.
-* **Panel de Repartidor**:
+* **Panel de repartidor**:
     * Ver los pedidos disponibles para entrega.
     * Aceptar pedidos y actualizar su estado (en camino, entregado).
     * Gestionar su perfil personal.
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías utilizadas
 
 * **Backend**: PHP 8.2, Laravel 11
 * **Frontend**: HTML5, CSS3, JavaScript, Blade (motor de plantillas de Laravel)
@@ -52,7 +52,7 @@ El proyecto está construido siguiendo el patrón de arquitectura **Modelo-Vista
 
 ---
 
-## 🚀 Guía de Instalación y Despliegue
+## Guía de instalación y despliegue
 
 Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno de desarrollo local.
 
@@ -64,7 +64,7 @@ Asegúrate de tener instalado lo siguiente en tu sistema:
 * [Node.js y NPM](https://nodejs.org/)
 * Un gestor de base de datos como [MySQL](https://www.mysql.com/) o MariaDB.
 
-### **2. Pasos de Instalación**
+### **2. Pasos de instalación**
 
 1.  **Clona el repositorio**
     Abre tu terminal y ejecuta el siguiente comando para descargar el proyecto:
@@ -116,14 +116,6 @@ Asegúrate de tener instalado lo siguiente en tu sistema:
     ```
 
 ¡Y listo! La aplicación estará corriendo en `http://127.0.0.1:8000`.
-
-### **👤 Credenciales de Prueba**
-
-Puedes usar las siguientes credenciales para acceder a los diferentes paneles (la contraseña para todos es `password`):
-
-* **Cliente**: `cliente@example.com`
-* **Restaurante**: `restaurante@example.com`
-* **Repartidor**: `repartidor@example.com`
 
 ---
 
