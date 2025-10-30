@@ -1,61 +1,103 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/joshualeba/mercy-foods-laravel/main/public/multimedia/logo.png" width="200" alt="Mercy Food Logo">
 </p>
 
-## About Laravel
+<h1 align="center">
+  Mercy Food
+</h1>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  <strong>Una plataforma web de entrega de comida desarrollada con Laravel y SQLite.</strong>
+  <br>
+  <br>
+  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php" alt="PHP Version">
+  <img src="https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel Version">
+  <img src="https://img.shields.io/badge/Database-SQLite-003B57?style=for-the-badge&logo=sqlite" alt="Database">
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Acerca del proyecto
 
-## Learning Laravel
+**Mercy Food** es una aplicación web robusta y escalable que simula una plataforma de _food delivery_. El sistema está diseñado para conectar a tres tipos de usuarios principales: **Clientes**, **Restaurantes** y **Repartidores**, cada uno con su propio panel de control y funcionalidades específicas para gestionar el ciclo completo de un pedido de comida.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+El proyecto está construido siguiendo el patrón de arquitectura **Modelo-Vista-Controlador (MVC)**, asegurando una separación clara de responsabilidades y un código limpio.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Características principales
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* **Sistema de Autenticación por Roles**: Registro e inicio de sesión seguro para Clientes, Restaurantes y Repartidores.
+* **Panel de Cliente**: Explorar menús, crear pedidos y dar seguimiento a su estado.
+* **Panel de Restaurante**: Gestión completa de su menú (CRUD) y administración de pedidos entrantes.
+* **Panel de Repartidor**: Visualización y aceptación de pedidos disponibles para entrega.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Guía de instalación y despliegue
 
-### Premium Partners
+Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno de desarrollo local.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### **1. Prerrequisitos**
 
-## Contributing
+Asegúrate de tener instalado lo siguiente en tu sistema:
+* [PHP](https://www.php.net/downloads.php) (versión 8.2 o superior)
+* [Composer](https://getcomposer.org/) (gestor de dependencias para PHP)
+* La extensión de PHP para SQLite (generalmente viene activada por defecto en entornos como Laragon o XAMPP).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### **2. Pasos de instalación**
 
-## Code of Conduct
+1.  **Clona el repositorio**
+    Abre tu terminal y ejecuta el siguiente comando para descargar el proyecto:
+    ```sh
+    git clone [https://github.com/joshualeba/mercy-foods-laravel.git](https://github.com/joshualeba/mercy-foods-laravel.git)
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2.  **Navega al directorio del proyecto**
+    ```sh
+    cd mercy-foods-laravel
+    ```
 
-## Security Vulnerabilities
+3.  **Instala las dependencias de PHP**
+    ```sh
+    composer install
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4.  **Crea el archivo de la base de datos**
+    Dentro de la carpeta `database/`, crea un archivo vacío llamado `database.sqlite`.
+    ```sh
+    touch database/database.sqlite
+    ```
+    *(Si estás en Windows y el comando `touch` no funciona, simplemente crea el archivo manualmente con el explorador de archivos).*
 
-## License
+5.  **Configura el archivo de entorno**
+    Crea una copia del archivo `.env.example` y renómbrala a `.env`:
+    ```sh
+    cp .env.example .env
+    ```
+    No necesitas modificar nada más en este archivo, ya que por defecto viene configurado para usar SQLite.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6.  **Genera la clave de la aplicación**
+    Este comando es crucial para la seguridad de tu aplicación Laravel:
+    ```sh
+    php artisan key:generate
+    ```
+
+7.  **Ejecuta las migraciones**
+    Este comando creará todas las tablas necesarias en tu archivo `database.sqlite`:
+    ```sh
+    php artisan migrate
+    ```
+
+8.  **Inicia el servidor de desarrollo**
+    ```sh
+    php artisan serve
+    ```
+
+¡Y listo! La aplicación estará corriendo en `http://127.0.0.1:8000`.
+
+**Nota Importante**: Como el proyecto no incluye datos de prueba (seeders), deberás **registrar un nuevo usuario** desde la interfaz de registro para poder comenzar a utilizar la aplicación.
+
+---
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT.
