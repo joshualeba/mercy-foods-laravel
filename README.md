@@ -1,65 +1,132 @@
-# Mercy Foods 🍔
+<p align="center">
+  <img src="https://raw.githubusercontent.com/joshualeba/mercy-foods-laravel/main/public/multimedia/logo.png" width="200" alt="Mercy Food Logo">
+</p>
 
-Una breve descripción de tu proyecto. Por ejemplo: "Mercy Foods es una plataforma web de entrega de comida que conecta a restaurantes, repartidores y clientes, desarrollada con el framework Laravel."
+<h1 align="center">
+  Mercy Food
+</h1>
 
-## ✨ Características Principales
+<p align="center">
+  <strong>Una plataforma web de entrega de comida desarrollada con Laravel.</strong>
+  <br>
+  <br>
+  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php" alt="PHP Version">
+  <img src="https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel Version">
+  <img src="https://img.shields.io/badge/Licencia-MIT-green?style=for-the-badge" alt="License">
+</p>
 
-* Registro y autenticación de usuarios con 3 roles distintos (Cliente, Restaurante, Repartidor).
-* Gestión de menú (CRUD) para los restaurantes.
-* Creación y seguimiento de pedidos en tiempo real.
-* Actualización de perfiles para todos los roles.
-* Dashboards personalizados según el rol del usuario.
+---
+
+## 📖 Acerca del Proyecto
+
+**Mercy Food** es una aplicación web robusta y escalable que simula una plataforma de _food delivery_. El sistema está diseñado para conectar a tres tipos de usuarios principales: **Clientes**, **Restaurantes** y **Repartidores**, cada uno con su propio panel de control y funcionalidades específicas para gestionar el ciclo completo de un pedido de comida.
+
+El proyecto está construido siguiendo el patrón de arquitectura **Modelo-Vista-Controlador (MVC)**, asegurando una separación clara de responsabilidades, un código limpio y un mantenimiento sencillo.
+
+### ✨ Características Principales
+
+* **Sistema de Autenticación por Roles**: Registro e inicio de sesión seguro para Clientes, Restaurantes y Repartidores.
+* **Panel de Cliente**:
+    * Explorar restaurantes y sus menús.
+    * Crear, personalizar y confirmar pedidos.
+    * Realizar seguimiento del estado de sus pedidos.
+    * Gestionar su información de perfil y dirección.
+* **Panel de Restaurante**:
+    * Gestión completa de su menú (Crear, Leer, Actualizar y Eliminar platillos).
+    * Visualizar y actualizar el estado de los pedidos entrantes.
+    * Administrar la información del perfil del restaurante.
+* **Panel de Repartidor**:
+    * Ver los pedidos disponibles para entrega.
+    * Aceptar pedidos y actualizar su estado (en camino, entregado).
+    * Gestionar su perfil personal.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+* **Backend**: PHP 8.2, Laravel 11
+* **Frontend**: HTML5, CSS3, JavaScript, Blade (motor de plantillas de Laravel)
+* **Base de Datos**: MySQL
+* **Servidor**: Servidor de desarrollo de Laravel (Artisan)
+* **Gestor de Dependencias**: Composer, NPM
+
+---
 
 ## 🚀 Guía de Instalación y Despliegue
 
-Estos son los pasos para instalar y ejecutar el proyecto en un entorno de desarrollo local.
+Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno de desarrollo local.
 
-### **Requisitos Previos**
+### **1. Prerrequisitos**
 
-* PHP 8.2 o superior
-* Composer
-* Node.js y NPM
-* Una base de datos (ej. MySQL, MariaDB)
+Asegúrate de tener instalado lo siguiente en tu sistema:
+* [PHP](https://www.php.net/downloads.php) (versión 8.2 o superior)
+* [Composer](https://getcomposer.org/) (gestor de dependencias para PHP)
+* [Node.js y NPM](https://nodejs.org/)
+* Un gestor de base de datos como [MySQL](https://www.mysql.com/) o MariaDB.
 
-### **Pasos de Instalación**
+### **2. Pasos de Instalación**
 
-1.  **Clonar el repositorio:**
+1.  **Clona el repositorio**
+    Abre tu terminal y ejecuta el siguiente comando para descargar el proyecto:
     ```sh
-    git clone [https://github.com/tu-usuario/mercy-foods-laravel.git](https://github.com/tu-usuario/mercy-foods-laravel.git)
+    git clone [https://github.com/joshualeba/mercy-foods-laravel.git](https://github.com/joshualeba/mercy-foods-laravel.git)
+    ```
+
+2.  **Navega al directorio del proyecto**
+    ```sh
     cd mercy-foods-laravel
     ```
 
-2.  **Instalar dependencias:**
+3.  **Instala las dependencias de PHP y JavaScript**
     ```sh
     composer install
     npm install
     ```
 
-3.  **Configurar el entorno:**
-    Copia el archivo de ejemplo `.env.example` y renómbralo a `.env`.
+4.  **Configura el archivo de entorno**
+    Crea una copia del archivo `.env.example` y renómbrala a `.env`:
     ```sh
     cp .env.example .env
     ```
-    Luego, abre el archivo `.env` y configura tus credenciales de base de datos (DB_DATABASE, DB_USERNAME, DB_PASSWORD).
+    Abre el archivo `.env` recién creado y configura las credenciales de tu base de datos:
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=mercy_food_db
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-4.  **Generar la clave de la aplicación:**
+5.  **Genera la clave de la aplicación**
+    Este comando es crucial para la seguridad de tu aplicación Laravel:
     ```sh
     php artisan key:generate
     ```
 
-5.  **Ejecutar las migraciones y seeders:**
-    Esto creará las tablas en tu base de datos y la llenará con datos de prueba.
+6.  **Ejecuta las migraciones y los seeders**
+    Este comando creará todas las tablas necesarias en tu base de datos y las poblará con datos de prueba (usuarios, platillos, etc.):
     ```sh
     php artisan migrate --seed
     ```
 
-6.  **Iniciar el servidor:**
+7.  **Inicia el servidor de desarrollo**
     ```sh
     php artisan serve
     ```
 
-¡Listo! Ahora puedes acceder a la aplicación en `http://127.0.0.1:8000`.
+¡Y listo! La aplicación estará corriendo en `http://127.0.0.1:8000`.
 
-##  credentials de prueba
-* Cliente: email@cliente.com / password
-* Restaurante: email@restaurante.com / password
+### **👤 Credenciales de Prueba**
+
+Puedes usar las siguientes credenciales para acceder a los diferentes paneles (la contraseña para todos es `password`):
+
+* **Cliente**: `cliente@example.com`
+* **Restaurante**: `restaurante@example.com`
+* **Repartidor**: `repartidor@example.com`
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
