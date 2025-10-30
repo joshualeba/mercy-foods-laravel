@@ -168,7 +168,7 @@
                     <span id="cart-total">$0.00</span>
                 </div>
             </div>
-            <div class="modal-buttons" style="margin-top: 20px;">
+            <div class="modal-buttons" style="margin-top: 20px;">       
                 <button class="btn btn-primary" id="checkout-btn" disabled>Realizar pedido</button>
             </div>
         </div>
