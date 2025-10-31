@@ -23,7 +23,6 @@ class User extends Authenticatable
          'contact_phone',
          'vehicle_type',
          'address',
-         'card_name',
         'card_last_four',
         'card_expiry',
      ];

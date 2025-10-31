@@ -37,6 +37,34 @@ class UserSeeder extends Seeder
                 'role' => 'repartidor',
                 'created_at' => now(),
                 'updated_at' => now(),
+            ],
+
+            // 4. Restaurante Japonés
+            [
+                'full_name' => 'Sushi Zen',
+                'email' => 'sushizen@gmail.com',
+                'password' => Hash::make('Contraseña123!'),
+                'role' => 'restaurante',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // 5. Restaurante Italiano
+            [
+                'full_name' => 'Bella Notte Trattoria',
+                'email' => 'bellanotte@gmail.com',
+                'password' => Hash::make('Contraseña123!'),
+                'role' => 'restaurante',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // 6. Restaurante Americano
+            [
+                'full_name' => 'Burger Joint',
+                'email' => 'burgerjoint@gmail.com',
+                'password' => Hash::make('Contraseña123!'),
+                'role' => 'restaurante',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ]);
     }

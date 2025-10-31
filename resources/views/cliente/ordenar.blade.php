@@ -91,7 +91,7 @@
             {{-- CAMBIO 2: Lista desplegable para tipo de cocina --}}
             @if($tiposCocina->isNotEmpty())
                 <div class="input-group-modal">
-                    <label for="cuisine-type-select">Tipo de Cocina</label>
+                    <label for="cuisine-type-select">Tipo de cocina</label>
                     <select id="cuisine-type-select" name="cuisine_type">
                         <option value="">Cualquier tipo</option>
                         {{-- Opciones tomadas de tu formulario de registro --}}

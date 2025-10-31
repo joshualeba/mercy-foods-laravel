@@ -1067,16 +1067,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 data.message,
                                 'success'
                             );
-                            // Actualizamos la interfaz
-                            const button = e.target;
-                            const card = button.closest('.order-card'); // Encuentra la tarjeta del pedido
-                            const statusElement = card.querySelector('p:nth-of-type(2)'); // El segundo <p> es el estado
-                            
-                            if (statusElement) {
-                                statusElement.innerHTML = '<strong>Estado:</strong> Cancelado';
+                            // Disparamos un clic en el enlace de "Mis pedidos" para recargar la sección
+                            const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
+                            if (pedidosLink) {
+                                pedidosLink.click();
+                            } else {
+                                // Si no lo encuentra, como fallback, recargamos la página completa
+                                window.location.reload();
                             }
-                            
-                            button.remove(); // Quitamos el botón después de cancelar
                         } else {
                             Swal.fire(
                                 'Error',

@@ -40,7 +40,7 @@
             </div>
 
             <div class="profile-actions">
-                <button type="submit" id="submit-payment-btn" class="btn btn-primary">Guardar Método de Pago</button>
+                <button type="submit" id="submit-payment-btn" class="btn btn-primary">Guardar método de pago</button>
             </div>
         </form>
     </div>

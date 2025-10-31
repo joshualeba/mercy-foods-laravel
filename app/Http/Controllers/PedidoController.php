@@ -177,7 +177,7 @@ class PedidoController extends Controller
         $pedido->estado = 'cancelado';
         $pedido->save();
 
-        // Devolvemos una respuesta de éxito
-        return response()->json(['message' => '¡Pedido cancelado correctamente!']);
+        // Devolvemos una respuesta de éxito con código 200 OK
+        return response()->json(['success' => true, 'message' => '¡Pedido cancelado correctamente!'], 200);
     }
 }
