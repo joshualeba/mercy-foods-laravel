@@ -82,9 +82,9 @@ Asegúrate de tener instalado lo siguiente en tu sistema:
     ```
 
 7.  **Ejecuta las migraciones**
-    Este comando creará todas las tablas necesarias en tu archivo `database.sqlite`:
+    Este comando creará todas las tablas necesarias en tu archivo `database.sqlite` y agregará datos de prueba:
     ```sh
-    php artisan migrate
+    php artisan migrate --seed
     ```
 
 8.  **Inicia el servidor de desarrollo**
@@ -94,10 +94,28 @@ Asegúrate de tener instalado lo siguiente en tu sistema:
 
 ¡Y listo! La aplicación estará corriendo en `http://127.0.0.1:8000`.
 
-**Nota Importante**: Como el proyecto no incluye datos de prueba (seeders), deberás **registrar un nuevo usuario** desde la interfaz de registro para poder comenzar a utilizar la aplicación.
+### Datos de prueba (Seeders)
+
+El proyecto incluye datos de prueba para que puedas ingresar y probar los tres roles principales.
+
+La contraseña para todas las cuentas es: `Contraseña123!`
+
+* **Cliente**:
+    * **Email**: `bepe@gmail.com`
+* **Restaurante**:
+    * **Email**: `tacoschuy@gmail.com`
+* **Repartidor**:
+    * **Email**: `beperepartidor@gmail.com`
+
+---
+
+## Documentación adicional
+
+Puedes encontrar la documentación técnica completa del proyecto (diagramas E-R, casos de uso, arquitectura y reglas de negocio) en la carpeta [`/docs`](./docs/).
 
 ---
 
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT.
+
