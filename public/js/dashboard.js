@@ -1636,18 +1636,28 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(response => response.json().then(data => ({ status: response.status, data })))
             .then(({ status, data }) => {
-                // Si el backend detecta múltiples restaurantes (error 400 Bad Request)
-                if (status === 400 && data.message.includes('múltiples restaurantes')) {
-                    cartModal.classList.remove('active'); // <-- ¡CAMBIO CLAVE! Cierra el carrito primero.
-                    Swal.fire({ icon: 'error', title: 'Carrito Inválido', text: data.message });
-                    return Promise.reject('Carrito Inválido');
-                }
+                    // Si el backend detecta múltiples restaurantes
+                    if (status === 400 && data.message.includes('múltiples restaurantes')) {
+                        cartModal.classList.remove('active');
+                        Swal.fire({ icon: 'error', title: 'Carrito Inválido', text: data.message });
+                        return Promise.reject('Carrito Inválido');
+                    }
 
-                // Si pasa la validación, verificamos el método de pago.
-                return fetch(verifyPaymentUrl);
-            })
-            .then(response => response.json())
-            .then(paymentData => {
+                    // Si falta la dirección de entrega
+                    if (status === 400 && data.message && data.message.includes('dirección')) {
+                        cartModal.classList.remove('active');
+                        const addAddressModal = document.getElementById('add-address-modal');
+                        if (addAddressModal) {
+                            addAddressModal.classList.add('active');
+                        }
+                        return Promise.reject('No address');
+                    }
+
+                    // Si pasa la validación, verificamos el método de pago.
+                    return fetch(verifyPaymentUrl);
+                })
+                .then(response => response.json())
+                .then(paymentData => {
                 // Si NO tiene método de pago, mostramos el modal para agregarlo.
                 if (!paymentData.hasPaymentMethod) {
                     cartModal.classList.remove('active');
@@ -1709,7 +1719,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 // Este catch ahora maneja los 'Promise.reject' para evitar errores en la consola.
-                if (error !== 'No payment method' && error !== 'Carrito Inválido') {
+                if (error !== 'No payment method' && error !== 'Carrito Inválido' && error !== 'No address') {
                     console.error('Error en el proceso de checkout:', error);
                     Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un problema inesperado. Intenta de nuevo.' });
                 }
@@ -1739,34 +1749,67 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // --- LÓGICA PARA EL MODAL DE AGREGAR PAGO ---
-    const addPaymentModal = document.getElementById('add-payment-modal');
-    const goToPaymentBtn = document.getElementById('go-to-payment-btn');
+    // --- LÓGICA PARA EL MODAL DE AGREGAR DIRECCIÓN ---
+    const addAddressModal = document.getElementById('add-address-modal');
+    const goToProfileBtn = document.getElementById('go-to-profile-btn');
 
-    // 1. Lógica para el botón "Agregar método de pago"
-    if (goToPaymentBtn) {
-        goToPaymentBtn.addEventListener('click', () => {
-            // Cierra el modal actual
-            if (addPaymentModal) {
-                addPaymentModal.classList.remove('active');
-            }
+    // Ir a la sección de perfil para agregar dirección
+    if (goToProfileBtn) {
+        goToProfileBtn.addEventListener('click', function() {
+            // Cerrar el modal
+            addAddressModal.classList.remove('active');
             
-            // Busca el enlace del sidebar que lleva a la sección de pago
-            const paymentNavLink = document.querySelector('.nav-link[data-section="pago"]');
-            
-            // Simula un clic en ese enlace para cargar la sección
-            if (paymentNavLink) {
-                paymentNavLink.click();
+            // Simular clic en el enlace del sidebar
+            const profileLink = document.querySelector('.nav-link[data-section="perfil"]');
+            if (profileLink) {
+                profileLink.click();
             }
         });
     }
 
-    // 2. Lógica para cerrar el modal si se hace clic fuera de él
-    if (addPaymentModal) {
-         addPaymentModal.addEventListener('click', (e) => {
-            if (e.target === addPaymentModal) {
-                addPaymentModal.classList.remove('active');
+    // Cerrar modal de "agregar dirección" si se da clic fuera
+    if (addAddressModal) {
+        addAddressModal.addEventListener('click', (e) => {
+            if (e.target === addAddressModal) {
+                addAddressModal.classList.remove('active');
+            }
+        });
+    }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // --- LÓGICA PARA EL MODAL DE AGREGAR DIRECCIÓN ---
+    const addAddressModal = document.getElementById('add-address-modal');
+    const goToProfileBtn = document.getElementById('go-to-profile-btn');
+
+    // Ir a la sección de perfil para agregar dirección
+    if (goToProfileBtn) {
+        goToProfileBtn.addEventListener('click', function() {
+            console.log('Botón de agregar dirección clickeado'); // Para depuración
+            
+            // Cerrar el modal
+            if (addAddressModal) {
+                addAddressModal.classList.remove('active');
+            }
+            
+            // Simular clic en el enlace del sidebar
+            const profileLink = document.querySelector('.nav-link[data-section="perfil"]');
+            console.log('profileLink encontrado:', profileLink); // Para depuración
+            
+            if (profileLink) {
+                profileLink.click();
+            } else {
+                console.error('No se encontró el enlace de perfil');
+            }
+        });
+    } else {
+        console.error('No se encontró el botón go-to-profile-btn');
+    }
+
+    // Cerrar modal de "agregar dirección" si se da clic fuera
+    if (addAddressModal) {
+        addAddressModal.addEventListener('click', function(e) {
+            if (e.target === addAddressModal) {
+                addAddressModal.classList.remove('active');
             }
         });
     }

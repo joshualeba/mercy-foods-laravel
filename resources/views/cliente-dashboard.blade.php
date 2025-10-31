@@ -227,6 +227,17 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal para agregar Dirección --}}
+    <div class="confirmation-modal-overlay" id="add-address-modal">
+        <div class="modal-box">
+            <h2>Dirección de entrega requerida</h2>
+            <p>Para realizar un pedido, necesitas agregar una dirección de entrega a tu perfil.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="go-to-profile-btn">Agregar dirección</button>
+            </div>
+        </div>
+    </div>
 </body>
 </body>
 </html>

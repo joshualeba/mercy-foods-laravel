@@ -96,6 +96,10 @@ class PedidoController extends Controller
             return response()->json(['message' => 'El carrito está vacío.'], 400);
         }
 
+        if (empty($user->address)) {
+            return response()->json(['message' => 'Necesitas agregar una dirección de entrega antes de realizar un pedido.'], 400);
+        }
+
         $restauranteId = null;
         $hasMultipleRestaurants = false;
 

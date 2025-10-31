@@ -65,9 +65,10 @@ class ClienteProfileController extends Controller
 
         // Verificamos si realmente tiene un método de pago para eliminar
         if ($user->card_last_four) {
-            // Establecemos los campos de la tarjeta a null (solo los que existen)
+            // Establecemos los campos de la tarjeta a null
             $user->card_last_four = null;
             $user->card_expiry = null;
+            $user->card_name = null;
             // La columna card_name no existe, por eso la quitamos de aquí.
             
             // Guardamos los cambios en la base de datos
