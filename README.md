@@ -25,10 +25,10 @@ El proyecto está construido siguiendo el patrón de arquitectura **Modelo-Vista
 
 ### Características principales
 
-* **Sistema de Autenticación por Roles**: Registro e inicio de sesión seguro para Clientes, Restaurantes y Repartidores.
-* **Panel de Cliente**: Explorar menús, crear pedidos y dar seguimiento a su estado.
-* **Panel de Restaurante**: Gestión completa de su menú (CRUD) y administración de pedidos entrantes.
-* **Panel de Repartidor**: Visualización y aceptación de pedidos disponibles para entrega.
+* **Sistema de autenticación por roles**: Registro e inicio de sesión seguro para Clientes, Restaurantes y Repartidores.
+* **Panel de cliente**: Explorar menús, crear pedidos y dar seguimiento a su estado.
+* **Panel de restaurante**: Gestión completa de su menú (CRUD) y administración de pedidos entrantes.
+* **Panel de repartidor**: Visualización y aceptación de pedidos disponibles para entrega.
 
 ---
 
