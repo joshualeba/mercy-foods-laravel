@@ -48,7 +48,7 @@ Asegúrate de tener instalado lo siguiente en tu sistema:
 1.  **Clona el repositorio**
     Abre tu terminal y ejecuta el siguiente comando para descargar el proyecto:
     ```sh
-    git clone [https://github.com/joshualeba/mercy-foods-laravel.git](https://github.com/joshualeba/mercy-foods-laravel.git)
+    git clone https://github.com/joshualeba/mercy-foods-laravel.git
     ```
 
 2.  **Navega al directorio del proyecto**
