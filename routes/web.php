@@ -31,6 +31,10 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+// Rutas para Google Socialite
+Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])->name('google.callback');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/cliente-dashboard', [ClienteController::class, 'dashboard'])->name('cliente.dashboard');
 
