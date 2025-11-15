@@ -27,6 +27,7 @@ class RepartidorProfileController extends Controller
         $user = Auth::user();
 
         $validator = \Validator::make($request->all(), [
+            'full_name' => 'required|string|max:120',
             'contact_phone' => 'required|string|regex:/^\d{10}$/',
             'vehicle_type' => 'required|string|in:motocicleta,bicicleta,automovil',
             'current_password' => 'nullable|required_with:new_password|current_password',
@@ -51,6 +52,7 @@ class RepartidorProfileController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        $user->full_name = $request->full_name;
         $user->contact_phone = $request->contact_phone;
         $user->vehicle_type = $request->vehicle_type;
 

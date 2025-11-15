@@ -175,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let originalValues = {};
 
+        const nameInput = document.getElementById('profile-full_name');
         const addressInput = document.getElementById('profile-address') || document.getElementById('profile-restaurant_address');
         const cuisineInput = document.getElementById('profile-cuisine_type');
         const phoneInput = document.getElementById('profile-contact_phone');
@@ -209,6 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const phoneRegex = /^\d{10}$/;
 
         const validators = {
+            'profile-full_name': (val) => val.trim().length > 0 && val.length <= 120,
             'profile-address': (val) => val === null || val.length <= 200,
             'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200, 
             'profile-cuisine_type': (val) => val.trim().length > 0 && val.length <= 50,
@@ -250,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
             profileForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
         };
         
-        [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput]
+        [nameInput, addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput]
         .filter(input => input)
         .forEach(input => {
             if (input) {
@@ -271,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                if (el.id === 'profile-full_name' || el.id === 'profile-email') {
+                if (el.id === 'profile-email') {
                     el.readOnly = true;
                     return;
                 }
@@ -349,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             let isFormValid = true;
-            const allInputsToValidate = [addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput];
+            const allInputsToValidate = [nameInput, addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput];
             
             allInputsToValidate.forEach(input => {
                 if (input) {

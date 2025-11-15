@@ -11,13 +11,15 @@
                 {{-- Nombre --}}
                 <div class="form-group span-2">
                     <label for="profile-full_name">Nombre completo</label>
-                    <input type="text" id="profile-full_name" name="full_name" value="{{ $user->full_name }}" required readonly>
+                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
+                    <input type="text" id="profile-full_name" name="full_name" value="{{ $user->full_name }}" required class="is-editable" readonly>
                 </div>
 
                 {{-- Teléfono de Contacto --}}
                 <div class="form-group">
                     <label for="profile-contact_phone">Teléfono de contacto</label>
-                    <input type="tel" id="profile-contact_phone" name="contact_phone" value="{{ $user->contact_phone }}" required pattern="\d{10}" readonly>
+                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
+                    <input type="tel" id="profile-contact_phone" name="contact_phone" value="{{ $user->contact_phone }}" required pattern="\d{10}" class="is-editable" readonly>
                     <small class="form-hint edit-mode-field">requerido, 10 dígitos.</small>
                     <small class="error-message"></small>
                 </div>
@@ -25,10 +27,11 @@
                 {{-- Tipo de Vehículo --}}
                 <div class="form-group">
                     <label for="profile-vehicle_type">Tipo de vehículo</label>
-                    <select id="profile-vehicle_type" name="vehicle_type" required disabled>
+                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
+                    <select id="profile-vehicle_type" name="vehicle_type" required class="is-editable" disabled>
                         @php
                             $opciones = ['motocicleta', 'bicicleta', 'automovil'];
-                        @endphp
+                        @php
                         <option value="" disabled {{ !$user->vehicle_type ? 'selected' : '' }}>selecciona un vehículo</option>
                         @foreach ($opciones as $opcion)
                             <option value="{{ $opcion }}" {{ $user->vehicle_type == $opcion ? 'selected' : '' }}>
@@ -45,7 +48,7 @@
         <div class="profile-card">
             <h2>Datos de acceso</h2>
             <div class="profile-grid">
-                {{-- Correo Electrónico --}}
+                {{-- Correo Electrónico (SIN CLASE, NO EDITABLE) --}}
                 <div class="form-group span-2">
                     <label for="profile-email">Correo electrónico</label>
                     <input type="email" id="profile-email" name="email" value="{{ $user->email }}" required readonly>
@@ -53,44 +56,46 @@
             </div>
              
             {{-- Campos para cambiar contraseña --}}
-            <div class="password-change-fields edit-mode-field">
-                <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
-                
-                <div class="form-group">
-                    <label for="profile-current_password">Contraseña actual</label>
-                    <div class="input-icon-wrapper">
-                        <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
-                        <i class="toggle-password fas fa-eye"></i>
+            @if(!$user->google_id)
+                <div class="password-change-fields edit-mode-field">
+                    <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
+                    
+                    <div class="form-group">
+                        <label for="profile-current_password">Contraseña actual</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
+                            <i class="toggle-password fas fa-eye"></i>
+                        </div>
+                        <small class="error-message"></small>
                     </div>
-                    <small class="error-message"></small>
-                </div>
 
-                <div class="form-group">
-                    <label for="profile-new_password">Nueva contraseña</label>
-                    <div class="input-icon-wrapper">
-                        <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
-                        <i class="toggle-password fas fa-eye"></i>
+                    <div class="form-group">
+                        <label for="profile-new_password">Nueva contraseña</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
+                            <i class="toggle-password fas fa-eye"></i>
+                        </div>
+                        <small class="error-message"></small>
                     </div>
-                    <small class="error-message"></small>
-                </div>
 
-                <div class="form-group">
-                    <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
-                    <div class="input-icon-wrapper">
-                        <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
-                        <i class="toggle-password fas fa-eye"></i>
+                    <div class="form-group">
+                        <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
+                            <i class="toggle-password fas fa-eye"></i>
+                        </div>
+                        <small class="error-message"></small>
                     </div>
-                    <small class="error-message"></small>
-                </div>
 
-                <div id="password-requirements">
-                    <ul class="password-checklist">
-                        <li id="length">8-25 caracteres</li>
-                        <li id="uppercase">una mayúscula</li>
-                        <li id="special">un caracter especial (!@#$%)</li>
-                    </ul>
+                    <div id="password-requirements">
+                        <ul class="password-checklist">
+                            <li id="length">8-25 caracteres</li>
+                            <li id="uppercase">una mayúscula</li>
+                            <li id="special">un caracter especial (!@#$%)</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            @endif
 
             {{-- Botones de Acción --}}
             <div class="profile-actions">
