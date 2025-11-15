@@ -46,8 +46,15 @@
                         <small class="error-message">La contraseña es requerida.</small>
                     </div>
                     
-                    <button type="submit" class="submit-btn" disabled>Iniciar Sesión</button>
+                    <button type="submit" class="submit-btn" disabled>Iniciar sesión</button>
                 </form>
+
+            <div class="divider-o-texto">O</div>
+
+            <a href="{{ route('google.redirect') }}" class="btn-google-login">
+                <img src="{{ asset('multimedia/google-logo.png') }}" alt="Google logo" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 10px;">
+                Iniciar sesión con Google
+            </a>
 
                 <p class="register-redirect">¿No tienes una cuenta? <a href="/registro">Regístrate aquí</a></p>
             </div>

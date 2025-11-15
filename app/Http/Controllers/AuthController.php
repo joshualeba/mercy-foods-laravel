@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\RestaurantDetail;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -116,5 +118,75 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    /**
+     * Redirige al usuario a la página de autenticación de Google.
+     */
+    public function googleRedirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Maneja el callback de Google y loguea o registra al usuario.
+     */
+    public function googleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+
+            // Buscar un usuario existente por google_id o email
+            $user = User::where('google_id', $googleUser->id)
+                        ->orWhere('email', $googleUser->email)
+                        ->first();
+
+            if ($user) {
+                // Si el usuario existe, actualizar su google_id si es nulo
+                if (is_null($user->google_id)) {
+                    $user->google_id = $googleUser->id;
+                    $user->save();
+                }
+
+                // Loguear al usuario
+                Auth::login($user);
+
+            } else {
+                // Si no existe, crear un nuevo usuario
+                // DECISIÓN DE LÓGICA DE NEGOCIO:
+                // Todos los usuarios registrados por Google tendrán el rol "Cliente" por defecto.
+
+                $newUser = User::create([
+                    'google_id' => $googleUser->id,
+                    'full_name' => $googleUser->name, // 'name' de Google a 'full_name' nuestro
+                    'email' => $googleUser->email,
+                    'role' => 'Cliente', // Rol por defecto
+                    'password' => Hash::make(Str::random(24)) // Contraseña aleatoria
+                ]);
+
+                Auth::login($newUser);
+            }
+
+            // Redirigir al dashboard correspondiente basado en el rol
+            // ESTO ES DIFERENTE A TU DOC, PERO ES MEJOR PORQUE TU LOGIN DEVUELVE JSON
+            // Para mantener consistencia con tu login actual, deberíamos devolver JSON
+            // PERO... Socialite es un flujo web. La redirección es lo correcto aquí.
+
+            $user = Auth::user(); // Obtenemos el usuario (nuevo o existente)
+            switch ($user->role) {
+                case 'Restaurante':
+                    return redirect()->route('restaurante.dashboard');
+                case 'Repartidor':
+                    return redirect()->route('repartidor.dashboard');
+                case 'Cliente':
+                default:
+                    return redirect()->route('cliente.dashboard');
+            }
+
+        } catch (\Exception $e) {
+            // Manejo de error
+            \Log::error('Error en Google Callback: '.$e->getMessage());
+            return redirect()->route('login')->with('error', 'Error al iniciar sesión con Google.');
+        }
     }
 }
