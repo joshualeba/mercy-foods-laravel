@@ -26,6 +26,7 @@ class RestauranteProfileController extends Controller
 
         // La validación se mantiene igual, ya que los campos que llegan son los correctos
         $validator = \Validator::make($request->all(), [
+            'full_name' => 'required|string|max:120',
             'restaurant_address' => 'required|string|max:200',
             'cuisine_type' => 'required|string|max:50',
             'contact_phone' => 'required|string|regex:/^\d{10}$/',
@@ -55,6 +56,7 @@ class RestauranteProfileController extends Controller
         // --- INICIO DE LA CORRECCIÓN ---
 
         // 1. Actualiza los campos que sí están en la tabla 'users'
+        $user->full_name = $request->full_name;
         $user->restaurant_address = $request->restaurant_address;
         $user->cuisine_type = $request->cuisine_type;
         $user->contact_phone = $request->contact_phone;

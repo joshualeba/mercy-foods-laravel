@@ -11,24 +11,26 @@
                 {{-- Nombre del restaurante --}}
                 <div class="form-group span-2">
                     <label for="profile-full_name">Nombre del restaurante</label>
-                    <input type="text" id="profile-full_name" name="full_name" value="{{ $user->full_name }}" required maxlength="120" readonly>
-                    {{-- <small class="form-hint edit-mode-field" style="display: none;">Requerido. Máximo 120 caracteres.</small> --}} {{-- LÍNEA ELIMINADA --}}
+                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
+                    <input type="text" id="profile-full_name" name="full_name" value="{{ $user->full_name }}" required maxlength="120" class="is-editable" readonly>
                     <small class="error-message"></small>
                 </div>
                 {{-- Dirección --}}
                 <div class="form-group span-2">
                     <label for="profile-restaurant_address">Dirección del local</label>
-                    <input type="text" id="profile-restaurant_address" name="restaurant_address" value="{{ $user->restaurant_address }}" required maxlength="200" readonly>
+                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
+                    <input type="text" id="profile-restaurant_address" name="restaurant_address" value="{{ $user->restaurant_address }}" required maxlength="200" class="is-editable" readonly>
                     <small class="form-hint edit-mode-field" style="display: none;">Requerido. Máximo 200 caracteres.</small>
                     <small class="error-message"></small>
                 </div>
                 {{-- Tipo de cocina --}}
                 <div class="form-group">
+                    {{-- CORREGIDO EL ID y AÑADIDA LA CLASE 'is-editable' --}}
                     <label for="profile-cuisine_type">Tipo de cocina</label>
-                    <select id="profile_cuisine_type" name="cuisine_type" required>
+                    <select id="profile-cuisine_type" name="cuisine_type" required class="is-editable" disabled>
                         @php
                             $opciones = ['mexicana', 'italiana', 'japonesa', 'americana', 'cafeteria', 'otro'];
-                        @endphp
+                        @php
                         <option value="" disabled {{ !$user->cuisine_type ? 'selected' : '' }}>Selecciona una categoría</option>
                         @foreach ($opciones as $opcion)
                             <option value="{{ $opcion }}" {{ $user->cuisine_type == $opcion ? 'selected' : '' }}>
@@ -42,15 +44,16 @@
                 {{-- Teléfono --}}
                 <div class="form-group">
                     <label for="profile-contact_phone">Teléfono de contacto</label>
-                    <input type="tel" id="profile-contact_phone" name="contact_phone" value="{{ $user->contact_phone }}" required pattern="\d{10}" readonly>
+                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
+                    <input type="tel" id="profile-contact_phone" name="contact_phone" value="{{ $user->contact_phone }}" required pattern="\d{10}" class="is-editable" readonly>
                     <small class="form-hint edit-mode-field" style="display: none;">Requerido. 10 dígitos numéricos.</small>
                     <small class="error-message"></small>
                 </div>
                 {{-- Horario de atención --}}
-                <div class="form-group span-2"> {{-- span-2 para que ocupe todo el ancho --}}
+                <div class="form-group span-2">
                     <label for="profile-attention_schedule">Horario de Atención</label>
-                    {{-- Usamos la relación para obtener el valor --}}
-                    <input type="text" id="profile-attention_schedule" name="attention_schedule" value="{{ $user->restaurantDetail ? $user->restaurantDetail->attention_schedule : '' }}" maxlength="255" readonly>
+                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
+                    <input type="text" id="profile-attention_schedule" name="attention_schedule" value="{{ $user->restaurantDetail ? $user->restaurantDetail->attention_schedule : '' }}" maxlength="255" class="is-editable" readonly>
                     <small class="form-hint edit-mode-field" style="display: none;">Máximo 255 caracteres. Ej: L-V 9am-6pm.</small>
                     <small class="error-message"></small>
                 </div>
@@ -60,61 +63,60 @@
         <div class="profile-card">
             <h2>Datos de acceso</h2>
             <div class="profile-grid">
-                {{-- Correo electrónico --}}
+                {{-- Correo electrónico (SIN CLASE, NO EDITABLE) --}}
                 <div class="form-group span-2">
                     <label for="profile-email">Correo electrónico</label>
                     <input type="email" id="profile-email" name="email" value="{{ $user->email }}" required maxlength="120" readonly>
-                    {{-- <small class="form-hint edit-mode-field" style="display: none;">Requerido. Formato de email válido.</small> --}} {{-- LÍNEA ELIMINADA --}}
                     <small class="error-message"></small>
                 </div>
             </div>
              
-            {{-- Campos para cambiar contraseña (ocultos en modo vista) --}}
-            <div class="password-change-fields edit-mode-field" style="display: none;">
-                <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
-                
-                {{-- Contraseña actual --}}
-                <div class="form-group">
-                    <label for="profile-current_password">Contraseña actual</label>
-                    {{-- Contenedor solo para el input y el ícono --}}
-                    <div class="input-icon-wrapper">
-                        <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
-                        <i class="toggle-password fas fa-eye"></i>
+            {{-- Campos para cambiar contraseña --}}
+            @if(!$user->google_id)
+                <div class="password-change-fields edit-mode-field" style="display: none;">
+                    {{-- ... (contenido de contraseña sin cambios) ... --}}
+                    <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
+                    
+                    {{-- Contraseña actual --}}
+                    <div class="form-group">
+                        <label for="profile-current_password">Contraseña actual</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
+                            <i class="toggle-password fas fa-eye"></i>
+                        </div>
+                        <small class="error-message"></small>
                     </div>
-                    <small class="error-message"></small>
-                </div>
 
-                {{-- Nueva contraseña --}}
-                <div class="form-group">
-                    <label for="profile-new_password">Nueva contraseña</label>
-                    {{-- Contenedor solo para el input y el ícono --}}
-                    <div class="input-icon-wrapper">
-                        <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
-                        <i class="toggle-password fas fa-eye"></i>
+                    {{-- Nueva contraseña --}}
+                    <div class="form-group">
+                        <label for="profile-new_password">Nueva contraseña</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
+                            <i class="toggle-password fas fa-eye"></i>
+                        </div>
+                        <small class="error-message"></small>
                     </div>
-                    <small class="error-message"></small>
-                </div>
 
-                {{-- Confirmar nueva contraseña --}}
-                <div class="form-group">
-                    <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
-                    {{-- Contenedor solo para el input y el ícono --}}
-                    <div class="input-icon-wrapper">
-                        <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
-                        <i class="toggle-password fas fa-eye"></i>
+                    {{-- Confirmar nueva contraseña --}}
+                    <div class="form-group">
+                        <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
+                            <i class="toggle-password fas fa-eye"></i>
+                        </div>
+                        <small class="error-message"></small>
                     </div>
-                    <small class="error-message"></small>
-                </div>
 
-                {{-- Lista de Requisitos de Contraseña (esto se queda igual) --}}
-                <div id="password-requirements">
-                    <ul class="password-checklist">
-                        <li id="length">8-25 caracteres</li>
-                        <li id="uppercase">Una mayúscula</li>
-                        <li id="special">Un caracter especial (!@#$%)</li>
-                    </ul>
+                    {{-- Lista de Requisitos de Contraseña --}}
+                    <div id="password-requirements">
+                        <ul class="password-checklist">
+                            <li id="length">8-25 caracteres</li>
+                            <li id="uppercase">Una mayúscula</li>
+                            <li id="special">Un caracter especial (!@#$%)</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            @endif
 
         {{-- Botones de acción --}}
         <div class="profile-actions">
@@ -125,7 +127,6 @@
     </form>
 </div>
 
-{{-- Script para inicializar la lógica JS específica de esta vista --}}
 <script>
     if (typeof initializeProfileSection === 'function') {
         initializeProfileSection();
