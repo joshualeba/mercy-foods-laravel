@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
                 'email' => 'bepe@gmail.com',
                 'password' => Hash::make('Contraseña123!'),
                 'role' => 'cliente',
+                'cuisine_type' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
                 'email' => 'tacoschuy@gmail.com',
                 'password' => Hash::make('Contraseña123!'),
                 'role' => 'restaurante',
+                'cuisine_type' => 'mexicana',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -35,16 +37,17 @@ class UserSeeder extends Seeder
                 'email' => 'beperepartidor@gmail.com',
                 'password' => Hash::make('Contraseña123!'),
                 'role' => 'repartidor',
+                'cuisine_type' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
             // 4. Restaurante Japonés
             [
                 'full_name' => 'Sushi Zen',
                 'email' => 'sushizen@gmail.com',
                 'password' => Hash::make('Contraseña123!'),
                 'role' => 'restaurante',
+                'cuisine_type' => 'japonesa',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -54,6 +57,7 @@ class UserSeeder extends Seeder
                 'email' => 'bellanotte@gmail.com',
                 'password' => Hash::make('Contraseña123!'),
                 'role' => 'restaurante',
+                'cuisine_type' => 'italiana',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -63,9 +67,10 @@ class UserSeeder extends Seeder
                 'email' => 'burgerjoint@gmail.com',
                 'password' => Hash::make('Contraseña123!'),
                 'role' => 'restaurante',
+                'cuisine_type' => 'americana',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
     }
 }
