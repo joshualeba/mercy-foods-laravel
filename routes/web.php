@@ -12,9 +12,11 @@ use App\Http\Controllers\RepartidorProfileController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\RepartidorController;
 use App\Http\Controllers\RestauranteDashboardController;
+use App\Models\Faq;
 
 Route::get('/', function () {
-    return view('index');
+    $faqs = Faq::all();
+    return view('index', ['faqs' => $faqs]);
 });
 
 Route::get('/login', function () {
