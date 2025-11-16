@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             RestaurantDetailSeeder::class,
             PlatilloSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }
