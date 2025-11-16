@@ -21,6 +21,7 @@ class ClienteProfileController extends Controller
         $user = Auth::user();
 
         $validator = \Validator::make($request->all(), [
+            'full_name' => 'required|string|max:120',
             'address' => 'nullable|string|max:200',
             'current_password' => 'nullable|required_with:new_password|current_password',
             'new_password' => [
@@ -43,6 +44,7 @@ class ClienteProfileController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        $user->full_name = $request->full_name;
         $user->address = $request->address;
 
         if ($request->filled('new_password')) {

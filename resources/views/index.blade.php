@@ -351,6 +351,21 @@
             <h2>Preguntas frecuentes</h2>
             <div class="modal-content">
                 <div class="faq-accordion">
+
+                    @forelse ($faqs as $faq)
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span>{{ $faq->question }}</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>{{ $faq->answer }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <p>No hay preguntas frecuentes disponibles en este momento.</p>
+                    @endforelse
+
                     </div> 
             </div>
         </div>

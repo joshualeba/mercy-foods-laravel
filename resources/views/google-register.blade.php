@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Mercy Food</title>
+    <title>Completa tu Registro - Mercy Food</title>
     
     <link rel="shortcut icon" href="{{ asset('multimedia/logo.png') }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,14 +14,10 @@
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
 </head>
 <body>
-    
+
     <div id="loader-wrapper">
         <div class="loadingspinner">
-            <div id="square1"></div>
-            <div id="square2"></div>
-            <div id="square3"></div>
-            <div id="square4"></div>
-            <div id="square5"></div>
+            <div id="square1"></div><div id="square2"></div><div id="square3"></div><div id="square4"></div><div id="square5"></div>
         </div>
         <span id="loader-text">Cargando tu experiencia...</span>
     </div>
@@ -32,14 +28,16 @@
                 <video playsinline autoplay muted loop><source src="{{ asset('multimedia/r_video.mp4') }}" type="video/mp4"></video>
             </div>
             <div class="video-overlay"></div>
-            
             <a href="/" class="return-link"><i class="fas fa-arrow-left"></i><span>Regresar</span></a>
             <a href="/" class="logo-corner"><img src="{{ asset('multimedia/logo.png') }}" alt="Mercy Food Logo"></a>
         </div>
 
         <div class="right-pane dark-mode">
             <div class="form-container-glass">
-                <h2>Crea tu cuenta</h2>
+                <h2>Completa tu registro</h2>
+                <p style="text-align: center; margin-top: -1.5rem; margin-bottom: 1.5rem; color: #ccc;">
+                    Estás iniciando con Google. Solo necesitamos saber qué tipo de usuario eres.
+                </p>
                 
                 <div class="tabs">
                     <button class="tab-link active" data-tab="cliente">Soy cliente</button>
@@ -47,134 +45,77 @@
                     <button class="tab-link" data-tab="repartidor">Soy repartidor</button>
                 </div>
 
-                <form id="register-form" novalidate>
-                    <div id="cliente" class="tab-content active">
-                        <div class="input-group">
-                            <label for="cliente-nombre">Nombre completo</label>
-                            <input type="text" id="cliente-nombre" placeholder="Armando Morales">
-                            <small class="error-message">El nombre solo debe contener letras.</small>
-                        </div>
-                        <div class="input-group">
-                            <label for="cliente-email">Correo electrónico</label>
-                            <input type="email" id="cliente-email" placeholder="bepe@gmail.com">
-                            <small class="error-message">Por favor, introduce un correo válido.</small>
-                        </div>
-                        <div class="input-group">
-                            <label for="cliente-pass">Contraseña</label>
-                            <input type="password" id="cliente-pass">
-                            <i class="fas fa-eye password-toggle-icon"></i>
-                            <small class="error-message"></small>
-                        </div>
-                        <div class="input-group">
-                            <label for="cliente-pass-confirm">Confirmar contraseña</label>
-                            <input type="password" id="cliente-pass-confirm">
-                            <i class="fas fa-eye password-toggle-icon"></i>
-                            <small class="error-message">Las contraseñas no coinciden.</small>
-                        </div>
+                <form id="google-register-form" method="POST" action="{{ route('google.register.process') }}">
+                    @csrf <input type="hidden" id="role-input" name="role" value="cliente">
+
+                    <div class="input-group">
+                        <label for="google-name">Nombre (de Google)</label>
+                        <input type="text" id="google-name" value="{{ $full_name ?? '' }}" disabled style="background: rgba(0,0,0,0.4); color: #999;">
                     </div>
+                    <div class="input-group">
+                        <label for="google-email">Email (de Google)</label>
+                        <input type="email" id="google-email" value="{{ $email ?? '' }}" disabled style="background: rgba(0,0,0,0.4); color: #999;">
+                    </div>
+
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
+
+                    <div id="cliente" class="tab-content active">
+                        <p style="color: #ccc; text-align: center;">Si quieres continuar como cliente, solo presiona el botón de abajo.</p>
+                    </div>
+                    
                     <div id="restaurante" class="tab-content">
                         <div class="input-group">
                             <label for="restaurante-nombre">Nombre del restaurante</label>
-                            <input type="text" id="restaurante-nombre" placeholder="Pitzeria Mercy">
-                            <small class="error-message">El nombre es requerido (mín. 3 caracteres).</small>
+                            <input type="text" id="restaurante-nombre" name="restaurant_name" placeholder="Pitzeria Mercy" value="{{ old('restaurant_name') }}">
+                            <small class="error-message">{{ $errors->first('restaurant_name') }}</small>
                         </div>
                         <div class="input-group">
                             <label for="restaurante-direccion">Dirección del local</label>
-                            <input type="text" id="restaurante-direccion" placeholder="Av. Tepito">
-                            <small class="error-message">La dirección es requerida (mín. 10 caracteres).</small>
+                            <input type="text" id="restaurante-direccion" name="restaurant_address" placeholder="Av. Tepito" value="{{ old('restaurant_address') }}">
+                            <small class="error-message">{{ $errors->first('restaurant_address') }}</small>
                         </div>
                         <div class="input-group">
                             <label for="restaurante-tipo">Tipo de cocina</label>
-                            <select id="restaurante-tipo">
+                            <select id="restaurante-tipo" name="cuisine_type">
                                 <option value="" disabled selected>Selecciona una categoría</option>
-                                <option value="mexicana">Mexicana</option>
-                                <option value="italiana">Italiana</option>
-                                <option value="japonesa">Japonesa</option>
-                                <option value="americana">Americana</option>
-                                <option value="cafeteria">Cafetería</option>
-                                <option value="otro">Otro</option>
+                                <option value="mexicana" @selected(old('cuisine_type') == 'mexicana')>Mexicana</option>
+                                <option value="italiana" @selected(old('cuisine_type') == 'italiana')>Italiana</option>
+                                <option value="japonesa" @selected(old('cuisine_type') == 'japonesa')>Japonesa</option>
+                                <option value="americana" @selected(old('cuisine_type') == 'americana')>Americana</option>
+                                <option value="cafeteria" @selected(old('cuisine_type') == 'cafeteria')>Cafetería</option>
+                                <option value="otro" @selected(old('cuisine_type') == 'otro')>Otro</option>
                             </select>
-                            <small class="error-message">Debes seleccionar un tipo de cocina.</small>
+                            <small class="error-message">{{ $errors->first('cuisine_type') }}</small>
                         </div>
                         <div class="input-group">
                             <label for="restaurante-telefono">Teléfono de contacto</label>
-                            <input type="tel" id="restaurante-telefono" placeholder="Ej. 4421234567">
-                            <small class="error-message">Introduce un teléfono válido de 10 dígitos.</small>
-                        </div>
-                        <div class="input-group">
-                            <label for="restaurante-email">Correo de contacto</label>
-                            <input type="email" id="restaurante-email" placeholder="pitzeriamercy@gmail.com">
-                            <small class="error-message">Por favor, introduce un correo válido.</small>
-                        </div>
-                        <div class="input-group">
-                            <label for="restaurante-pass">Contraseña</label>
-                            <input type="password" id="restaurante-pass">
-                            <i class="fas fa-eye password-toggle-icon"></i>
-                            <small class="error-message"></small>
-                        </div>
-                        <div class="input-group">
-                            <label for="restaurante-pass-confirm">Confirmar contraseña</label>
-                            <input type="password" id="restaurante-pass-confirm">
-                            <i class="fas fa-eye password-toggle-icon"></i>
-                            <small class="error-message">Las contraseñas no coinciden.</small>
+                            <input type="tel" id="restaurante-telefono" name="contact_phone" placeholder="Ej. 4421234567" value="{{ old('contact_phone') }}">
+                            <small class="error-message">{{ $errors->first('contact_phone') }}</small>
                         </div>
                     </div>
+
                     <div id="repartidor" class="tab-content">
                         <div class="input-group">
-                            <label for="repartidor-nombre">Nombre completo</label>
-                            <input type="text" id="repartidor-nombre" placeholder="Bepe">
-                            <small class="error-message">El nombre solo debe contener letras (mín. 3).</small>
-                        </div>
-                        <div class="input-group">
-                            <label for="repartidor-email">Correo electrónico</label>
-                            <input type="email" id="repartidor-email" placeholder="bepe@gmail.com">
-                            <small class="error-message">Por favor, introduce un correo válido.</small>
-                        </div>
-                        <div class="input-group">
                             <label for="repartidor-vehiculo">Tipo de vehículo</label>
-                            <select id="repartidor-vehiculo">
+                            <select id="repartidor-vehiculo" name="vehicle_type">
                                 <option value="" disabled selected>Selecciona tu vehículo</option>
-                                <option value="motocicleta">Motocicleta</option>
-                                <option value="bicicleta">Bicicleta</option>
-                                <option value="automovil">Automóvil</option>
+                                <option value="motocicleta" @selected(old('vehicle_type') == 'motocicleta')>Motocicleta</option>
+                                <option value="bicicleta" @selected(old('vehicle_type') == 'bicicleta')>Bicicleta</option>
+                                <option value="automovil" @selected(old('vehicle_type') == 'automovil')>Automóvil</option>
                             </select>
-                            <small class="error-message">Debes seleccionar un tipo de vehículo.</small>
-                        </div>
-                        <div class="input-group">
-                            <label for="repartidor-pass">Contraseña</label>
-                            <input type="password" id="repartidor-pass">
-                            <i class="fas fa-eye password-toggle-icon"></i>
-                            <small class="error-message"></small>
-                        </div>
-                        <div class="input-group">
-                            <label for="repartidor-pass-confirm">Confirmar contraseña</label>
-                            <input type="password" id="repartidor-pass-confirm">
-                            <i class="fas fa-eye password-toggle-icon"></i>
-                            <small class="error-message">Las contraseñas no coinciden.</small>
+                            <small class="error-message">{{ $errors->first('vehicle_type') }}</small>
                         </div>
                     </div>
 
-                    <ul class="password-checklist">
-                        <li id="length">8-25 caracteres</li>
-                        <li id="uppercase">Una mayúscula</li>
-                        <li id="special">Un caracter especial (!@#$%)</li>
-                    </ul>
                     <div class="terms-group">
-                        <input type="checkbox" id="terms-check">
-                        <label for="terms-check">Acepto los <a id="open-terms-link">términos y condiciones</a></label>
+                        <input type="checkbox" id="terms-check" name="terms" required>
+                        <label for="terms-check">Acepto los <a id="open-terms-link">Términos y condiciones</a></label>
                     </div>
 
-                    <button type="submit" class="submit-btn" disabled>Crear cuenta</button>
+                    <button type="submit" class="submit-btn">Completar registro</button>
                 </form>
 
-                <div class="divider-o-texto">O</div>
-
-                <a href="{{ route('google.redirect') }}" class="btn-google-login">
-                    <img src="{{ asset('multimedia/google-logo.png') }}" alt="Google logo">
-                    Registrarse con Google
-                </a>
-                
-                <p class="login-redirect">¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
+                <p class="login-redirect">¿Cancelar registro? <a href="/login">Volver a inicio de sesión</a></p>
             </div>
         </div>
     </div>
@@ -229,6 +170,69 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/registro.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- JS para las pestañas ---
+            const tabs = document.querySelectorAll('.tab-link');
+            const contents = document.querySelectorAll('.tab-content');
+            const roleInput = document.getElementById('role-input');
+
+            if (tabs.length > 0 && contents.length > 0 && roleInput) {
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        tabs.forEach(t => t.classList.remove('active'));
+                        contents.forEach(c => c.classList.remove('active'));
+
+                        this.classList.add('active');
+                        const targetContent = document.getElementById(this.dataset.tab);
+                        if (targetContent) {
+                            targetContent.classList.add('active');
+                        }
+                        roleInput.value = this.dataset.tab; // Actualiza el rol
+                    });
+                });
+            }
+
+            // --- JS para el modal de términos ---
+            const openTerms = document.getElementById('open-terms-link');
+            const closeTerms = document.getElementById('close-terms-btn');
+            const termsModal = document.getElementById('terms-modal');
+
+            if (openTerms && termsModal) {
+                openTerms.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    termsModal.classList.add('active');
+                });
+            }
+            if (closeTerms && termsModal) {
+                closeTerms.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    termsModal.classList.remove('active');
+                });
+            }
+
+            // --- JS para ocultar el loader ---
+            const loader = document.getElementById('loader-wrapper');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500); // 500ms de transición
+            }
+
+            // Cierra el modal si se hace clic en el fondo (overlay)
+            if (termsModal) {
+                termsModal.addEventListener('click', function(e) {
+                    // Comprueba si el clic fue en el overlay (this)
+                    // y no en un elemento hijo (e.target)
+                    if (e.target === this) {
+                        termsModal.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

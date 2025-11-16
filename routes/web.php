@@ -12,9 +12,11 @@ use App\Http\Controllers\RepartidorProfileController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\RepartidorController;
 use App\Http\Controllers\RestauranteDashboardController;
+use App\Models\Faq;
 
 Route::get('/', function () {
-    return view('index');
+    $faqs = Faq::all();
+    return view('index', ['faqs' => $faqs]);
 });
 
 Route::get('/login', function () {
@@ -30,6 +32,14 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rutas para procesar el formulario de login y registro
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+
+// Rutas para Google Socialite
+Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])->name('google.callback');
+
+// Rutas para completar el registro con Google
+Route::get('/auth/google/register', [AuthController::class, 'showGoogleRegisterForm'])->name('google.register.form');
+Route::post('/auth/google/register', [AuthController::class, 'processGoogleRegister'])->name('google.register.process');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/cliente-dashboard', [ClienteController::class, 'dashboard'])->name('cliente.dashboard');
