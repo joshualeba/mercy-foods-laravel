@@ -103,6 +103,15 @@
                             </ul>
                             <hr>
                             <p><strong>Entregado por:</strong> {{ $pedido->repartidor->full_name ?? 'N/A' }}</p>
+                            @if(!$pedido->review)
+                                <button type="button" class="btn btn-warning btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#reviewModal-{{ $pedido->id }}">
+                                    ★ Calificar pedido
+                                </button>
+                            @else
+                                <div class="mt-2 text-success small">
+                                    <i class="fas fa-check-circle"></i> ¡Gracias por tu calificación!
+                                </div>
+                            @endif
                         </div>
                         <div class="order-card-footer">
                             <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
