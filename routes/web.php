@@ -86,6 +86,8 @@ Route::middleware(['auth'])->group(function () {
     // Rutas de pedidos para restaurantes
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('restaurante.pedidos.index');
     Route::put('/pedidos/{pedido}/estado', [PedidoController::class, 'actualizarEstado'])->name('pedidos.actualizarEstado');
+
+    Route::post('/pedidos/{id}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
 });
 
 Route::get('/faq', [FaqController::class, 'index']);
