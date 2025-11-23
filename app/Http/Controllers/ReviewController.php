@@ -77,4 +77,25 @@ class ReviewController extends Controller
         
         return response()->json($reviews);
     }
+
+    public function getRepartidorReviews()
+    {
+        $repartidor = Auth::user();
+        
+        $reviews = Review::where('repartidor_id', $repartidor->id)
+            ->with('cliente')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function($review) {
+                return [
+                    'pedido_id' => $review->pedido_id,
+                    'cliente_nombre' => $review->cliente->full_name,
+                    'rating_repartidor' => $review->rating_repartidor,
+                    'comentario_repartidor' => $review->comentario_repartidor,
+                    'fecha' => $review->created_at->format('d/m/Y')
+                ];
+            });
+        
+        return response()->json($reviews);
+    }
 }
