@@ -56,4 +56,25 @@ class ReviewController extends Controller
 
         return redirect()->back()->with('success', '¡Gracias por tu calificación!');
     }
+
+    public function getRestauranteReviews()
+    {
+        $restaurante = Auth::user();
+        
+        $reviews = Review::where('restaurante_id', $restaurante->id)
+            ->with('cliente')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function($review) {
+                return [
+                    'pedido_id' => $review->pedido_id,
+                    'cliente_nombre' => $review->cliente->full_name,
+                    'rating_restaurante' => $review->rating_restaurante,
+                    'comentario_restaurante' => $review->comentario_restaurante,
+                    'fecha' => $review->created_at->format('d/m/Y')
+                ];
+            });
+        
+        return response()->json($reviews);
+    }
 }

@@ -123,13 +123,14 @@
                             <p><strong>Entregado por:</strong> {{ $pedido->repartidor->full_name ?? 'N/A' }}</p>
                             
                             @if(!$pedido->review)
-                                {{-- Botón para abrir el modal con el mismo estilo 'btn-confirm' que el botón de enviar --}}
+                                {{-- Botón para abrir el modal con estilos inline para asegurar el color rojo --}}
                                 <button type="button" 
-                                        class="btn-confirm" 
-                                        style="width: 100%; margin-top: 10px;"
+                                        style="background-color: #e74c3c; color: #fff; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-top: 10px;"
                                         data-pedido-id="{{ $pedido->id }}"
                                         data-tiene-repartidor="{{ $pedido->repartidor_id ? '1' : '0' }}"
-                                        onclick="abrirModalResena({{ $pedido->id }})">
+                                        onclick="abrirModalResena({{ $pedido->id }})"
+                                        onmouseover="this.style.backgroundColor='#c0392b'"
+                                        onmouseout="this.style.backgroundColor='#e74c3c'">
                                     Calificar Pedido
                                 </button>
                             @else
