@@ -12,10 +12,17 @@ use App\Models\RestaurantDetail;
 class RestauranteProfileController extends Controller
 {
     // Método para mostrar la vista del perfil
-    public function index()
+    public function index(Request $request)
     {
         // Carga el usuario y su relación restaurantDetail
         $user = Auth::user()->loadMissing('restaurantDetail');
+        
+        // Si es una petición AJAX, devuelve solo el contenido parcial
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('restaurante.perfil', ['user' => $user])->render();
+        }
+        
+        // Si es una petición normal, devuelve la vista completa
         return view('restaurante.perfil', ['user' => $user]);
     }
 

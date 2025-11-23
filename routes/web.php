@@ -12,6 +12,7 @@ use App\Http\Controllers\RepartidorProfileController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\RepartidorController;
 use App\Http\Controllers\RestauranteDashboardController;
+use App\Http\Controllers\ReviewController;
 use App\Models\Faq;
 
 Route::get('/', function () {
@@ -74,6 +75,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
     Route::post('/pago', [PaymentController::class, 'store'])->name('cliente.pago.procesar');
     Route::get('/verificar-pago', [PaymentController::class, 'verify'])->name('cliente.pago.verificar');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('/api/restaurante/reviews', [ReviewController::class, 'getRestauranteReviews'])->name('api.restaurante.reviews');
+    Route::get('/api/repartidor/reviews', [ReviewController::class, 'getRepartidorReviews'])->name('api.repartidor.reviews');
 
     // RUTAS PARA EL PERFIL DEL REPARTIDOR ---
     Route::get('/repartidor/pedidos', [RepartidorController::class, 'verPedidos'])->name('repartidor.pedidos');

@@ -49,4 +49,9 @@ class Pedido extends Model
     {
         return $this->belongsTo(User::class, 'repartidor_id');
     }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
 }

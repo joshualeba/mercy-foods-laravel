@@ -31,7 +31,7 @@
                     <select id="profile-vehicle_type" name="vehicle_type" required class="is-editable" disabled>
                         @php
                             $opciones = ['motocicleta', 'bicicleta', 'automovil'];
-                        @php
+                        @endphp
                         <option value="" disabled {{ !$user->vehicle_type ? 'selected' : '' }}>selecciona un vehículo</option>
                         @foreach ($opciones as $opcion)
                             <option value="{{ $opcion }}" {{ $user->vehicle_type == $opcion ? 'selected' : '' }}>
