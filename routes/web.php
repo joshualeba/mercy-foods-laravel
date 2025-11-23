@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/verificar-pago', [PaymentController::class, 'verify'])->name('cliente.pago.verificar');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::get('/api/restaurante/reviews', [ReviewController::class, 'getRestauranteReviews'])->name('api.restaurante.reviews');
+    Route::get('/api/repartidor/reviews', [ReviewController::class, 'getRepartidorReviews'])->name('api.repartidor.reviews');
 
     // RUTAS PARA EL PERFIL DEL REPARTIDOR ---
     Route::get('/repartidor/pedidos', [RepartidorController::class, 'verPedidos'])->name('repartidor.pedidos');

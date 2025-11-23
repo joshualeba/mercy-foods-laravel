@@ -31,11 +31,17 @@ class RepartidorController extends Controller
                                 ->whereIn('estado', ['en_camino', 'recogido'])
                                 ->count();
 
+        // Obtener calificación promedio y total de reseñas
+        $averageRating = round($user->average_rating_repartidor, 1);
+        $totalReviews = $user->total_reviews_repartidor;
+
         return view('repartidor-dashboard', compact(
             'entregasHoy', 
             'gananciasHoy', 
             'pedidosPendientes', 
-            'profileStatus'
+            'profileStatus',
+            'averageRating',
+            'totalReviews'
         ));
     }
 
