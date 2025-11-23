@@ -79,7 +79,7 @@ class PedidoController extends Controller
 
         $pedidosEntregados = $cliente->pedidosCliente()
                                     ->where('estado', 'entregado')
-                                    ->with(['restaurante', 'repartidor', 'detalles.platillo'])
+                                    ->with(['restaurante', 'repartidor', 'detalles.platillo', 'review'])
                                     ->latest()
                                     ->take(5)
                                     ->get();

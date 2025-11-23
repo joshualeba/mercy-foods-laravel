@@ -32,6 +32,23 @@
                         <span style="background-color: #FF6347; color: white; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 600; display: inline-block;">
                             {{ $platillo->user->full_name }}
                         </span>
+                        @if($platillo->user->total_reviews_restaurante > 0)
+                            <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-color-semidark);">
+                                <span style="color: #ffc107; font-size: 1rem;">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= round($platillo->user->average_rating_restaurante))
+                                            ★
+                                        @else
+                                            ☆
+                                        @endif
+                                    @endfor
+                                </span>
+                                <span style="margin-left: 0.3rem;">
+                                    {{ number_format($platillo->user->average_rating_restaurante, 1) }} 
+                                    ({{ $platillo->user->total_reviews_restaurante }} {{ $platillo->user->total_reviews_restaurante == 1 ? 'reseña' : 'reseñas' }})
+                                </span>
+                            </div>
+                        @endif
                     </div>
                     <div class="platillo-card-image">
                         <img src="{{ $platillo->imagen_url }}" alt="Imagen de {{ $platillo->nombre }}">
