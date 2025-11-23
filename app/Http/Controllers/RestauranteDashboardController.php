@@ -32,10 +32,16 @@ class RestauranteDashboardController extends Controller
 
         $profileStatus = $profileComplete ? 'Completo' : 'Incompleto';
 
+        // 4. Obtener calificación promedio y total de reseñas
+        $averageRating = round($user->average_rating_restaurante, 1);
+        $totalReviews = $user->total_reviews_restaurante;
+
         return response()->json([
             'activeOrders' => $activeOrdersCount,
             'todayIncome' => number_format($todayIncome, 2),
-            'profileStatus' => $profileStatus
+            'profileStatus' => $profileStatus,
+            'averageRating' => $averageRating,
+            'totalReviews' => $totalReviews
         ]);
     }
 }

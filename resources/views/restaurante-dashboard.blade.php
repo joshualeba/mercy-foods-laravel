@@ -137,6 +137,28 @@
                             </div>
                         </div>
 
+                        <!-- Nueva tarjeta de calificación -->
+                        <div class="stat-card" style="grid-column: span 2;">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon icon-rating" style="background-color: #ffc107;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                </div>
+                                <div class="stat-card-content">
+                                    <p>Tu calificación promedio</p>
+                                    <h3 id="average-rating" style="display: inline-block; margin-right: 0.5rem;">--</h3>
+                                    <div id="rating-stars" style="display: inline-block; color: #ffc107; font-size: 1.3rem;"></div>
+                                    <br>
+                                    <small id="total-reviews" style="color: var(--text-color-light); font-size: 0.9rem;"></small>
+                                </div>
+                            </div>
+                            <div class="stat-card-footer">
+                                <a href="#" class="card-link" onclick="event.preventDefault(); mostrarSeccionResenas();">
+                                    <span>Ver todas las reseñas</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
+
                         <div class="stat-card">
                             <div class="stat-card-header">
                                 <div class="stat-card-icon icon-perfil">
@@ -153,6 +175,19 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 </a>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Reseñas -->
+                    <div id="reviews-section" style="display: none; margin-top: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h2>Reseñas de clientes</h2>
+                            <button onclick="ocultarSeccionResenas()" style="background-color: #e74c3c; color: #fff; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                                Cerrar
+                            </button>
+                        </div>
+                        <div id="reviews-list" class="reviews-container">
+                            <!-- Las reseñas se cargarán aquí dinámicamente -->
                         </div>
                     </div>
                 </section>
@@ -308,6 +343,13 @@
                         document.getElementById('active-orders-count').textContent = data.activeOrders;
                         document.getElementById('today-income').textContent = '$' + data.todayIncome;
                         document.getElementById('profile-status').textContent = data.profileStatus;
+                        
+                        // Actualizar calificación
+                        document.getElementById('average-rating').textContent = data.averageRating || '0.0';
+                        const starsHtml = generarEstrellas(data.averageRating || 0);
+                        document.getElementById('rating-stars').innerHTML = starsHtml;
+                        const reviewText = data.totalReviews === 1 ? 'reseña' : 'reseñas';
+                        document.getElementById('total-reviews').textContent = `${data.totalReviews || 0} ${reviewText}`;
 
                         // Cambia el color del texto del perfil si está incompleto
                         const profileStatusEl = document.getElementById('profile-status');
@@ -318,6 +360,66 @@
                         }
                     })
                     .catch(error => console.error('Error al cargar las estadísticas:', error));
+            }
+
+            // Función para generar estrellas
+            function generarEstrellas(rating) {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= Math.round(rating)) {
+                        stars += '★';
+                    } else {
+                        stars += '☆';
+                    }
+                }
+                return stars;
+            }
+
+            // Función para mostrar sección de reseñas
+            window.mostrarSeccionResenas = function() {
+                document.getElementById('reviews-section').style.display = 'block';
+                cargarResenas();
+            };
+
+            // Función para ocultar sección de reseñas
+            window.ocultarSeccionResenas = function() {
+                document.getElementById('reviews-section').style.display = 'none';
+            };
+
+            // Función para cargar reseñas
+            function cargarResenas() {
+                fetch('/api/restaurante/reviews')
+                    .then(response => response.json())
+                    .then(reviews => {
+                        const container = document.getElementById('reviews-list');
+                        if (reviews.length === 0) {
+                            container.innerHTML = '<p style="text-align: center; color: var(--text-color-light); padding: 2rem;">Aún no tienes reseñas de clientes.</p>';
+                            return;
+                        }
+
+                        container.innerHTML = reviews.map(review => `
+                            <div class="review-card" style="background: var(--card-bg); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem; border: 1px solid var(--border-color);">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                    <div>
+                                        <h4 style="margin: 0; color: var(--text-color-dark);">${review.cliente_nombre}</h4>
+                                        <small style="color: var(--text-color-light);">Pedido #${review.pedido_id} - ${review.fecha}</small>
+                                    </div>
+                                    <div style="color: #ffc107; font-size: 1.2rem;">
+                                        ${generarEstrellas(review.rating_restaurante)}
+                                    </div>
+                                </div>
+                                ${review.comentario_restaurante ? `
+                                    <p style="color: var(--text-color-semidark); margin: 0; line-height: 1.6;">
+                                        "${review.comentario_restaurante}"
+                                    </p>
+                                ` : '<p style="color: var(--text-color-light); margin: 0; font-style: italic;">Sin comentario</p>'}
+                            </div>
+                        `).join('');
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar reseñas:', error);
+                        document.getElementById('reviews-list').innerHTML = '<p style="text-align: center; color: var(--color-danger);">Error al cargar las reseñas.</p>';
+                    });
             }
 
             // Carga los datos al iniciar

@@ -30,7 +30,7 @@
                     <select id="profile-cuisine_type" name="cuisine_type" required class="is-editable" disabled>
                         @php
                             $opciones = ['mexicana', 'italiana', 'japonesa', 'americana', 'cafeteria', 'otro'];
-                        @php
+                        @endphp
                         <option value="" disabled {{ !$user->cuisine_type ? 'selected' : '' }}>Selecciona una categoría</option>
                         @foreach ($opciones as $opcion)
                             <option value="{{ $opcion }}" {{ $user->cuisine_type == $opcion ? 'selected' : '' }}>

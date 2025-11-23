@@ -13,9 +13,15 @@ class RepartidorProfileController extends Controller
     /**
      * Muestra la vista del perfil del repartidor.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        
+        // Si es una petición AJAX, devuelve solo el contenido parcial
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('repartidor.perfil', ['user' => $user])->render();
+        }
+        
         return view('repartidor.perfil', ['user' => $user]);
     }
 

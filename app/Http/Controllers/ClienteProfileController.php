@@ -10,9 +10,15 @@ use App\Models\User;
 
 class ClienteProfileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        
+        // Si es una petición AJAX, devuelve solo el contenido parcial
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('cliente.perfil', ['user' => $user])->render();
+        }
+        
         return view('cliente.perfil', ['user' => $user]);
     }
 
