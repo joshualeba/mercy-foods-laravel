@@ -2339,3 +2339,66 @@ input:checked+.switch-slider:before {
 .accordion-content .order-card-footer {
     padding-bottom: 0;
 }
+
+/* === ESTILOS PARA EL MODAL DE RESEÑAS === */
+.review-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+[data-theme="dark"] .review-section {
+    background-color: #2d2d2d;
+    border-color: #444;
+}
+
+.review-label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color-dark);
+}
+
+.custom-textarea {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    resize: none;
+    font-family: inherit;
+    background-color: var(--card-bg);
+    color: var(--text-color-dark);
+    transition: border-color 0.3s;
+}
+
+.custom-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Estrellas de calificación */
+.star-rating {
+    direction: rtl;
+    display: inline-flex;
+    font-size: 1.8rem;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/* Color amarillo para las estrellas al pasar el mouse o seleccionarlas */
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffc107; 
+}
