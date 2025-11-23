@@ -62,5 +62,40 @@ class User extends Authenticatable
     public function pedidosCliente()
     {
         return $this->hasMany(Pedido::class, 'cliente_id');
-}
+    }
+
+    // Relaciones para reseñas
+    public function reviewsAsRestaurante()
+    {
+        return $this->hasMany(Review::class, 'restaurante_id');
+    }
+
+    public function reviewsAsRepartidor()
+    {
+        return $this->hasMany(Review::class, 'repartidor_id');
+    }
+
+    // Método para obtener el promedio de calificación como restaurante
+    public function getAverageRatingRestauranteAttribute()
+    {
+        return $this->reviewsAsRestaurante()->avg('rating_restaurante') ?? 0;
+    }
+
+    // Método para obtener el promedio de calificación como repartidor
+    public function getAverageRatingRepartidorAttribute()
+    {
+        return $this->reviewsAsRepartidor()->avg('rating_repartidor') ?? 0;
+    }
+
+    // Método para obtener el total de reseñas como restaurante
+    public function getTotalReviewsRestauranteAttribute()
+    {
+        return $this->reviewsAsRestaurante()->count();
+    }
+
+    // Método para obtener el total de reseñas como repartidor
+    public function getTotalReviewsRepartidorAttribute()
+    {
+        return $this->reviewsAsRepartidor()->count();
+    }
 }

@@ -2,6 +2,29 @@
     <h1>Mis pedidos</h1>
 </div>
 
+{{-- Mensajes de alerta --}}
+@if(session('success'))
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="order-board">
     {{-- Columna: En preparación --}}
     <div class="order-column">
@@ -10,7 +33,7 @@
             <span class="order-count">{{ $pedidosEnPreparacion->count() }}</span>
         </div>
         <div class="order-cards-container scrollable-orders">
-            @forelse($pedidosEntregados as $pedido)
+            @forelse($pedidosEnPreparacion as $pedido)
                 <div class="accordion-item">
                     <button class="accordion-header">
                         <span>Pedido #{{ $pedido->id }} - {{ $pedido->restaurante->full_name }}</span>
@@ -25,32 +48,16 @@
                                 @endforeach
                             </ul>
                             <hr>
-                            <p><strong>Entregado por:</strong> {{ $pedido->repartidor->full_name ?? 'N/A' }}</p>
-                            
-                            {{-- Lógica para mostrar el botón o el mensaje de agradecimiento --}}
-                            {{-- Nota: Asegúrate de tener la relación 'review' en tu modelo Pedido si usas este @if --}}
-                            @if(optional($pedido)->review) 
-                                <div class="mt-2 text-success small fw-bold text-center">
-                                    <i class="fas fa-check-circle"></i> ¡Gracias por tu calificación!
-                                </div>
-                            @else
-                                {{-- Botón con estilo btn-confirm (igual al del modal) --}}
-                                <button type="button" 
-                                        class="btn-confirm" 
-                                        style="display: block; width: 100%; margin-top: 10px;"
-                                        onclick="abrirModalResena({{ $pedido->id }})">
-                                    Calificar Pedido
-                                </button>
-                            @endif
+                            <p><strong>Estado:</strong> El restaurante está preparando tu orden.</p>
                         </div>
                         <div class="order-card-footer">
                             <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
-                            <small>Entregado {{ $pedido->updated_at->diffForHumans() }}</small>
+                            <small>Actualizado {{ $pedido->updated_at->diffForHumans() }}</small>
                         </div>
                     </div>
                 </div>
             @empty
-                <p>No tienes pedidos recientes.</p>
+                <p>No tienes pedidos en preparación.</p>
             @endforelse
         </div>
     </div>
@@ -114,14 +121,17 @@
                             </ul>
                             <hr>
                             <p><strong>Entregado por:</strong> {{ $pedido->repartidor->full_name ?? 'N/A' }}</p>
-                            {{-- Botón para abrir tu modal personalizado --}}
-                            <button type="button" 
-                                    class="btn-confirm" 
-                                    style="width: 100%; margin-top: 10px;"
-                                    onclick="abrirModalResena({{ $pedido->id }})">
-                                Calificar Pedido
-                            </button>
+                            
                             @if(!$pedido->review)
+                                {{-- Botón para abrir el modal con el mismo estilo 'btn-confirm' que el botón de enviar --}}
+                                <button type="button" 
+                                        class="btn-confirm" 
+                                        style="width: 100%; margin-top: 10px;"
+                                        data-pedido-id="{{ $pedido->id }}"
+                                        data-tiene-repartidor="{{ $pedido->repartidor_id ? '1' : '0' }}"
+                                        onclick="abrirModalResena({{ $pedido->id }})">
+                                    Calificar Pedido
+                                </button>
                             @else
                                 <div class="mt-2 text-success small">
                                     <i class="fas fa-check-circle"></i> ¡Gracias por tu calificación!
@@ -141,16 +151,18 @@
     </div>
 </div>
 
+{{-- Modal de Reseña --}}
 <div class="confirmation-modal-overlay" id="modalResena">
     <div class="modal-box" style="max-width: 500px; text-align: left; padding: 25px;">
         <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 20px;">Calificar Pedido</h2>
         
-        <form action="{{ route('reviews.store') }}" method="POST">
+        <form action="{{ route('reviews.store') }}" method="POST" id="reviewForm">
             @csrf
             <input type="hidden" name="pedido_id" id="input_pedido_id">
+            <input type="hidden" name="tiene_repartidor" id="input_tiene_repartidor" value="1">
             
             <div class="review-section">
-                <label class="review-label">Comida (Restaurante)</label>
+                <label class="review-label">Comida (Restaurante) <span style="color: red;">*</span></label>
                 <div class="star-rating">
                     <input type="radio" name="rating_restaurante" value="5" id="rest-5" required><label for="rest-5">★</label>
                     <input type="radio" name="rating_restaurante" value="4" id="rest-4"><label for="rest-4">★</label>
@@ -158,11 +170,11 @@
                     <input type="radio" name="rating_restaurante" value="2" id="rest-2"><label for="rest-2">★</label>
                     <input type="radio" name="rating_restaurante" value="1" id="rest-1"><label for="rest-1">★</label>
                 </div>
-                <textarea name="comentario_restaurante" class="custom-textarea" placeholder="¿Qué te pareció el sabor?"></textarea>
+                <textarea name="comentario_restaurante" class="custom-textarea" placeholder="¿Qué te pareció el sabor? (Opcional)" rows="3"></textarea>
             </div>
 
-            <div class="review-section mt-3">
-                <label class="review-label">Entrega (Repartidor)</label>
+            <div class="review-section mt-3" id="repartidorSection">
+                <label class="review-label">Entrega (Repartidor) <span style="color: red;" id="repartidorRequired">*</span></label>
                 <div class="star-rating">
                     <input type="radio" name="rating_repartidor" value="5" id="rep-5" required><label for="rep-5">★</label>
                     <input type="radio" name="rating_repartidor" value="4" id="rep-4"><label for="rep-4">★</label>
@@ -170,7 +182,7 @@
                     <input type="radio" name="rating_repartidor" value="2" id="rep-2"><label for="rep-2">★</label>
                     <input type="radio" name="rating_repartidor" value="1" id="rep-1"><label for="rep-1">★</label>
                 </div>
-                <textarea name="comentario_repartidor" class="custom-textarea" placeholder="¿Llegó a tiempo? ¿Fue amable?"></textarea>
+                <textarea name="comentario_repartidor" class="custom-textarea" placeholder="¿Llegó a tiempo? ¿Fue amable? (Opcional)" rows="3"></textarea>
             </div>
 
             <div class="modal-buttons" style="margin-top: 20px;">
@@ -183,8 +195,32 @@
 
 <script>
     function abrirModalResena(idPedido) {
+        // Resetear el formulario
+        document.getElementById('reviewForm').reset();
+        
         // Asignar el ID al formulario
         document.getElementById('input_pedido_id').value = idPedido;
+        
+        // Buscar el pedido en la página para verificar si tiene repartidor
+        const pedidoElement = document.querySelector(`[data-pedido-id="${idPedido}"]`);
+        const tieneRepartidor = pedidoElement ? pedidoElement.dataset.tieneRepartidor === '1' : true;
+        
+        // Actualizar el campo oculto
+        document.getElementById('input_tiene_repartidor').value = tieneRepartidor ? '1' : '0';
+        
+        // Ajustar la sección de repartidor según corresponda
+        const repartidorSection = document.getElementById('repartidorSection');
+        const repartidorInputs = document.querySelectorAll('input[name="rating_repartidor"]');
+        
+        if (!tieneRepartidor) {
+            // Si no hay repartidor, hacer la calificación opcional
+            repartidorInputs.forEach(input => input.required = false);
+            document.getElementById('repartidorRequired').style.display = 'none';
+        } else {
+            // Si hay repartidor, hacer la calificación requerida
+            repartidorInputs.forEach(input => input.required = true);
+            document.getElementById('repartidorRequired').style.display = 'inline';
+        }
         
         // Mostrar el modal forzando el display flex y luego la clase active
         const modal = document.getElementById('modalResena');
@@ -199,6 +235,8 @@
         modal.classList.remove('active');
         setTimeout(() => {
             modal.style.display = 'none';
+            // Resetear el formulario al cerrar
+            document.getElementById('reviewForm').reset();
         }, 300); // Espera la transición
     }
 
