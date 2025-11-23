@@ -14,9 +14,9 @@ class ReviewController extends Controller
         // Validar datos de entrada
         $request->validate([
             'rating_restaurante' => 'required|integer|min:1|max:5',
-            'comentario_restaurante' => 'nullable|string|max:255',
+            'comentario_restaurante' => 'nullable|string|min:10|max:200',
             'rating_repartidor' => 'nullable|integer|min:1|max:5',
-            'comentario_repartidor' => 'nullable|string|max:255',
+            'comentario_repartidor' => 'nullable|string|min:10|max:200',
         ]);
 
         $pedido = Pedido::findOrFail($id);
