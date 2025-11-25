@@ -568,12 +568,16 @@ input:checked+.slider:before {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 450px;
+    max-width: 500px; /* Increased slightly */
+    max-height: 90vh; /* Limit height to viewport */
+    overflow-y: auto; /* Allow vertical scrolling */
     text-align: center;
     transform: scale(0.9);
     transition: transform 0.3s ease, background-color 0.3s;
     border: 1px solid var(--border-color);
     position: relative;
+    display: flex; /* Flex to organize content */
+    flex-direction: column;
 }
 
 .confirmation-modal-overlay.active .modal-box {
@@ -2401,4 +2405,16 @@ input:checked+.switch-slider:before {
 .star-rating label:hover,
 .star-rating label:hover ~ label {
     color: #ffc107; 
+}
+/* PayPal Button Container */
+#paypal-button-container {
+    min-height: 150px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Ensure PayPal iframe is properly positioned */
+#paypal-button-container iframe {
+    position: relative !important;
+    z-index: 1 !important;
 }

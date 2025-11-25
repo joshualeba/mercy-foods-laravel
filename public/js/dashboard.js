@@ -1744,20 +1744,36 @@ if (checkoutBtn) {
                 }
             });
     });
+}
 
-    // Manejar cierre del modal de confirmación
+// Manejar cierre del modal de confirmación - FUERA del if(checkoutBtn)
+document.addEventListener('DOMContentLoaded', function () {
     const confirmModal = document.getElementById('confirm-order-modal');
     const cancelOrderBtn = document.getElementById('cancel-order-btn');
 
-    if (cancelOrderBtn) {
-        cancelOrderBtn.addEventListener('click', () => {
-            if (confirmModal) confirmModal.classList.remove('active');
+    if (cancelOrderBtn && confirmModal) {
+        cancelOrderBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar que el evento se propague
+            confirmModal.classList.remove('active');
             // Limpiamos el contenedor para evitar duplicados si se vuelve a abrir
             const container = document.getElementById('paypal-button-container');
             if (container) container.innerHTML = '';
         });
     }
-}
+
+    // Cerrar modal al hacer clic fuera de él
+    if (confirmModal) {
+        confirmModal.addEventListener('click', (e) => {
+            // Solo cerrar si se hace clic en el overlay, no en el modal-box
+            if (e.target === confirmModal) {
+                confirmModal.classList.remove('active');
+                // Limpiamos el contenedor
+                const container = document.getElementById('paypal-button-container');
+                if (container) container.innerHTML = '';
+            }
+        });
+    }
+});
 
 
 const addPaymentModal = document.getElementById('add-payment-modal');
