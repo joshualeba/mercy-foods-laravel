@@ -209,13 +209,19 @@
     <div class="confirmation-modal-overlay" id="confirm-order-modal">
         <div class="modal-box">
             <h2>Confirmar tu pedido</h2>
-            <p>¿Estás seguro/a de que deseas realizar el pago por un total de <strong id="confirm-total-amount"></strong>?</p>
+            <p>Total a pagar: <strong id="confirm-total-amount"></strong></p>
+            
+            {{-- Contenedor para botones de PayPal --}}
+            <div id="paypal-button-container" style="margin-top: 20px;"></div>
+
             <div class="modal-buttons">
                 <button class="btn-cancel" id="cancel-order-btn">Cancelar</button>
-                <button class="btn-confirm" id="confirm-order-btn">Aceptar y pagar</button>
             </div>
         </div>
     </div>
+
+    {{-- Script de PayPal SDK --}}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=MXN"></script>
 
     {{-- Nuevo Modal para agregar Método de Pago --}}
     <div class="confirmation-modal-overlay" id="add-payment-modal">
