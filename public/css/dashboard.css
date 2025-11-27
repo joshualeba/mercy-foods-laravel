@@ -405,10 +405,25 @@ input:checked+.slider:before {
     height: 24px;
 }
 
-.icon-pedidos { background-color: rgba(255, 159, 64, 0.2); color: #ff9f40; }
-.icon-menu { background-color: rgba(54, 162, 235, 0.2); color: #36a2eb; }
-.icon-ganancias { background-color: rgba(75, 192, 192, 0.2); color: #4bc0c0; }
-.icon-perfil { background-color: rgba(153, 102, 255, 0.2); color: #9966ff; }
+.icon-pedidos {
+    background-color: rgba(255, 159, 64, 0.2);
+    color: #ff9f40;
+}
+
+.icon-menu {
+    background-color: rgba(54, 162, 235, 0.2);
+    color: #36a2eb;
+}
+
+.icon-ganancias {
+    background-color: rgba(75, 192, 192, 0.2);
+    color: #4bc0c0;
+}
+
+.icon-perfil {
+    background-color: rgba(153, 102, 255, 0.2);
+    color: #9966ff;
+}
 
 .stat-card-content h3 {
     margin: 0;
@@ -568,15 +583,19 @@ input:checked+.slider:before {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 500px; /* Increased slightly */
-    max-height: 90vh; /* Limit height to viewport */
-    overflow-y: auto; /* Allow vertical scrolling */
+    max-width: 500px;
+    /* Increased slightly */
+    max-height: 90vh;
+    /* Limit height to viewport */
+    overflow-y: auto;
+    /* Allow vertical scrolling */
     text-align: center;
     transform: scale(0.9);
     transition: transform 0.3s ease, background-color 0.3s;
     border: 1px solid var(--border-color);
     position: relative;
-    display: flex; /* Flex to organize content */
+    display: flex;
+    /* Flex to organize content */
     flex-direction: column;
 }
 
@@ -973,10 +992,21 @@ input:checked+.switch-slider:before {
     outline: none;
 }
 
-.profile-form.view-mode .edit-mode-field { display: none; }
-.profile-form.edit-mode .edit-mode-field { display: block; }
-.profile-form.view-mode .edit-mode-btn { display: none; }
-.profile-form.edit-mode .view-mode-btn { display: none; }
+.profile-form.view-mode .edit-mode-field {
+    display: none;
+}
+
+.profile-form.edit-mode .edit-mode-field {
+    display: block;
+}
+
+.profile-form.view-mode .edit-mode-btn {
+    display: none;
+}
+
+.profile-form.edit-mode .view-mode-btn {
+    display: none;
+}
 
 .profile-form.edit-mode .form-group input#profile-full_name,
 .profile-form.edit-mode .form-group input#profile-email {
@@ -1246,13 +1276,33 @@ input:checked+.switch-slider:before {
 /* ============================================= */
 /* === CLASES DE UTILIDAD Y COMPONENTES      === */
 /* ============================================= */
-.d-flex { display: flex; }
-.justify-content-between { justify-content: space-between; }
-.align-items-center { align-items: center; }
-.mb-4 { margin-bottom: 2rem; }
-.text-center { text-align: center; }
-.p-5 { padding: 3rem; }
-.mt-3 { margin-top: 1rem; }
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.mb-4 {
+    margin-bottom: 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.p-5 {
+    padding: 3rem;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
 
 .btn {
     display: inline-block;
@@ -1279,9 +1329,23 @@ input:checked+.switch-slider:before {
     border-color: #e55337;
 }
 
-.btn-sm { padding: .25rem .5rem; font-size: .875rem; border-radius: .2rem; }
-.btn-info { color: #fff; background-color: #17a2b8; border-color: #17a2b8; }
-.btn-danger { color: #fff; background-color: #dc3545; border-color: #dc3545; }
+.btn-sm {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    border-radius: .2rem;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
 
 .badge {
     display: inline-block;
@@ -1296,10 +1360,23 @@ input:checked+.switch-slider:before {
     border-radius: .25rem;
 }
 
-.badge-success { background-color: #28a745; }
-.badge-danger { background-color: #dc3545; }
-.status-active { color: #1a6e33; background-color: #d1f7dd; }
-.status-paused { color: #616161; background-color: #f0f0f0; }
+.badge-success {
+    background-color: #28a745;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.status-active {
+    color: #1a6e33;
+    background-color: #d1f7dd;
+}
+
+.status-paused {
+    color: #616161;
+    background-color: #f0f0f0;
+}
 
 /* ============================================= */
 /* === ESTILOS PARA EL TEMA OSCURO (DARK)    === */
@@ -1328,9 +1405,19 @@ input:checked+.switch-slider:before {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-[data-theme="dark"] .status-active { color: #7ee29a; background-color: #24462d; }
-[data-theme="dark"] .status-paused { color: #a0a0a0; background-color: #3a3a3a; }
-[data-theme="dark"] .close-modal-btn { color: #a0a0a0; }
+[data-theme="dark"] .status-active {
+    color: #7ee29a;
+    background-color: #24462d;
+}
+
+[data-theme="dark"] .status-paused {
+    color: #a0a0a0;
+    background-color: #3a3a3a;
+}
+
+[data-theme="dark"] .close-modal-btn {
+    color: #a0a0a0;
+}
 
 [data-theme="dark"] .profile-form.edit-mode .form-group input:not([readonly]):focus {
     box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.2);
@@ -1461,7 +1548,7 @@ input:checked+.switch-slider:before {
 
 .action-card:not(.disabled):hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .action-card h3 {
@@ -1530,19 +1617,21 @@ input:checked+.switch-slider:before {
 
 .restaurant-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .restaurant-card-banner {
     height: 140px;
     width: 100%;
-    background-color: var(--border-color); /* Color de fondo mientras carga la imagen */
+    background-color: var(--border-color);
+    /* Color de fondo mientras carga la imagen */
 }
 
 .restaurant-card-banner img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Asegura que la imagen cubra el espacio sin deformarse */
+    object-fit: cover;
+    /* Asegura que la imagen cubra el espacio sin deformarse */
 }
 
 .restaurant-card-content {
@@ -1596,7 +1685,8 @@ input:checked+.switch-slider:before {
 
 /* Para que las tarjetas se oculten/muestren correctamente */
 .platillo-card {
-    display: flex; /* Importante para la alineación interna */
+    display: flex;
+    /* Importante para la alineación interna */
 }
 
 .no-results-message {
@@ -1684,7 +1774,8 @@ input:checked+.switch-slider:before {
 
 /* Para que las tarjetas se oculten/muestren correctamente sin descuadrarse */
 .platillo-card {
-    display: flex; /* Importante para la alineación interna */
+    display: flex;
+    /* Importante para la alineación interna */
 }
 
 .no-results-message {
@@ -1736,14 +1827,16 @@ input:checked+.switch-slider:before {
 
 /* --- Estilos para el Slider de Precios (noUiSlider) --- */
 .price-slider-container {
-    padding: 20px 10px; /* Aumentamos el padding para que el punto no se corte */
+    padding: 20px 10px;
+    /* Aumentamos el padding para que el punto no se corte */
 }
 
 #price-slider {
     height: 6px;
     border: none;
     box-shadow: none;
-    background: #d3d3d3; /* Color de la barra de fondo */
+    background: #d3d3d3;
+    /* Color de la barra de fondo */
 }
 
 /* Esta es la parte de la barra que se colorea */
@@ -1755,12 +1848,14 @@ input:checked+.switch-slider:before {
 #price-slider .noUi-handle {
     height: 22px;
     width: 22px;
-    top: -8px; /* Centra el punto verticalmente */
-    right: -11px; /* Centra el punto horizontalmente */
+    top: -8px;
+    /* Centra el punto verticalmente */
+    right: -11px;
+    /* Centra el punto horizontalmente */
     border-radius: 50%;
     background: var(--primary-color);
     border: 3px solid var(--card-bg);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     cursor: grab;
 }
 
@@ -1768,9 +1863,11 @@ input:checked+.switch-slider:before {
 #price-slider .noUi-handle:focus {
     outline: none;
 }
+
 #price-slider .noUi-handle.noUi-handle-upper {
     display: none;
 }
+
 .noUi-tooltip {
     display: none;
 }
@@ -1794,7 +1891,7 @@ input:checked+.switch-slider:before {
 }
 
 [data-theme="dark"] #cuisine-type-select {
-     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23EAEAEA' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23EAEAEA' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 
 /* --- UNIFICACIÓN DE BOTONES DEL PERFIL --- */
@@ -1806,7 +1903,8 @@ input:checked+.switch-slider:before {
     cursor: pointer;
     transition: all 0.3s ease;
     border: 1px solid transparent;
-    color: white; /* Color de texto para todos */
+    color: white;
+    /* Color de texto para todos */
 }
 
 .profile-actions .btn.btn-primary,
@@ -1822,7 +1920,8 @@ input:checked+.switch-slider:before {
 }
 
 .profile-actions .btn-cancel {
-    background-color: #6c757d; /* Gris neutral */
+    background-color: #6c757d;
+    /* Gris neutral */
     border-color: #6c757d;
 }
 
@@ -1839,11 +1938,13 @@ input:checked+.switch-slider:before {
 }
 
 .modal-box .icon.success {
-    color: #28a745; /* Verde éxito */
+    color: #28a745;
+    /* Verde éxito */
 }
 
 .modal-box .icon.error {
-    color: #dc3545; /* Rojo error */
+    color: #dc3545;
+    /* Rojo error */
 }
 
 .modal-box .btn-modal-close {
@@ -1860,7 +1961,8 @@ input:checked+.switch-slider:before {
     padding: 12px 15px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background-color: var(--main-bg); /* Un fondo ligeramente diferente para contraste */
+    background-color: var(--main-bg);
+    /* Un fondo ligeramente diferente para contraste */
     color: var(--text-color-dark);
     font-size: 1rem;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -1879,7 +1981,8 @@ input:checked+.switch-slider:before {
 
 /* Estilo para el modo oscuro */
 [data-theme="dark"] .profile-card .form-group .form-control {
-    background-color: #2a2a2a; /* Un poco más claro que el fondo de la tarjeta */
+    background-color: #2a2a2a;
+    /* Un poco más claro que el fondo de la tarjeta */
 }
 
 /* ============================================= */
@@ -1892,14 +1995,16 @@ input:checked+.switch-slider:before {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    display: none; /* Oculto por defecto */
+    display: none;
+    /* Oculto por defecto */
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
 #notification-modal-overlay.active {
-    display: flex; /* Se muestra con Flexbox */
+    display: flex;
+    /* Se muestra con Flexbox */
 }
 
 /* El resto de los estilos son similares al modal de logout */
@@ -1957,13 +2062,16 @@ input:checked+.switch-slider:before {
 
     /* Reduce el tamaño del título "Método de pago agregados" */
     .profile-card h2 {
-        font-size: 1.1rem; /* Un tamaño más pequeño y legible en móviles */
+        font-size: 1.1rem;
+        /* Un tamaño más pequeño y legible en móviles */
     }
 
     /* Hace que el grid de 2 columnas se convierta en una sola */
     .profile-grid {
-        grid-template-columns: 1fr; /* Apila los elementos verticalmente */
-        gap: 1rem; /* Reduce el espacio entre ellos */
+        grid-template-columns: 1fr;
+        /* Apila los elementos verticalmente */
+        gap: 1rem;
+        /* Reduce el espacio entre ellos */
     }
 
     /* Elimina el span de 2 columnas para que todo ocupe una sola */
@@ -1973,12 +2081,12 @@ input:checked+.switch-slider:before {
 }
 
 .nombre-del-restaurante-destacado {
-    display: inline-block; 
-    padding: 0.3rem 0.8rem; 
-    font-weight: 600; 
-    color: #fff; 
-    background-color: var(--primary-color); 
-    border-radius: 15px; 
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--primary-color);
+    border-radius: 15px;
     font-size: 0.9em;
 }
 
@@ -1989,12 +2097,16 @@ input:checked+.switch-slider:before {
     max-width: 450px;
     padding: 1.5rem;
     text-align: left;
+    position: relative;
+    /* Necesario para posicionar el botón de cerrar */
+    overflow: visible;
+    /* Permite que el botón sobresalga ligeramente */
 }
 
 #platillo-modal-details .close-modal {
     position: absolute;
-    top: -15px;
-    right: -15px;
+    top: 10px;
+    right: 10px;
     background-color: #2c3e50;
     color: #ffffff;
     border-radius: 50%;
@@ -2021,8 +2133,13 @@ input:checked+.switch-slider:before {
 .platillo-modal-content {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centra los elementos */
+    align-items: center;
+    /* Centra los elementos */
     text-align: center;
+    overflow-x: hidden;
+    /* Previene el scroll horizontal */
+    width: 100%;
+    /* Asegura que no se expanda más allá del contenedor */
 }
 
 .platillo-modal-img {
@@ -2170,18 +2287,23 @@ input:checked+.switch-slider:before {
 }
 
 .cart-item-actions .item-quantity {
-    font-size: 1.2rem; /* Aumenta el tamaño de la fuente */
+    font-size: 1.2rem;
+    /* Aumenta el tamaño de la fuente */
     font-weight: bold;
     padding: 5px;
-    height: 40px; /* Ajusta la altura */
-    width: 60px;  /* Ajusta el ancho */
+    height: 40px;
+    /* Ajusta la altura */
+    width: 60px;
+    /* Ajusta el ancho */
 }
 
 .cart-item-actions .remove-item {
-    font-size: 2rem; /* Aumenta el tamaño de la 'X' */
+    font-size: 2rem;
+    /* Aumenta el tamaño de la 'X' */
     width: 40px;
     height: 40px;
-    line-height: 40px; /* Centra la 'X' verticalmente */
+    line-height: 40px;
+    /* Centra la 'X' verticalmente */
     text-align: center;
     padding: 0;
 }
@@ -2231,7 +2353,8 @@ input:checked+.switch-slider:before {
 }
 
 .order-column-header {
-    flex-shrink: 0; /* El header no se reduce */
+    flex-shrink: 0;
+    /* El header no se reduce */
 }
 
 .order-cards-container {
@@ -2243,7 +2366,8 @@ input:checked+.switch-slider:before {
 
 /* ESPECÍFICO para la columna de entregados con scroll */
 .scrollable-orders {
-    max-height: none !important; /* Removemos el límite de altura */
+    max-height: none !important;
+    /* Removemos el límite de altura */
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
@@ -2279,7 +2403,8 @@ input:checked+.switch-slider:before {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     margin-bottom: 0.75rem;
-    overflow: visible; /* IMPORTANTE: Cambiamos de hidden a visible */
+    overflow: visible;
+    /* IMPORTANTE: Cambiamos de hidden a visible */
     transition: all 0.3s ease;
 }
 
@@ -2330,7 +2455,8 @@ input:checked+.switch-slider:before {
 /* Cuando está activo, permitimos que se expanda completamente */
 .accordion-item.active .accordion-content {
     padding-bottom: 1rem;
-    max-height: 1000px; /* Valor alto para permitir expansión completa */
+    max-height: 1000px;
+    /* Valor alto para permitir expansión completa */
 }
 
 .accordion-content .order-card-body,
@@ -2401,11 +2527,12 @@ input:checked+.switch-slider:before {
 }
 
 /* Color amarillo para las estrellas al pasar el mouse o seleccionarlas */
-.star-rating input:checked ~ label,
+.star-rating input:checked~label,
 .star-rating label:hover,
-.star-rating label:hover ~ label {
-    color: #ffc107; 
+.star-rating label:hover~label {
+    color: #ffc107;
 }
+
 /* PayPal Button Container */
 #paypal-button-container {
     min-height: 150px;
@@ -2417,4 +2544,83 @@ input:checked+.switch-slider:before {
 #paypal-button-container iframe {
     position: relative !important;
     z-index: 1 !important;
+}
+
+/* Ensure modal buttons appear above PayPal content */
+#confirm-order-modal .modal-buttons {
+    position: relative;
+    z-index: 10;
+}
+
+#confirm-order-modal .btn-cancel {
+    position: relative;
+    z-index: 10;
+}
+/* ============================================= */
+/* === PROFILE HEADER STYLES                 === */
+/* ============================================= */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--text-color-dark);
+}
+
+.profile-header .btn {
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .profile-header .btn {
+        width: 100%;
+    }
+}
+
+/* Payment method card styles */
+.saved-payment-display {
+    padding: 1.5rem 0;
+}
+
+.payment-method-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem;
+    background-color: var(--main-bg);
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+}
+
+.payment-icon {
+    flex-shrink: 0;
+}
+
+.payment-details h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color-dark);
+    font-size: 1.2rem;
+}
+
+.payment-details p {
+    margin: 0;
+    color: var(--text-color-semidark);
+    font-size: 1rem;
+}
+
+.payment-details small {
+    color: var(--text-color-light);
+    font-size: 0.85rem;
 }

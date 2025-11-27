@@ -180,6 +180,8 @@
     <script>
         const processCartUrl = '{{ route("carrito.procesar") }}';
         const verifyPaymentUrl = '{{ route("cliente.pago.verificar") }}';
+        const hasSavedPayPal = {{ Auth::user()->paypal_email ? 'true' : 'false' }};
+        const savedPayPalEmail = '{{ Auth::user()->paypal_email ?? "" }}';
     </script>
 
     {{-- Modal para detalles del platillo --}}
@@ -207,14 +209,34 @@
 
     {{-- Nuevo Modal para Confirmar Pedido --}}
     <div class="confirmation-modal-overlay" id="confirm-order-modal">
-        <div class="modal-box">
+        <div class="modal-box" style="max-width: 500px;">
             <h2>Confirmar tu pedido</h2>
             <p>Total a pagar: <strong id="confirm-total-amount"></strong></p>
-            
-            {{-- Contenedor para botones de PayPal --}}
-            <div id="paypal-button-container" style="margin-top: 20px;"></div>
 
-            <div class="modal-buttons">
+            @if(Auth::user()->paypal_email)
+                {{-- Usuario tiene PayPal guardado --}}
+                <div class="saved-payment-option" style="margin: 2rem 0;">
+                    <h3 style="margin-bottom: 1rem;">Método de pago</h3>
+                    <div class="payment-method-card" style="padding: 1rem; background-color: var(--main-bg); border-radius: 8px; border: 2px solid var(--primary-color);">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i class="fab fa-paypal" style="font-size: 2rem; color: #0070ba;"></i>
+                            <div>
+                                <strong>PayPal</strong>
+                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-color-light);">{{ Auth::user()->paypal_email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-color-light);">Se procesará el pago con tu cuenta de PayPal guardada</p>
+                </div>
+            @else
+                {{-- Usuario NO tiene método de pago guardado --}}
+                <p style="margin: 1.5rem 0;">Selecciona tu método de pago:</p>
+            @endif
+
+            {{-- Contenedor para botones de PayPal --}}
+            <div id="paypal-button-container"></div>
+
+            <div class="modal-buttons" style="margin-top: 1.5rem;">
                 <button class="btn-cancel" id="cancel-order-btn">Cancelar</button>
             </div>
         </div>

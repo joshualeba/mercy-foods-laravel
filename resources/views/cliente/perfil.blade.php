@@ -1,5 +1,8 @@
 <div class="profile-section-container">
-    <h1>Mi perfil</h1>
+    <div class="profile-header">
+        <h1>Mi perfil</h1>
+        <button type="button" class="btn btn-primary view-mode-btn" id="edit-profile-btn">Editar perfil</button>
+    </div>
 
     <form id="profile-form" action="{{ route('cliente.perfil.update') }}" class="profile-form view-mode" novalidate>
         @csrf
@@ -11,64 +14,61 @@
                 {{-- Nombre --}}
                 <div class="form-group span-2">
                     <label for="profile-full_name">Nombre</label>
-                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
                     <input type="text" id="profile-full_name" name="full_name" value="{{ $user->full_name }}" class="is-editable" readonly>
                 </div>
+                
+                {{-- Correo electrónico --}}
+                <div class="form-group span-2">
+                    <label for="profile-email">Correo electrónico</label>
+                    <input type="email" id="profile-email" name="email" value="{{ $user->email }}" readonly>
+                    <small class="form-hint">El correo no se puede modificar</small>
+                </div>
+                
                 {{-- Dirección --}}
                 <div class="form-group span-2">
                     <label for="profile-address">Dirección de entrega</label>
-                    {{-- AÑADIDA LA CLASE 'is-editable' --}}
                     <input type="text" id="profile-address" name="address" value="{{ $user->address }}" maxlength="200" class="is-editable" readonly>
                     <small class="form-hint edit-mode-field" style="display: none;">Máximo 200 caracteres.</small>
                     <small class="error-message"></small>
                 </div>
             </div>
-        </div>
 
-        <div class="profile-card">
-            <h2>Datos de acceso</h2>
-            <div class="profile-grid">
-                {{-- Correo electrónico (SIN CLASE, NO EDITABLE) --}}
-                <div class="form-group span-2">
-                    <label for="profile-email">Correo electrónico</label>
-                    <input type="email" id="profile-email" name="email" value="{{ $user->email }}" readonly>
-                </div>
-            </div>
-
-            {{-- Campos para cambiar contraseña --}}
             @if(!$user->google_id)
+                {{-- Campos para cambiar contraseña (solo en modo edición) --}}
                 <div class="password-change-fields edit-mode-field" style="display: none;">
-                    {{-- ... (contenido de contraseña sin cambios) ... --}}
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Cambiar contraseña (opcional)</h3>
                     <p class="password-info">Deja los campos de contraseña en blanco si no deseas cambiarla.</p>
 
-                    {{-- Contraseña actual --}}
-                    <div class="form-group">
-                        <label for="profile-current_password">Contraseña actual</label>
-                        <div class="input-icon-wrapper">
-                            <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
-                            <i class="toggle-password fas fa-eye"></i>
+                    <div class="profile-grid">
+                        {{-- Contraseña actual --}}
+                        <div class="form-group span-2">
+                            <label for="profile-current_password">Contraseña actual</label>
+                            <div class="input-icon-wrapper">
+                                <input type="password" id="profile-current_password" name="current_password" class="form-control" autocomplete="current-password">
+                                <i class="toggle-password fas fa-eye"></i>
+                            </div>
+                            <small class="error-message"></small>
                         </div>
-                        <small class="error-message"></small>
-                    </div>
 
-                    {{-- Nueva contraseña --}}
-                    <div class="form-group">
-                        <label for="profile-new_password">Nueva contraseña</label>
-                        <div class="input-icon-wrapper">
-                            <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
-                            <i class="toggle-password fas fa-eye"></i>
+                        {{-- Nueva contraseña --}}
+                        <div class="form-group">
+                            <label for="profile-new_password">Nueva contraseña</label>
+                            <div class="input-icon-wrapper">
+                                <input type="password" id="profile-new_password" name="new_password" class="form-control" autocomplete="new-password">
+                                <i class="toggle-password fas fa-eye"></i>
+                            </div>
+                            <small class="error-message"></small>
                         </div>
-                        <small class="error-message"></small>
-                    </div>
 
-                    {{-- Confirmar nueva contraseña --}}
-                    <div class="form-group">
-                        <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
-                        <div class="input-icon-wrapper">
-                            <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
-                            <i class="toggle-password fas fa-eye"></i>
+                        {{-- Confirmar nueva contraseña --}}
+                        <div class="form-group">
+                            <label for="profile-new_password_confirmation">Confirmar nueva contraseña</label>
+                            <div class="input-icon-wrapper">
+                                <input type="password" id="profile-new_password_confirmation" name="new_password_confirmation" class="form-control" autocomplete="new-password">
+                                <i class="toggle-password fas fa-eye"></i>
+                            </div>
+                            <small class="error-message"></small>
                         </div>
-                        <small class="error-message"></small>
                     </div>
 
                     {{-- Lista de Requisitos de Contraseña --}}
@@ -82,58 +82,48 @@
                 </div>
             @endif
 
-            {{-- Botones de acción --}}
-            <div class="profile-actions">
-                 <button type="button" class="btn btn-primary view-mode-btn" id="edit-profile-btn">Editar perfil</button>
+            {{-- Botones de acción (ahora solo para guardar/cancelar en modo edición) --}}
+            <div class="profile-actions" style="margin-top: 1rem;">
                  <button type="submit" class="btn btn-confirm edit-mode-btn" id="save-profile-btn" style="display:none;">Guardar cambios</button>
                  <button type="button" class="btn btn-cancel edit-mode-btn" id="cancel-profile-btn" style="display:none;">Cancelar</button>
             </div>
+        </div>
     </form>
 
+    {{-- Sección de Método de Pago --}}
     <div class="profile-form" style="margin-top: 2rem;">
         <div class="profile-card">
-            <h2>Método de pago agregados a esta cuenta</h2>
+            <h2>Método de pago</h2>
 
-            @if(Auth::user()->card_last_four)
-                {{-- Contenedor que muestra los datos de la tarjeta --}}
-                <div class="profile-grid">
-                    {{-- Nombre del titular --}}
-                    <div class="form-group span-2">
-                        <label>Nombre del titular</label>
-                        <input type="text" value="{{ Auth::user()->card_name }}" readonly>
-                    </div>
-
-                    {{-- Número de tarjeta --}}
-                    <div class="form-group">
-                        <label>Tarjeta registrada</label>
-                        <input type="text" value="**** **** **** {{ Auth::user()->card_last_four }}" readonly>
-                    </div>
-                    
-                    {{-- Fecha de expiración --}}
-                    <div class="form-group">
-                        <label>Fecha de expiración</label>
-                        <input type="text" value="{{ Auth::user()->card_expiry }}" readonly>
+            @if(Auth::user()->paypal_email)
+                {{-- Mostrar método de pago guardado --}}
+                <div class="saved-payment-display">
+                    <div class="payment-method-card">
+                        <div class="payment-icon">
+                            <i class="fab fa-paypal" style="font-size: 2.5rem; color: #0070ba;"></i>
+                        </div>
+                        <div class="payment-details">
+                            <h3>PayPal</h3>
+                            <p>{{ Auth::user()->paypal_email }}</p>
+                            <small>ID: {{ substr(Auth::user()->paypal_payer_id, 0, 10) }}...</small>
+                        </div>
                     </div>
                 </div>
 
-                {{-- Botón para eliminar el método de pago (centrado) --}}
-                <div class="text-center" style="padding: 1rem 0;">
-                    <button id="delete-payment-method-btn" class="btn btn-danger" style="border-radius: 8px; padding: 10px 20px;">
-                        <i class="fas fa-trash-alt"></i> Eliminar este método de pago
+                <div class="profile-actions" style="margin-top: 1.5rem;">
+                    <button id="remove-payment-method-btn" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Eliminar método de pago
                     </button>
                 </div>
-
             @else
-                {{-- Mensaje y botón para agregar método si no existe --}}
-                <div class="text-center" style="padding: 1rem 0;">
-                    <p>No tienes ningún método de pago guardado.</p>
-                    <button id="add-payment-method-from-profile" class="btn btn-primary" style="border-radius: 8px; padding: 10px 20px;">
-                        <i class="fas fa-plus"></i> Agregar método de pago
-                    </button>
-                </div>
+                <p>No tienes ningún método de pago guardado.</p>
+                <button class="btn btn-primary" onclick="document.querySelector('.nav-link[data-section=&quot;pago&quot;]').click();" style="margin-top: 1rem;">
+                    <i class="fas fa-plus"></i> Agregar método de pago
+                </button>
             @endif
         </div>
     </div>
+    </form>
 </div>
 
 <div class="confirmation-modal-overlay" id="success-modal">

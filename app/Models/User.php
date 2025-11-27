@@ -26,6 +26,9 @@ class User extends Authenticatable
          'address',
         'card_last_four',
         'card_expiry',
+        'card_name',
+        'paypal_email',
+        'paypal_payer_id',
      ];
 
     /**

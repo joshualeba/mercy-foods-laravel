@@ -127,6 +127,35 @@ class PedidoController extends Controller
             return response()->json(['message' => 'Pre-verificación exitosa.']);
         }
 
+        // --- VALIDACIÓN DE PAGO DE PAYPAL (HU_4.3) ---
+        // Validar que se reciban los datos de PayPal
+        $request->validate([
+            'paypal_order_id' => 'required|string',
+            'paypal_payment_data' => 'required|array',
+            'paypal_payment_data.status' => 'required|string'
+        ]);
+
+        // Verificar que el pago fue completado exitosamente
+        $paymentStatus = $request->input('paypal_payment_data.status');
+        if ($paymentStatus !== 'COMPLETED') {
+            \Log::warning('Intento de crear pedido con pago no completado', [
+                'user_id' => $user->id,
+                'paypal_order_id' => $request->input('paypal_order_id'),
+                'payment_status' => $paymentStatus
+            ]);
+            return response()->json([
+                'message' => 'El pago no ha sido completado. Por favor, intenta nuevamente.'
+            ], 400);
+        }
+
+        // Extraer información del pago de PayPal
+        $paypalData = $request->input('paypal_payment_data');
+        $paypalOrderId = $request->input('paypal_order_id');
+        
+        // Obtener el payer_id y capture_id de la respuesta de PayPal
+        $paypalPayerId = $paypalData['payer']['payer_id'] ?? null;
+        $paypalCaptureId = $paypalData['purchase_units'][0]['payments']['captures'][0]['id'] ?? null;
+
         // --- A PARTIR DE AQUÍ, LA LÓGICA PARA CREAR EL PEDIDO CONTINÚA ---
         $subtotal = 0;
         foreach ($cartItems as $item) {
@@ -138,6 +167,7 @@ class PedidoController extends Controller
         $comisionPlataforma = $subtotal * 0.03;
         $total = $subtotal + $costoEnvio + $comisionPlataforma;
 
+        // Crear el pedido con información de PayPal
         $pedido = Pedido::create([
             'cliente_id' => $user->id,
             'restaurante_id' => $restauranteId,
@@ -147,6 +177,12 @@ class PedidoController extends Controller
             'total' => $total,
             'estado' => 'pendiente',
             'direccion_entrega' => $user->address,
+            // Campos de PayPal (HU_4.3)
+            'paypal_order_id' => $paypalOrderId,
+            'paypal_payer_id' => $paypalPayerId,
+            'paypal_payment_status' => $paymentStatus,
+            'paypal_capture_id' => $paypalCaptureId,
+            'metodo_pago' => 'paypal'
         ]);
 
         foreach ($cartItems as $item) {
@@ -158,6 +194,12 @@ class PedidoController extends Controller
                 'precio_unitario' => $platillo->precio,
             ]);
         }
+
+        \Log::info('Pedido creado exitosamente con pago de PayPal', [
+            'pedido_id' => $pedido->id,
+            'paypal_order_id' => $paypalOrderId,
+            'total' => $total
+        ]);
 
         return response()->json(['message' => '¡Pedido realizado con éxito!', 'pedido_id' => $pedido->id]);
     }
