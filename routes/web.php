@@ -75,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
     Route::post('/pago', [PaymentController::class, 'store'])->name('cliente.pago.procesar');
     Route::get('/verificar-pago', [PaymentController::class, 'verify'])->name('cliente.pago.verificar');
+    Route::post('/cliente/pago/save-paypal', [PaymentController::class, 'savePayPal'])->name('cliente.pago.save-paypal');
+    Route::post('/cliente/pago/remove', [PaymentController::class, 'removePaymentMethod'])->name('cliente.pago.remove');
     
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::get('/api/restaurante/reviews', [ReviewController::class, 'getRestauranteReviews'])->name('api.restaurante.reviews');

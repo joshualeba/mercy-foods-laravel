@@ -1100,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Lógica para eliminar el método de pago en la sección de perfil
     const initializeDeletePayment = () => {
-        const deletePaymentBtn = document.getElementById('delete-payment-method-btn');
+        const deletePaymentBtn = document.getElementById('remove-payment-method-btn');
 
         if (deletePaymentBtn) {
             deletePaymentBtn.addEventListener('click', () => {
@@ -1115,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cliente/perfil/eliminar-pago', {
+                        fetch('/cliente/pago/remove', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -1668,12 +1668,28 @@ if (checkoutBtn) {
                 if (totalAmountEl) totalAmountEl.textContent = totalFormatted;
                 if (confirmModal) confirmModal.classList.add('active');
 
-                // Renderizar botones de PayPal si no existen aún
-                const container = document.getElementById('paypal-button-container');
-                if (container && container.innerHTML === '') {
+                // Renderizar botones de PayPal
+                const paypalContainer = document.getElementById('paypal-button-container');
+                if (paypalContainer) {
+                    paypalContainer.innerHTML = ''; // Limpiar contenedor
+
+                    // Si el usuario tiene PayPal guardado, mostramos la info pero usamos el botón oficial
+                    if (typeof hasSavedPayPal !== 'undefined' && hasSavedPayPal) {
+                        // No creamos botón personalizado, dejamos que se renderice el botón oficial
+                        // pero podemos ocultar la opción de tarjeta si quisiéramos, 
+                        // aunque por seguridad es mejor dejar ambas opciones del SDK.
+                    }
+
+                    // Configuración de botones
+                    let fundingSource = undefined;
+                    if (typeof hasSavedPayPal !== 'undefined' && hasSavedPayPal) {
+                        fundingSource = paypal.FUNDING.PAYPAL;
+                    }
+
+                    // Configuración común para los botones de PayPal
                     paypal.Buttons({
+                        fundingSource: fundingSource,
                         createOrder: function (data, actions) {
-                            // Llamada al backend para crear la orden
                             return fetch('/paypal/create', {
                                 method: 'POST',
                                 headers: {
@@ -1690,7 +1706,6 @@ if (checkoutBtn) {
                             });
                         },
                         onApprove: function (data, actions) {
-                            // Capturar la orden
                             return fetch('/paypal/capture', {
                                 method: 'POST',
                                 headers: {
@@ -1707,7 +1722,6 @@ if (checkoutBtn) {
                                     throw new Error(orderData.error);
                                 }
 
-                                // Si el pago es exitoso, creamos el pedido en nuestra BD
                                 return fetch(processCartUrl, {
                                     method: 'POST',
                                     headers: {
@@ -1715,7 +1729,11 @@ if (checkoutBtn) {
                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                                         'Accept': 'application/json',
                                     },
-                                    body: JSON.stringify({ cart: cart }) // Enviamos el carrito para crear el pedido
+                                    body: JSON.stringify({
+                                        cart: cart,
+                                        paypal_order_id: data.orderID,
+                                        paypal_payment_data: orderData
+                                    })
                                 });
                             }).then(function (res) {
                                 return res.json();
@@ -1732,15 +1750,59 @@ if (checkoutBtn) {
                         },
                         onError: function (err) {
                             console.error('PayPal Error:', err);
+                            if (err.toString().includes('closed') || err.toString().includes('popup')) {
+                                return;
+                            }
                             Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error con PayPal.' });
+                        },
+                        onCancel: function (data) {
+                            console.log('Pago cancelado por el usuario');
+                            const cancelBtn = document.getElementById('cancel-order-btn');
+                            if (cancelBtn) cancelBtn.style.display = 'block';
+                        },
+                        onClick: function (data, actions) {
+                            if (data.fundingSource === 'card') {
+                                const cancelBtn = document.getElementById('cancel-order-btn');
+                                if (cancelBtn) cancelBtn.style.display = 'none';
+                            }
                         }
                     }).render('#paypal-button-container');
+
+                    // Observar cambios en el contenedor de PayPal
+                    const observer = new MutationObserver(function (mutations) {
+                        mutations.forEach(function (mutation) {
+                            const paypalIframe = paypalContainer.querySelector('iframe');
+                            const cancelBtn = document.getElementById('cancel-order-btn');
+
+                            if (paypalIframe && cancelBtn) {
+                                const iframeDoc = paypalIframe.contentWindow;
+                                if (iframeDoc) {
+                                    try {
+                                        const cardForm = paypalIframe.contentDocument?.querySelector('[data-funding-source="card"]');
+                                        if (cardForm) {
+                                            cancelBtn.style.display = 'none';
+                                        }
+                                    } catch (e) {
+                                        // Error de CORS
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                    observer.observe(paypalContainer, {
+                        childList: true,
+                        subtree: true,
+                        attributes: true
+                    });
                 }
             })
             .catch(error => {
-                if (error !== 'Carrito Inválido' && error !== 'No address') {
+                if (error !== 'Carrito Inválido' && error !== 'No address' && error !== 'Canceled') {
                     console.error('Error en el proceso de checkout:', error);
-                    Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un problema inesperado. Intenta de nuevo.' });
+                    if (typeof error === 'string' && !error.includes('closed')) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un problema inesperado. Intenta de nuevo.' });
+                    }
                 }
             });
     });
@@ -1758,6 +1820,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Limpiamos el contenedor para evitar duplicados si se vuelve a abrir
             const container = document.getElementById('paypal-button-container');
             if (container) container.innerHTML = '';
+            // Asegurarse de que el botón esté visible cuando se cierre el modal
+            cancelOrderBtn.style.display = 'block';
         });
     }
 
@@ -1770,6 +1834,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Limpiamos el contenedor
                 const container = document.getElementById('paypal-button-container');
                 if (container) container.innerHTML = '';
+                // Asegurarse de que el botón esté visible cuando se cierre el modal
+                const cancelBtn = document.getElementById('cancel-order-btn');
+                if (cancelBtn) cancelBtn.style.display = 'block';
             }
         });
     }
