@@ -1673,22 +1673,8 @@ if (checkoutBtn) {
                 if (paypalContainer) {
                     paypalContainer.innerHTML = ''; // Limpiar contenedor
 
-                    // Si el usuario tiene PayPal guardado, mostramos la info pero usamos el botón oficial
-                    if (typeof hasSavedPayPal !== 'undefined' && hasSavedPayPal) {
-                        // No creamos botón personalizado, dejamos que se renderice el botón oficial
-                        // pero podemos ocultar la opción de tarjeta si quisiéramos, 
-                        // aunque por seguridad es mejor dejar ambas opciones del SDK.
-                    }
-
-                    // Configuración de botones
-                    let fundingSource = undefined;
-                    if (typeof hasSavedPayPal !== 'undefined' && hasSavedPayPal) {
-                        fundingSource = paypal.FUNDING.PAYPAL;
-                    }
-
-                    // Configuración común para los botones de PayPal
-                    paypal.Buttons({
-                        fundingSource: fundingSource,
+                    // Configurar fundingSource según si tiene método guardado
+                    let buttonConfig = {
                         createOrder: function (data, actions) {
                             return fetch('/paypal/create', {
                                 method: 'POST',
@@ -1766,7 +1752,14 @@ if (checkoutBtn) {
                                 if (cancelBtn) cancelBtn.style.display = 'none';
                             }
                         }
-                    }).render('#paypal-button-container');
+                    };
+
+                    // Si el usuario tiene PayPal guardado, solo mostrar botón de PayPal (no tarjeta)
+                    if (typeof hasSavedPayPal !== 'undefined' && hasSavedPayPal) {
+                        buttonConfig.fundingSource = paypal.FUNDING.PAYPAL;
+                    }
+
+                    paypal.Buttons(buttonConfig).render('#paypal-button-container');
 
                     // Observar cambios en el contenedor de PayPal
                     const observer = new MutationObserver(function (mutations) {

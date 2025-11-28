@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -226,7 +227,7 @@
                             </div>
                         </div>
                     </div>
-                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-color-light);">Se procesará el pago con tu cuenta de PayPal guardada</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-color-light);">Haz clic en el botón de PayPal para continuar con tu cuenta guardada</p>
                 </div>
             @else
                 {{-- Usuario NO tiene método de pago guardado --}}
