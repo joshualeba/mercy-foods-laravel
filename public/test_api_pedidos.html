@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Probador de API HU_4.4 - Mercy Foods</title>
+    <title>Probador API Pedidos y Reseñas - Mercy Foods</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -110,19 +110,14 @@
             font-weight: 700;
         }
 
-        .icon-login {
-            background-color: rgba(54, 162, 235, 0.2);
-            color: #36a2eb;
+        .icon-pedidos {
+            background-color: rgba(255, 159, 64, 0.2);
+            color: #ff9f40;
         }
 
-        .icon-google {
-            background-color: rgba(220, 53, 69, 0.2);
-            color: #dc3545;
-        }
-
-        .icon-protected {
-            background-color: rgba(40, 167, 69, 0.2);
-            color: #28a745;
+        .icon-reviews {
+            background-color: rgba(153, 102, 255, 0.2);
+            color: #9966ff;
         }
 
         .icon-response {
@@ -148,7 +143,8 @@
             font-size: 0.9rem;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 12px 16px;
             border: 1px solid var(--border-color);
@@ -160,7 +156,8 @@
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.1);
@@ -176,49 +173,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
+            margin-top: 0.5rem;
         }
 
         .btn-primary {
-            background-color: #36a2eb;
+            background-color: #ff9f40;
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: #2b8ac7;
+            background-color: #e68a2e;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(54, 162, 235, 0.3);
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 159, 64, 0.3);
         }
 
         .btn-success {
-            background-color: var(--success-color);
+            background-color: #9966ff;
             color: white;
         }
 
         .btn-success:hover {
-            background-color: #218838;
+            background-color: #8552e6;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: var(--border-color);
-            color: var(--text-color-dark);
-            margin-top: 0.75rem;
-        }
-
-        .btn-secondary:hover {
-            background-color: #d1d5db;
+            box-shadow: 0 5px 15px rgba(153, 102, 255, 0.3);
         }
 
         .btn:disabled {
@@ -305,68 +282,76 @@
     <div class="container">
         <div class="header">
             <img src="/multimedia/logo.png" alt="Mercy Foods" class="logo">
-            <h1>Probador de API HU_4.4</h1>
-            <p class="subtitle">Herramienta de desarrollo para probar los endpoints de autenticación</p>
+            <h1>Probador API - Pedidos y Reseñas</h1>
+            <p class="subtitle">Prueba los endpoints de pedidos y reseñas con autenticación</p>
         </div>
 
         <div class="grid">
             <!-- Columna Izquierda -->
             <div class="left-column">
-                <!-- Login Normal -->
+                <!-- Token Section -->
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-icon icon-login">1</div>
-                        <h2>Login con Email/Password</h2>
+                        <div class="card-icon icon-pedidos">T</div>
+                        <h2>Token de Autenticación</h2>
                     </div>
-                    <form id="loginForm">
-                        <div class="form-group">
-                            <label>Correo Electrónico</label>
-                            <input type="email" id="email" placeholder="ejemplo@correo.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Contraseña</label>
-                            <input type="password" id="password" placeholder="Tu contraseña" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Enviar a /api/login</button>
-                    </form>
-                </div>
-
-                <!-- Google Auth -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon icon-google">2</div>
-                        <h2>Google Auth (Simulado)</h2>
-                    </div>
-                    <p class="note">Simula que Google ya validó al usuario y envía sus datos.</p>
-                    <form id="googleForm">
-                        <div class="form-group">
-                            <label>Google ID</label>
-                            <input type="text" id="google_id" value="1234567890">
-                        </div>
-                        <div class="form-group">
-                            <label>Email de Google</label>
-                            <input type="email" id="google_email" placeholder="google@gmail.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Nombre Completo</label>
-                            <input type="text" id="google_name" value="Usuario Google Test">
-                        </div>
-                        <button type="submit" class="btn btn-danger">Enviar a /api/auth/google</button>
-                    </form>
-                </div>
-
-                <!-- Rutas Protegidas -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon icon-protected">3</div>
-                        <h2>Rutas Protegidas</h2>
-                    </div>
+                    <p class="note">Primero obtén un token desde <a href="/test_api.html"
+                            target="_blank">test_api.html</a> y pégalo aquí</p>
                     <div class="form-group">
                         <label>Token Actual</label>
-                        <div id="currentToken" class="token-display">No hay token aún...</div>
+                        <input type="text" id="tokenInput" placeholder="Pega tu token aquí...">
                     </div>
-                    <button id="btnGetUser" class="btn btn-success" disabled>Consultar Usuario (/api/user)</button>
-                    <button id="btnLogout" class="btn btn-secondary" disabled>Cerrar Sesión (/api/logout)</button>
+                    <button id="saveTokenBtn" class="btn btn-primary">Guardar Token</button>
+                    <div id="currentToken" class="token-display" style="margin-top: 1rem;">No hay token guardado...
+                    </div>
+                </div>
+
+                <!-- Pedidos Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-pedidos">1</div>
+                        <h2>API de Pedidos</h2>
+                    </div>
+
+                    <button id="btnGetPedidos" class="btn btn-primary" disabled>GET /api/pedidos (Listar)</button>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>ID del Pedido (para ver detalle)</label>
+                        <input type="number" id="pedidoId" placeholder="Ej: 1" min="1">
+                    </div>
+                    <button id="btnGetPedidosById" class="btn btn-primary" disabled>GET /api/pedidos/{id} (Ver
+                        detalle)</button>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-reviews">2</div>
+                        <h2>API de Reseñas</h2>
+                    </div>
+
+                    <button id="btnGetReviews" class="btn btn-success" disabled>GET /api/reviews (Listar)</button>
+
+                    <p class="note" style="margin-top: 1.5rem;">Para crear una reseña, necesitas un pedido entregado</p>
+                    <div class="form-group">
+                        <label>ID del Pedido</label>
+                        <input type="number" id="reviewPedidoId" placeholder="Ej: 1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Rating Restaurante (1-5)</label>
+                        <select id="ratingRestaurante">
+                            <option value="5">5 estrellas</option>
+                            <option value="4">4 estrellas</option>
+                            <option value="3">3 estrellas</option>
+                            <option value="2">2 estrellas</option>
+                            <option value="1">1 estrella</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Comentario Restaurante</label>
+                        <input type="text" id="comentarioRestaurante" placeholder="Opcional">
+                    </div>
+                    <button id="btnCreateReview" class="btn btn-success" disabled>POST /api/reviews (Crear)</button>
                 </div>
             </div>
 
@@ -406,61 +391,33 @@
         function updateTokenUI(token) {
             savedToken = token;
             const tokenEl = document.getElementById('currentToken');
-            tokenEl.textContent = token ? token : 'Token revocado o no existe';
+            tokenEl.textContent = token ? token.substring(0, 50) + '...' : 'No hay token guardado...';
             tokenEl.style.color = token ? '#28a745' : '#6B7280';
-            document.getElementById('btnGetUser').disabled = !token;
-            document.getElementById('btnLogout').disabled = !token;
+
+            // Habilitar/deshabilitar botones
+            document.getElementById('btnGetPedidos').disabled = !token;
+            document.getElementById('btnGetPedidosById').disabled = !token;
+            document.getElementById('btnGetReviews').disabled = !token;
+            document.getElementById('btnCreateReview').disabled = !token;
         }
 
-        // 1. Login Normal
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                showResponse(data, res.status);
-
-                if (data.token) updateTokenUI(data.token);
-            } catch (err) {
-                showResponse({ error: err.message }, 500);
+        // Guardar token
+        document.getElementById('saveTokenBtn').addEventListener('click', () => {
+            const token = document.getElementById('tokenInput').value.trim();
+            if (token) {
+                updateTokenUI(token);
+                showResponse({ message: 'Token guardado exitosamente' }, 200);
+            } else {
+                showResponse({ error: 'Por favor ingresa un token válido' }, 400);
             }
         });
 
-        // 2. Google Auth
-        document.getElementById('googleForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const google_id = document.getElementById('google_id').value;
-            const email = document.getElementById('google_email').value;
-            const full_name = document.getElementById('google_name').value;
-
-            try {
-                const res = await fetch('/api/auth/google', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ google_id, email, full_name })
-                });
-                const data = await res.json();
-                showResponse(data, res.status);
-
-                if (data.token) updateTokenUI(data.token);
-            } catch (err) {
-                showResponse({ error: err.message }, 500);
-            }
-        });
-
-        // 3. Get User (Protegido)
-        document.getElementById('btnGetUser').addEventListener('click', async () => {
+        // GET /api/pedidos
+        document.getElementById('btnGetPedidos').addEventListener('click', async () => {
             if (!savedToken) return;
 
             try {
-                const res = await fetch('/api/user', {
+                const res = await fetch('/api/pedidos', {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -474,22 +431,80 @@
             }
         });
 
-        // 4. Logout
-        document.getElementById('btnLogout').addEventListener('click', async () => {
+        // GET /api/pedidos/{id}
+        document.getElementById('btnGetPedidosById').addEventListener('click', async () => {
             if (!savedToken) return;
 
+            const id = document.getElementById('pedidoId').value;
+
+            if (!id || id.trim() === '') {
+                showResponse({ error: 'Por favor ingresa un ID de pedido válido' }, 400);
+                return;
+            }
+
             try {
-                const res = await fetch('/api/logout', {
-                    method: 'POST',
+                const res2 = await fetch(`/api/pedidos/${id}`, {
+                    method: 'GET',
                     headers: {
                         'Accept': 'application/json',
                         'Authorization': 'Bearer ' + savedToken
                     }
                 });
-                const data = await res.json();
-                showResponse(data, res.status);
+                const data2 = await res2.json();
+                showResponse(data2, res2.status);
+            } catch (err) {
+                showResponse({ error: err.message }, 500);
+            }
+        });
 
-                if (res.ok) updateTokenUI(null);
+        // GET /api/reviews
+        document.getElementById('btnGetReviews').addEventListener('click', async () => {
+            if (!savedToken) return;
+
+            try {
+                const res3 = await fetch('/api/reviews', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + savedToken
+                    }
+                });
+                const data3 = await res3.json();
+                showResponse(data3, res3.status);
+            } catch (err) {
+                showResponse({ error: err.message }, 500);
+            }
+        });
+
+        // POST /api/reviews
+        document.getElementById('btnCreateReview').addEventListener('click', async () => {
+            if (!savedToken) return;
+
+            const pedidoId = document.getElementById('reviewPedidoId').value;
+            const rating = document.getElementById('ratingRestaurante').value;
+            const comentario = document.getElementById('comentarioRestaurante').value;
+
+            if (!pedidoId) {
+                showResponse({ error: 'Por favor ingresa un ID de pedido' }, 400);
+                return;
+            }
+
+            try {
+                const res4 = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + savedToken
+                    },
+                    body: JSON.stringify({
+                        pedido_id: parseInt(pedidoId),
+                        rating_restaurante: parseInt(rating),
+                        comentario_restaurante: comentario || null
+                    })
+                });
+                const data4 = await res4.json();
+                showResponse(data4, res4.status);
             } catch (err) {
                 showResponse({ error: err.message }, 500);
             }
