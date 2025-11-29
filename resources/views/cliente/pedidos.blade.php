@@ -54,6 +54,16 @@
                             <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
                             <small>Actualizado {{ $pedido->updated_at->diffForHumans() }}</small>
                         </div>
+                        <div style="margin-top: 10px;">
+                            <button type="button" 
+                                    class="cancel-order-btn" 
+                                    data-id="{{ $pedido->id }}"
+                                    style="background-color: #dc3545; color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-weight: 500; cursor: pointer; width: 100%; transition: background-color 0.3s ease;"
+                                    onmouseover="this.style.backgroundColor='#c82333'"
+                                    onmouseout="this.style.backgroundColor='#dc3545'">
+                                Cancelar pedido
+                            </button>
+                        </div>
                     </div>
                 </div>
             @empty
@@ -89,6 +99,16 @@
                         <div class="order-card-footer">
                             <span class="order-total">${{ number_format($pedido->total, 2) }}</span>
                             <small>¡Tu pedido va en camino!</small>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <button type="button" 
+                                    class="cancel-order-btn" 
+                                    data-id="{{ $pedido->id }}"
+                                    style="background-color: #dc3545; color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-weight: 500; cursor: pointer; width: 100%; transition: background-color 0.3s ease;"
+                                    onmouseover="this.style.backgroundColor='#c82333'"
+                                    onmouseout="this.style.backgroundColor='#dc3545'">
+                                Cancelar pedido
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,30 @@
+/* Profile Header Styles */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--text-color-dark);
+}
+
+.profile-header .btn {
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-header .btn {
+        width: 100%;
+    }
+}

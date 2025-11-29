@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     // --- LÓGICA PARA OCULTAR EL LOADER ---
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         const loaderWrapper = document.getElementById('loader-wrapper');
         if (loaderWrapper) {
             loaderWrapper.style.opacity = '0';
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Clic fuera para cerrar
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('click', function (e) {
             if (e.target === this) {
                 modal.classList.remove('active');
             }
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (searchInput) searchInput.addEventListener('input', applySearchAndFilters);
         if (openModalBtn) openModalBtn.addEventListener('click', () => filterModal.classList.add('active'));
         if (closeModalBtn) closeModalBtn.addEventListener('click', () => filterModal.classList.remove('active'));
-        
+
         if (applyFiltersBtn) {
             applyFiltersBtn.addEventListener('click', () => {
                 applySearchAndFilters();
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const viewModeBtns = profileForm.querySelectorAll('.view-mode-btn');
         const editModeBtns = profileForm.querySelectorAll('.edit-mode-btn');
         const editModeFields = profileForm.querySelectorAll('.edit-mode-field');
-        
+
         const notificationModal = document.getElementById('profile-notification-modal');
         const notificationTitle = document.getElementById('profile-notification-title');
         const notificationMessage = document.getElementById('profile-notification-message');
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentPassInput = document.getElementById('profile-current_password');
         const newPassInput = document.getElementById('profile-new_password');
         const confirmPassInput = document.getElementById('profile-new_password_confirmation');
-        
+
         const showProfileNotification = (title, message, isError = false) => {
             notificationTitle.textContent = title;
             notificationMessage.textContent = message;
@@ -196,10 +196,10 @@ document.addEventListener('DOMContentLoaded', function() {
             notificationModal.classList.remove('active');
         };
 
-        if(notificationCloseBtn) {
+        if (notificationCloseBtn) {
             notificationCloseBtn.addEventListener('click', closeProfileNotification);
         }
-        if(notificationModal) {
+        if (notificationModal) {
             notificationModal.addEventListener('click', (e) => {
                 if (e.target === notificationModal) {
                     closeProfileNotification();
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const validators = {
             'profile-full_name': (val) => val.trim().length > 0 && val.length <= 120,
             'profile-address': (val) => val === null || val.length <= 200,
-            'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200, 
+            'profile-restaurant_address': (val) => val.trim().length > 0 && val.length <= 200,
             'profile-cuisine_type': (val) => val.trim().length > 0 && val.length <= 50,
             'profile-contact_phone': (val) => phoneRegex.test(val),
             'profile-attention_schedule': (val) => val.length <= 255,
@@ -244,21 +244,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 validateField(currentPassInput);
             }
         };
-        
+
         const clearAllValidation = () => {
             profileForm.querySelectorAll('input.is-valid, input.is-invalid').forEach(input => {
                 input.classList.remove('is-valid', 'is-invalid');
             });
             profileForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
         };
-        
+
         [nameInput, addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput]
-        .filter(input => input)
-        .forEach(input => {
-            if (input) {
-                input.addEventListener('input', () => validateField(input));
-            }
-        });
+            .filter(input => input)
+            .forEach(input => {
+                if (input) {
+                    input.addEventListener('input', () => validateField(input));
+                }
+            });
 
         const setProfileEditMode = (isEditing) => {
             profileForm.classList.toggle('view-mode', !isEditing);
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.readOnly = true;
                     return;
                 }
-                
+
                 if (el.tagName === 'SELECT') {
                     el.disabled = !isEditing; // Usar 'disabled' para selects es más robusto.
                     el.classList.toggle('form-control-plaintext', !isEditing);
@@ -290,15 +290,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     validateField(el);
                 }
             });
-            
+
             [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
-                if(input) input.disabled = !isEditing;
+                if (input) input.disabled = !isEditing;
             });
 
             if (!isEditing) {
                 clearAllValidation();
                 [currentPassInput, newPassInput, confirmPassInput].forEach(input => {
-                    if(input) input.value = '';
+                    if (input) input.value = '';
                 });
             }
 
@@ -308,10 +308,10 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         const editBtn = document.getElementById('edit-profile-btn');
-        if(editBtn) editBtn.addEventListener('click', () => setProfileEditMode(true));
+        if (editBtn) editBtn.addEventListener('click', () => setProfileEditMode(true));
 
         const cancelBtn = document.getElementById('cancel-profile-btn');
-        if(cancelBtn) {
+        if (cancelBtn) {
             cancelBtn.addEventListener('click', () => {
                 inputs.forEach(input => {
                     if (originalValues[input.name] !== undefined) {
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 special: document.querySelector('#password-requirements #special')
             };
 
-            newPasswordInput.addEventListener('keyup', function() {
+            newPasswordInput.addEventListener('keyup', function () {
                 const value = this.value;
                 requirements.length.classList.toggle('valid', value.length >= 8 && value.length <= 25);
                 requirements.uppercase.classList.toggle('valid', /[A-Z]/.test(value));
@@ -347,12 +347,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        profileForm.addEventListener('submit', function(e) {
+        profileForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             let isFormValid = true;
             const allInputsToValidate = [nameInput, addressInput, cuisineInput, phoneInput, attentionScheduleInput, currentPassInput, newPassInput, confirmPassInput];
-            
+
             allInputsToValidate.forEach(input => {
                 if (input) {
                     validateField(input);
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showProfileNotification('Formulario incompleto', 'Por favor, corrige los campos marcados en rojo.', true);
                 return;
             }
-            
+
             const formData = new FormData(this);
             const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
             clearAllValidation();
@@ -381,46 +381,46 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Accept': 'application/json',
                 }
             })
-            .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
-            .then(data => {
-                Object.keys(data).forEach(key => {
-                    const input = profileForm.querySelector(`[name="${key}"]`);
-                    if (input) {
-                        input.value = data[key];
+                .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
+                .then(data => {
+                    Object.keys(data).forEach(key => {
+                        const input = profileForm.querySelector(`[name="${key}"]`);
+                        if (input) {
+                            input.value = data[key];
+                        }
+                    });
+                    setProfileEditMode(false);
+                    showProfileNotification('¡Éxito!', 'Tu perfil se ha actualizado correctamente.');
+                })
+                .catch(error => {
+                    clearAllValidation();
+                    if (error.errors) {
+                        let firstErrorMessage = 'Por favor, revisa los errores en el formulario.';
+                        let firstErrorFound = false;
+
+                        for (const key in error.errors) {
+                            if (!firstErrorFound) {
+                                firstErrorMessage = error.errors[key][0];
+                                firstErrorFound = true;
+                            }
+
+                            let inputId = `profile-${key}`;
+                            if (key === 'new_password_confirmation') inputId = `profile-new_password_confirmation`;
+
+                            const input = document.getElementById(inputId);
+                            const errorContainer = input ? input.closest('.form-group').querySelector('.error-message') : null;
+
+                            if (input) input.classList.add('is-invalid');
+
+                            if (errorContainer) {
+                                errorContainer.textContent = error.errors[key][0];
+                            }
+                        }
+                        showProfileNotification('Error de validación', firstErrorMessage, true);
+                    } else {
+                        showProfileNotification('Error inesperado', 'Ocurrió un problema al guardar los datos. Inténtalo de nuevo.', true);
                     }
                 });
-                setProfileEditMode(false);
-                showProfileNotification('¡Éxito!', 'Tu perfil se ha actualizado correctamente.');
-            })
-            .catch(error => {
-                clearAllValidation(); 
-                if (error.errors) {
-                    let firstErrorMessage = 'Por favor, revisa los errores en el formulario.';
-                    let firstErrorFound = false;
-                    
-                    for (const key in error.errors) {
-                        if (!firstErrorFound) {
-                            firstErrorMessage = error.errors[key][0];
-                            firstErrorFound = true;
-                        }
-                        
-                        let inputId = `profile-${key}`;
-                        if (key === 'new_password_confirmation') inputId = `profile-new_password_confirmation`;
-                        
-                        const input = document.getElementById(inputId);
-                        const errorContainer = input ? input.closest('.form-group').querySelector('.error-message') : null;
-
-                        if (input) input.classList.add('is-invalid');
-
-                        if (errorContainer) {
-                            errorContainer.textContent = error.errors[key][0];  
-                        }
-                    }
-                    showProfileNotification('Error de validación', firstErrorMessage, true);
-                } else {
-                    showProfileNotification('Error inesperado', 'Ocurrió un problema al guardar los datos. Inténtalo de nuevo.', true);
-                }
-            });
         });
 
         initializeDeletePayment();
@@ -430,27 +430,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // === INICIALIZADOR DE ACORDEÓN PARA PEDIDOS ENTREGADOS ===
     const initializeAccordion = () => {
         const accordionHeaders = document.querySelectorAll('.accordion-header');
-        
+
         accordionHeaders.forEach(header => {
-            header.addEventListener('click', function() {
+            header.addEventListener('click', function () {
                 const clickedItem = this.closest('.accordion-item');
                 const clickedContent = clickedItem.querySelector('.accordion-content');
                 const clickedIcon = this.querySelector('.accordion-icon');
                 const isCurrentlyActive = clickedItem.classList.contains('active');
-                
+
                 // Cerrar todos los demás acordeones
                 accordionHeaders.forEach(otherHeader => {
                     const otherItem = otherHeader.closest('.accordion-item');
                     const otherContent = otherItem.querySelector('.accordion-content');
                     const otherIcon = otherHeader.querySelector('.accordion-icon');
-                    
+
                     if (otherItem !== clickedItem) {
                         otherItem.classList.remove('active');
                         otherIcon.textContent = '+';
                         otherContent.style.maxHeight = '0';
                     }
                 });
-                
+
                 // Toggle el item clickeado
                 if (isCurrentlyActive) {
                     clickedItem.classList.remove('active');
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Calculamos la altura real del contenido
                     const realHeight = clickedContent.scrollHeight;
                     clickedContent.style.maxHeight = (realHeight + 20) + 'px'; // +20px de margen
-                    
+
                     // Scroll suave hacia el elemento expandido
                     setTimeout(() => {
                         const container = clickedItem.closest('.scrollable-orders');
@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const containerScroll = container.scrollTop;
                             const containerHeight = container.clientHeight;
                             const itemHeight = clickedItem.offsetHeight;
-                            
+
                             // Si el item expandido no es completamente visible
                             if (itemTop < containerScroll || (itemTop + itemHeight) > (containerScroll + containerHeight)) {
                                 container.scrollTo({
@@ -493,16 +493,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('profile-form')) {
         initializeProfileSection();
     }
-    
+
     // =================================================================
     // === NAVEGACIÓN PRINCIPAL DEL DASHBOARD ===
     // =================================================================
     const navLinks = document.querySelectorAll('.nav-link');
 
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const url = this.getAttribute('href');
             const sectionId = this.getAttribute('data-section');
             const ajaxWrapper = document.getElementById('ajax-content-wrapper');
@@ -571,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (window.innerWidth <= 991 && sidebar) {
                 sidebar.classList.remove('active');
             }
-            
+
             // Cierra dropdown de perfil
             const profileDropdown = document.getElementById('profile-dropdown');
             if (profileDropdown) {
@@ -590,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fileNameDisplay = document.getElementById('file-name');
 
         if (fileInput && fileNameDisplay) {
-            fileInput.addEventListener('change', function() {
+            fileInput.addEventListener('change', function () {
                 fileNameDisplay.textContent = this.files.length > 0 ? this.files[0].name : 'Ningún archivo seleccionado';
             });
         }
@@ -610,17 +610,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 closePlatilloModal();
             }
         });
-        
+
         const precioInput = document.getElementById('precio');
-        if(precioInput) {
-            precioInput.addEventListener('input', function() {
+        if (precioInput) {
+            precioInput.addEventListener('input', function () {
                 this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
                 if (parseFloat(this.value) < 0) this.value = '';
             });
         }
 
         if (platilloForm) {
-            platilloForm.addEventListener('submit', function(e) {
+            platilloForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
                 if (!csrfTokenMeta) {
@@ -628,38 +628,38 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 const formData = new FormData(this);
-                
+
                 fetch(this.action, {
                     method: 'POST',
                     body: formData,
                     headers: { 'X-CSRF-TOKEN': csrfTokenMeta.getAttribute('content'), 'Accept': 'application/json' }
                 })
-                .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
-                .then(() => {
-                    closePlatilloModal();
-                    document.querySelector('.nav-link[data-section="menu"]').click();
-                })
-                .catch(error => {
-                    if (error.errors) {
-                        platilloForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-                        for (const key in error.errors) {
-                            const input = document.getElementById(key);
-                            const errorContainer = input.closest('.input-group-modal').querySelector('.error-message');
-                            if (errorContainer) {
-                                errorContainer.textContent = error.errors[key][0];
+                    .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
+                    .then(() => {
+                        closePlatilloModal();
+                        document.querySelector('.nav-link[data-section="menu"]').click();
+                    })
+                    .catch(error => {
+                        if (error.errors) {
+                            platilloForm.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+                            for (const key in error.errors) {
+                                const input = document.getElementById(key);
+                                const errorContainer = input.closest('.input-group-modal').querySelector('.error-message');
+                                if (errorContainer) {
+                                    errorContainer.textContent = error.errors[key][0];
+                                }
                             }
+                        } else {
+                            alert('Ocurrió un error inesperado al guardar el platillo.');
                         }
-                    } else {
-                        alert('Ocurrió un error inesperado al guardar el platillo.');
-                    }
-                });
+                    });
             });
         }
     }
 
     const detailsModal = document.getElementById('details-modal');
     const deleteModal = document.getElementById('delete-platillo-modal');
-    let openDetailsModal = () => {};
+    let openDetailsModal = () => { };
     let currentPlatilloId = null;
 
     if (detailsModal) {
@@ -670,11 +670,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const availabilityCheckbox = form.querySelector('#details-disponible');
         const newImageInput = form.querySelector('#details-new-image');
         const fileNameDisplay = form.querySelector('#details-file-name');
-        
+
         const viewModeBtns = detailsModal.querySelectorAll('.view-mode-btn');
         const editModeBtns = detailsModal.querySelectorAll('.edit-mode-btn');
         const editModeFields = detailsModal.querySelectorAll('.edit-mode-field');
-        
+
         const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
         const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
 
@@ -705,7 +705,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     dashboardContainer.classList.add('blurred');
                 });
         };
-        
+
         const closeDetailsModal = () => {
             detailsModal.classList.remove('active');
             if (!deleteModal.classList.contains('active')) {
@@ -715,7 +715,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fileNameDisplay.textContent = 'Ningún archivo nuevo';
             form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
         };
-        
+
         const openDeleteModal = () => {
             deleteModal.classList.add('active');
             dashboardContainer.classList.add('blurred');
@@ -727,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dashboardContainer.classList.remove('blurred');
             }
         };
-        
+
         const handleDelete = () => {
             openDeleteModal();
         };
@@ -739,18 +739,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'DELETE',
                 headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 'Accept': 'application/json' }
             })
-            .then(res => res.json())
-            .then(() => {
-                closeDetailsModal();
-                closeDeleteModal(); 
-                document.querySelector('.nav-link[data-section="menu"]').click();
-            }).catch(err => {
-                console.error('Error al eliminar:', err);
-                closeDeleteModal();
-                alert('No se pudo eliminar el platillo.');
-            });
+                .then(res => res.json())
+                .then(() => {
+                    closeDetailsModal();
+                    closeDeleteModal();
+                    document.querySelector('.nav-link[data-section="menu"]').click();
+                }).catch(err => {
+                    console.error('Error al eliminar:', err);
+                    closeDeleteModal();
+                    alert('No se pudo eliminar el platillo.');
+                });
         });
-        
+
         cancelDeleteBtn.addEventListener('click', closeDeleteModal);
         deleteModal.addEventListener('click', (e) => {
             if (e.target === deleteModal) closeDeleteModal();
@@ -766,19 +766,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        newImageInput.addEventListener('change', function() {
+        newImageInput.addEventListener('change', function () {
             fileNameDisplay.textContent = this.files.length > 0 ? this.files[0].name : 'Ningún archivo nuevo';
         });
 
         const detailsPrecioInput = document.getElementById('details-precio');
-        if(detailsPrecioInput) {
-            detailsPrecioInput.addEventListener('input', function() {
+        if (detailsPrecioInput) {
+            detailsPrecioInput.addEventListener('input', function () {
                 this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
                 if (parseFloat(this.value) < 0) this.value = '';
             });
         }
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);
             if (!formData.has('disponible')) {
@@ -786,35 +786,35 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 formData.set('disponible', 1);
             }
-            
+
             fetch(`/platillos/${currentPlatilloId}`, {
                 method: 'POST', body: formData,
                 headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 'Accept': 'application/json' }
             })
-            .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
-            .then(() => {
-                closeDetailsModal();
-                document.querySelector('.nav-link[data-section="menu"]').click();
-            })
-            .catch(error => {
-                if (error.errors) {
-                    form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-                    for (const key in error.errors) {
-                        const input = form.querySelector(`[name="${key}"]`);
-                        if (input && input.closest('.input-group-modal').querySelector('.error-message')) {
-                            input.closest('.input-group-modal').querySelector('.error-message').textContent = error.errors[key][0];
+                .then(response => response.ok ? response.json() : response.json().then(err => Promise.reject(err)))
+                .then(() => {
+                    closeDetailsModal();
+                    document.querySelector('.nav-link[data-section="menu"]').click();
+                })
+                .catch(error => {
+                    if (error.errors) {
+                        form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+                        for (const key in error.errors) {
+                            const input = form.querySelector(`[name="${key}"]`);
+                            if (input && input.closest('.input-group-modal').querySelector('.error-message')) {
+                                input.closest('.input-group-modal').querySelector('.error-message').textContent = error.errors[key][0];
+                            }
                         }
+                    } else {
+                        alert('Ocurrió un error inesperado al actualizar el platillo.');
                     }
-                } else {
-                    alert('Ocurrió un error inesperado al actualizar el platillo.');
-                }
-            });
+                });
         });
     }
 
     // --- LISTENER DE CLICS PRINCIPAL Y DELEGADO ---
     if (dashboardContainer) {
-        dashboardContainer.addEventListener('click', function(e) {
+        dashboardContainer.addEventListener('click', function (e) {
             const addBtn = e.target.closest('#add-platillo-btn');
             const detailsBtn = e.target.closest('.btn-details');
             const actionCard = e.target.closest('.action-card:not(.disabled)');
@@ -868,54 +868,54 @@ document.addEventListener('DOMContentLoaded', function() {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 })
-                .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                .then(({ ok, data }) => {
-                    if (ok) {
-                        Swal.fire('¡Aceptado!', data.message, 'success');
-                        // Recargamos la sección de pedidos para ver los cambios
-                        const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
-                        if (pedidosLink) {
-                            pedidosLink.click();
+                    .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                    .then(({ ok, data }) => {
+                        if (ok) {
+                            Swal.fire('¡Aceptado!', data.message, 'success');
+                            // Recargamos la sección de pedidos para ver los cambios
+                            const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
+                            if (pedidosLink) {
+                                pedidosLink.click();
+                            } else {
+                                // Si no encuentra el link, simplemente recarga la página como fallback
+                                window.location.reload();
+                            }
                         } else {
-                            // Si no encuentra el link, simplemente recarga la página como fallback
-                            window.location.reload();
+                            Swal.fire('Error', data.message, 'error');
+                            // Si falla, volvemos a habilitar el botón
+                            boton.disabled = false;
+                            boton.textContent = 'Aceptar Pedido';
                         }
-                    } else {
-                        Swal.fire('Error', data.message, 'error');
-                        // Si falla, volvemos a habilitar el botón
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
                         boton.disabled = false;
                         boton.textContent = 'Aceptar Pedido';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
-                    boton.disabled = false;
-                    boton.textContent = 'Aceptar Pedido';
-                });
+                    });
             }
         });
     }
 
     // --- LÓGICA PARA ACEPTAR PEDIDOS (REPARTIDOR) ---
-    document.body.addEventListener('click', function(e) {
+    document.body.addEventListener('click', function (e) {
         const boton = e.target.closest('.btn-aceptar-pedido');
-            
+
         if (boton) {
             e.preventDefault();
             const pedidoId = boton.dataset.id;
-                
+
             if (!pedidoId) {
                 console.error('No se encontró el ID del pedido');
                 return;
             }
-                
+
             aceptarPedido(boton, pedidoId);
         }
     });
 
     // --- LÓGICA PARA MARCAR PEDIDOS (REPARTIDOR) ---
-    document.body.addEventListener('click', function(e) {
+    document.body.addEventListener('click', function (e) {
         const recogidoBtn = e.target.closest('.btn-marcar-recogido');
         const entregadoBtn = e.target.closest('.btn-marcar-entregado');
 
@@ -967,29 +967,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 })
-                .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                .then(({ ok, data }) => {
-                    if (ok) {
-                        Swal.fire('¡Éxito!', data.message, 'success');
-                        // Recargar la sección de pedidos para ver los cambios
-                        const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
-                        if (pedidosLink) {
-                            pedidosLink.click();
+                    .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                    .then(({ ok, data }) => {
+                        if (ok) {
+                            Swal.fire('¡Éxito!', data.message, 'success');
+                            // Recargar la sección de pedidos para ver los cambios
+                            const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
+                            if (pedidosLink) {
+                                pedidosLink.click();
+                            } else {
+                                window.location.reload();
+                            }
                         } else {
-                            window.location.reload();
+                            Swal.fire('Error', data.message, 'error');
+                            boton.disabled = false;
+                            boton.textContent = (estado === 'recogido') ? 'Marcar como recogido' : 'Marcar como entregado';
                         }
-                    } else {
-                        Swal.fire('Error', data.message, 'error');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
                         boton.disabled = false;
                         boton.textContent = (estado === 'recogido') ? 'Marcar como recogido' : 'Marcar como entregado';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
-                    boton.disabled = false;
-                    boton.textContent = (estado === 'recogido') ? 'Marcar como recogido' : 'Marcar como entregado';
-                });
+                    });
             }
         });
     }
@@ -1003,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.setAttribute('data-theme', currentTheme);
             if (currentTheme === 'dark') themeToggle.checked = true;
         }
-        themeToggle.addEventListener('change', function(e) {
+        themeToggle.addEventListener('change', function (e) {
             const theme = e.target.checked ? 'dark' : 'light';
             document.body.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
@@ -1039,10 +1039,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Delegación de eventos para los botones de cancelar pedido
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target && e.target.classList.contains('cancel-order-btn')) {
             const pedidoId = e.target.dataset.id;
-            
+
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "No podrás revertir esta acción.",
@@ -1061,38 +1061,38 @@ document.addEventListener('DOMContentLoaded', function() {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
                     })
-                    .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                    .then(({ ok, data }) => {
-                        if (ok) {
-                            Swal.fire(
-                                '¡Cancelado!',
-                                data.message,
-                                'success'
-                            );
-                            // Disparamos un clic en el enlace de "Mis pedidos" para recargar la sección
-                            const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
-                            if (pedidosLink) {
-                                pedidosLink.click();
+                        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                        .then(({ ok, data }) => {
+                            if (ok) {
+                                Swal.fire(
+                                    '¡Cancelado!',
+                                    data.message,
+                                    'success'
+                                );
+                                // Disparamos un clic en el enlace de "Mis pedidos" para recargar la sección
+                                const pedidosLink = document.querySelector('.nav-link[data-section="pedidos"]');
+                                if (pedidosLink) {
+                                    pedidosLink.click();
+                                } else {
+                                    // Si no lo encuentra, como fallback, recargamos la página completa
+                                    window.location.reload();
+                                }
                             } else {
-                                // Si no lo encuentra, como fallback, recargamos la página completa
-                                window.location.reload();
+                                Swal.fire(
+                                    'Error',
+                                    data.message || 'No se pudo cancelar el pedido.',
+                                    'error'
+                                );
                             }
-                        } else {
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
                             Swal.fire(
-                                'Error',
-                                data.message || 'No se pudo cancelar el pedido.',
+                                'Error de Conexión',
+                                'No se pudo comunicar con el servidor.',
                                 'error'
                             );
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire(
-                            'Error de Conexión',
-                            'No se pudo comunicar con el servidor.',
-                            'error'
-                        );
-                    });
+                        });
                 }
             });
         }
@@ -1100,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Lógica para eliminar el método de pago en la sección de perfil
     const initializeDeletePayment = () => {
-        const deletePaymentBtn = document.getElementById('delete-payment-method-btn');
+        const deletePaymentBtn = document.getElementById('remove-payment-method-btn');
 
         if (deletePaymentBtn) {
             deletePaymentBtn.addEventListener('click', () => {
@@ -1115,39 +1115,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cliente/perfil/eliminar-pago', {
+                        fetch('/cliente/pago/remove', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             }
                         })
-                        .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                        .then(({ ok, data }) => {
-                            if (ok) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: '¡Eliminado!',
-                                    text: data.message,
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            } else {
+                            .then(response => response.json().then(data => ({ ok: response.ok, data })))
+                            .then(({ ok, data }) => {
+                                if (ok) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: '¡Eliminado!',
+                                        text: data.message,
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: data.message || 'No se pudo eliminar el método de pago.'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Error',
-                                    text: data.message || 'No se pudo eliminar el método de pago.'
+                                    title: 'Error de Conexión',
+                                    text: 'No se pudo comunicar con el servidor.'
                                 });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error de Conexión',
-                                text: 'No se pudo comunicar con el servidor.'
                             });
-                        });
                     }
                 });
             });
@@ -1158,8 +1158,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // =================================================================
 // === CÓDIGO ADICIONAL PARA VALIDACIÓN DE CONTRASEÑAS ===
 // =================================================================
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     const togglePasswordIcons = document.querySelectorAll('.toggle-password');
 
     togglePasswordIcons.forEach(icon => {
@@ -1179,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', function() {
             special: document.getElementById('special')
         };
 
-        newPasswordInput.addEventListener('keyup', function() {
+        newPasswordInput.addEventListener('keyup', function () {
             const value = this.value;
 
             if (value.length >= 8 && value.length <= 25) {
@@ -1237,13 +1237,13 @@ function showModal(title, message, isSuccess) {
 
     // Lógica para cerrar el modal
     const closeModal = () => modalOverlay.classList.remove('active');
-    
+
     // Asignar eventos a los botones de cierre
     const closeBtn = document.getElementById('notification-modal-close-btn');
     const acceptBtn = document.getElementById('notification-modal-accept-btn');
-    
-    if(closeBtn) closeBtn.onclick = closeModal;
-    if(acceptBtn) acceptBtn.onclick = closeModal;
+
+    if (closeBtn) closeBtn.onclick = closeModal;
+    if (acceptBtn) acceptBtn.onclick = closeModal;
 }
 
 /**
@@ -1272,7 +1272,7 @@ function initializePaymentSection() {
     });
 
 
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', function (event) {
         event.preventDefault();
 
         let isValid = true;
@@ -1338,25 +1338,25 @@ function initializePaymentSection() {
                 'Accept': 'application/json',
             }
         })
-        .then(response => response.json().then(data => ({ ok: response.ok, data })))
-        .then(({ ok, data }) => {
-            if (ok) {
-                showModal('¡Éxito!', data.message, true);
-                // Opcional: limpiar el formulario después de guardar
-                form.reset();
-            } else {
-                // Muestra el error que viene del backend
-                showModal('Error al guardar', data.message || 'No se pudo guardar la tarjeta.', false);
-            }
-        })
-        .catch(error => {
-            console.error('Error en el fetch:', error);
-            showModal('Error de Conexión', 'No se pudo comunicar con el servidor. Intenta más tarde.', false);
-        })
-        .finally(() => {
-            submitButton.disabled = false;
-            submitButton.textContent = 'Guardar Método de Pago';
-        });
+            .then(response => response.json().then(data => ({ ok: response.ok, data })))
+            .then(({ ok, data }) => {
+                if (ok) {
+                    showModal('¡Éxito!', data.message, true);
+                    // Opcional: limpiar el formulario después de guardar
+                    form.reset();
+                } else {
+                    // Muestra el error que viene del backend
+                    showModal('Error al guardar', data.message || 'No se pudo guardar la tarjeta.', false);
+                }
+            })
+            .catch(error => {
+                console.error('Error en el fetch:', error);
+                showModal('Error de Conexión', 'No se pudo comunicar con el servidor. Intenta más tarde.', false);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Guardar Método de Pago';
+            });
     });
 }
 
@@ -1408,7 +1408,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // Usamos delegación de eventos en un contenedor padre
-    mainContent.addEventListener('click', function(event) {
+    mainContent.addEventListener('click', function (event) {
         const verMasBtn = event.target.closest('.ver-mas-btn');
         if (verMasBtn) {
             openPlatilloModal(verMasBtn);
@@ -1425,9 +1425,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 🛒 NUEVO: Manejar el clic en el botón "Ordenar" del modal
     if (modalOrdenarBtn) {
-        modalOrdenarBtn.addEventListener('click', function(e) {
+        modalOrdenarBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const platilloId = this.dataset.id;
             const platilloName = this.dataset.nombre;
             const platilloPrice = parseFloat(this.dataset.precio);
@@ -1478,46 +1478,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-        
-    // =================================================================
-    // === LÓGICA DEL CARRITO DE COMPRAS ===
-    // =================================================================
-    const cartFab = document.getElementById('cart-fab');
-    const cartCount = document.getElementById('cart-count');
-    const cartModal = document.getElementById('cart-modal');
-    const closeCartBtn = document.getElementById('close-cart-btn');
-    const cartItemsContainer = document.getElementById('cart-items-container');
-    const cartTotal = document.getElementById('cart-total');
-    const checkoutBtn = document.getElementById('checkout-btn');
 
-    let cart = [];
-    let updateCart = () => {};
+// =================================================================
+// === LÓGICA DEL CARRITO DE COMPRAS ===
+// =================================================================
+const cartFab = document.getElementById('cart-fab');
+const cartCount = document.getElementById('cart-count');
+const cartModal = document.getElementById('cart-modal');
+const closeCartBtn = document.getElementById('close-cart-btn');
+const cartItemsContainer = document.getElementById('cart-items-container');
+const cartTotal = document.getElementById('cart-total');
+const checkoutBtn = document.getElementById('checkout-btn');
 
-    // Función para actualizar el carrito y la UI
-    updateCart = () => {
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCount.textContent = totalItems;
+let cart = [];
+let updateCart = () => { };
 
-        if (totalItems > 0) {
-            cartFab.style.display = 'flex';
-        } else {
-            cartFab.style.display = 'none';
-        }
+// Función para actualizar el carrito y la UI
+updateCart = () => {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalItems;
 
-        cartItemsContainer.innerHTML = '';
-        let subtotal = 0;
+    if (totalItems > 0) {
+        cartFab.style.display = 'flex';
+    } else {
+        cartFab.style.display = 'none';
+    }
 
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
-            checkoutBtn.disabled = true;
-            document.getElementById('cart-subtotal').textContent = '$0.00';
-            document.getElementById('cart-service-fee').textContent = '$0.00';
-            cartTotal.textContent = '$0.00';
-        } else {
-            cart.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.classList.add('cart-item');
-                itemElement.innerHTML = `
+    cartItemsContainer.innerHTML = '';
+    let subtotal = 0;
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
+        checkoutBtn.disabled = true;
+        document.getElementById('cart-subtotal').textContent = '$0.00';
+        document.getElementById('cart-service-fee').textContent = '$0.00';
+        cartTotal.textContent = '$0.00';
+    } else {
+        cart.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.classList.add('cart-item');
+            itemElement.innerHTML = `
                     <div class="cart-item-details">
                         <h4>${item.name}</h4>
                         <p>$${parseFloat(item.price).toFixed(2)}</p>
@@ -1527,276 +1527,382 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button class="remove-item" data-id="${item.id}">&times;</button>
                     </div>
                 `;
-                cartItemsContainer.appendChild(itemElement);
-                subtotal += item.price * item.quantity;
-            });
-            checkoutBtn.disabled = false;
+            cartItemsContainer.appendChild(itemElement);
+            subtotal += item.price * item.quantity;
+        });
+        checkoutBtn.disabled = false;
+    }
+
+    const serviceFee = subtotal * 0.18; // 15% + 3%
+    const total = subtotal + serviceFee;
+
+    document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+    document.getElementById('cart-service-fee').textContent = `$${serviceFee.toFixed(2)}`;
+    cartTotal.textContent = `$${total.toFixed(2)}`;
+};
+
+// Evento para abrir y cerrar el modal del carrito
+cartFab.addEventListener('click', () => cartModal.classList.add('active'));
+closeCartBtn.addEventListener('click', () => cartModal.classList.remove('active'));
+cartModal.addEventListener('click', (e) => {
+    if (e.target === cartModal) {
+        cartModal.classList.remove('active');
+    }
+});
+
+// Event delegation para acciones en todo el body
+document.body.addEventListener('click', (e) => {
+    const ordenarBtn = e.target.closest('.btn-ordenar');
+    const aceptarPedidoBtn = e.target.closest('.btn-aceptar-pedido');
+
+    // Si se hizo clic en "Ordenar"
+    if (ordenarBtn) {
+        const card = ordenarBtn.closest('.platillo-card');
+        const platilloId = ordenarBtn.dataset.id;
+        const platilloName = card.querySelector('h3').textContent;
+        const platilloPrice = parseFloat(card.querySelector('.platillo-card-price, .platillo-precio').textContent.replace('$', ''));
+
+        const existingItem = cart.find(item => item.id === platilloId);
+
+        if (existingItem) {
+            existingItem.quantity++;
+        } else {
+            cart.push({ id: platilloId, name: platilloName, price: platilloPrice, quantity: 1 });
         }
 
-        const serviceFee = subtotal * 0.18; // 15% + 3%
-        const total = subtotal + serviceFee;
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: '¡Agregado al carrito!',
+            showConfirmButton: false,
+            timer: 1500
+        });
 
-        document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-        document.getElementById('cart-service-fee').textContent = `$${serviceFee.toFixed(2)}`;
-        cartTotal.textContent = `$${total.toFixed(2)}`;
-    };
-
-    // Evento para abrir y cerrar el modal del carrito
-    cartFab.addEventListener('click', () => cartModal.classList.add('active'));
-    closeCartBtn.addEventListener('click', () => cartModal.classList.remove('active'));
-    cartModal.addEventListener('click', (e) => {
-        if (e.target === cartModal) {
-            cartModal.classList.remove('active');
-        }
-    });
-
-    // Event delegation para acciones en todo el body
-    document.body.addEventListener('click', (e) => {
-        const ordenarBtn = e.target.closest('.btn-ordenar');
-        const aceptarPedidoBtn = e.target.closest('.btn-aceptar-pedido');
-
-        // Si se hizo clic en "Ordenar"
-        if (ordenarBtn) {
-            const card = ordenarBtn.closest('.platillo-card');
-            const platilloId = ordenarBtn.dataset.id;
-            const platilloName = card.querySelector('h3').textContent;
-            const platilloPrice = parseFloat(card.querySelector('.platillo-card-price, .platillo-precio').textContent.replace('$', ''));
-
-            const existingItem = cart.find(item => item.id === platilloId);
-
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ id: platilloId, name: platilloName, price: platilloPrice, quantity: 1 });
-            }
-
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: '¡Agregado al carrito!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-
-            updateCart();
+        updateCart();
 
         // Si se hizo clic en "Aceptar Pedido"
-        } else if (aceptarPedidoBtn) {
-            e.preventDefault();
-            const pedidoId = aceptarPedidoBtn.dataset.id;
+    } else if (aceptarPedidoBtn) {
+        e.preventDefault();
+        const pedidoId = aceptarPedidoBtn.dataset.id;
 
-            if (!pedidoId) {
-                console.error('No se encontró el ID del pedido');
-                return;
-            }
-
-            // Llama a la función que movimos en el paso 1
-            aceptarPedido(aceptarPedidoBtn, pedidoId);
+        if (!pedidoId) {
+            console.error('No se encontró el ID del pedido');
+            return;
         }
-    });
 
-    // Event delegation para acciones dentro del carrito (eliminar, cambiar cantidad)
-    cartItemsContainer.addEventListener('click', (e) => {
-        const target = e.target;
-        if (target.classList.contains('remove-item')) {
-            const platilloId = target.dataset.id;
+        // Llama a la función que movimos en el paso 1
+        aceptarPedido(aceptarPedidoBtn, pedidoId);
+    }
+});
+
+// Event delegation para acciones dentro del carrito (eliminar, cambiar cantidad)
+cartItemsContainer.addEventListener('click', (e) => {
+    const target = e.target;
+    if (target.classList.contains('remove-item')) {
+        const platilloId = target.dataset.id;
+        cart = cart.filter(item => item.id !== platilloId);
+        updateCart();
+    }
+});
+
+cartItemsContainer.addEventListener('change', (e) => {
+    const target = e.target;
+    if (target.classList.contains('item-quantity')) {
+        const platilloId = target.dataset.id;
+        const newQuantity = parseInt(target.value, 10);
+        const itemInCart = cart.find(item => item.id === platilloId);
+
+        if (itemInCart && newQuantity > 0) {
+            itemInCart.quantity = newQuantity;
+        } else {
+            // Si la cantidad es 0 o inválida, lo eliminamos
             cart = cart.filter(item => item.id !== platilloId);
-            updateCart();
         }
-    });
+        updateCart();
+    }
+});
 
-    cartItemsContainer.addEventListener('change', (e) => {
-        const target = e.target;
-        if (target.classList.contains('item-quantity')) {
-            const platilloId = target.dataset.id;
-            const newQuantity = parseInt(target.value, 10);
-            const itemInCart = cart.find(item => item.id === platilloId);
-
-            if (itemInCart && newQuantity > 0) {
-                itemInCart.quantity = newQuantity;
-            } else {
-                // Si la cantidad es 0 o inválida, lo eliminamos
-                cart = cart.filter(item => item.id !== platilloId);
-            }
-            updateCart();
-        }
-    });
-
-    // Evento para el botón "Realizar Pedido"
-    if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', () => {
-            // Primero, verifica si hay platillos de múltiples restaurantes en el backend.
-            fetch(processCartUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({ cart: cart, precheck: true })
-            })
+// Evento para el botón "Realizar Pedido"
+if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+        // Primero, verifica si hay platillos de múltiples restaurantes en el backend.
+        fetch(processCartUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ cart: cart, precheck: true })
+        })
             .then(response => response.json().then(data => ({ status: response.status, data })))
             .then(({ status, data }) => {
-                    // Si el backend detecta múltiples restaurantes
-                    if (status === 400 && data.message.includes('múltiples restaurantes')) {
-                        cartModal.classList.remove('active');
-                        Swal.fire({ icon: 'error', title: 'Carrito Inválido', text: data.message });
-                        return Promise.reject('Carrito Inválido');
-                    }
-
-                    // Si falta la dirección de entrega
-                    if (status === 400 && data.message && data.message.includes('dirección')) {
-                        cartModal.classList.remove('active');
-                        const addAddressModal = document.getElementById('add-address-modal');
-                        if (addAddressModal) {
-                            addAddressModal.classList.add('active');
-                        }
-                        return Promise.reject('No address');
-                    }
-
-                    // Si pasa la validación, verificamos el método de pago.
-                    return fetch(verifyPaymentUrl);
-                })
-                .then(response => response.json())
-                .then(paymentData => {
-                // Si NO tiene método de pago, mostramos el modal para agregarlo.
-                if (!paymentData.hasPaymentMethod) {
+                // Si el backend detecta múltiples restaurantes
+                if (status === 400 && data.message.includes('múltiples restaurantes')) {
                     cartModal.classList.remove('active');
-                    const addPaymentModal = document.getElementById('add-payment-modal');
-                    if (addPaymentModal) {
-                        addPaymentModal.classList.add('active');
-                    }
-                    return Promise.reject('No payment method');
+                    Swal.fire({ icon: 'error', title: 'Carrito Inválido', text: data.message });
+                    return Promise.reject('Carrito Inválido');
                 }
 
-                // Si SÍ tiene método de pago, procedemos con la confirmación.
+                // Si falta la dirección de entrega
+                if (status === 400 && data.message && data.message.includes('dirección')) {
+                    cartModal.classList.remove('active');
+                    const addAddressModal = document.getElementById('add-address-modal');
+                    if (addAddressModal) {
+                        addAddressModal.classList.add('active');
+                    }
+                    return Promise.reject('No address');
+                }
+
+                // Si pasa la validación, abrimos el modal de confirmación con PayPal
+                cartModal.classList.remove('active');
+                const confirmModal = document.getElementById('confirm-order-modal');
+                const totalAmountEl = document.getElementById('confirm-total-amount');
+
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 const serviceFee = subtotal * 0.18;
                 const finalTotal = subtotal + serviceFee;
                 const totalFormatted = `$${finalTotal.toFixed(2)}`;
-                cartModal.classList.remove('active');
 
-                Swal.fire({
-                    title: 'Confirmar tu pedido',
-                    html: `¿Estás seguro/a de que deseas realizar el pago por <strong>${totalFormatted}</strong>?`,
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#FF6347',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Aceptar y pagar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        checkoutBtn.disabled = true;
-                        checkoutBtn.textContent = 'Procesando...';
+                if (totalAmountEl) totalAmountEl.textContent = totalFormatted;
+                if (confirmModal) confirmModal.classList.add('active');
 
-                        fetch(processCartUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                'Accept': 'application/json',
-                            },
-                            body: JSON.stringify({ cart: cart })
-                        })
-                        .then(response => response.json().then(data => ({ ok: response.ok, data })))
-                        .then(({ ok, data }) => {
-                            if (ok) {
-                                Swal.fire({ icon: 'success', title: '¡Pedido Realizado!', text: data.message, showConfirmButton: false, timer: 2000 });
+                // Renderizar botones de PayPal
+                const paypalContainer = document.getElementById('paypal-button-container');
+                if (paypalContainer) {
+                    paypalContainer.innerHTML = ''; // Limpiar contenedor
+
+                    // Configurar fundingSource según si tiene método guardado
+                    let buttonConfig = {
+                        createOrder: function (data, actions) {
+                            return fetch('/paypal/create', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    total: finalTotal.toFixed(2)
+                                })
+                            }).then(function (res) {
+                                return res.json();
+                            }).then(function (orderData) {
+                                return orderData.id;
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            return fetch('/paypal/capture', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    order_id: data.orderID
+                                })
+                            }).then(function (res) {
+                                return res.json();
+                            }).then(function (orderData) {
+                                if (orderData.error) {
+                                    throw new Error(orderData.error);
+                                }
+
+                                return fetch(processCartUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                        'Accept': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        cart: cart,
+                                        paypal_order_id: data.orderID,
+                                        paypal_payment_data: orderData
+                                    })
+                                });
+                            }).then(function (res) {
+                                return res.json();
+                            }).then(function (data) {
+                                confirmModal.classList.remove('active');
+                                Swal.fire({ icon: 'success', title: '¡Pedido Realizado!', text: 'Pago con PayPal exitoso.', showConfirmButton: false, timer: 2000 });
                                 cart = [];
                                 updateCart();
                                 setTimeout(() => document.querySelector('.nav-link[data-section="pedidos"]').click(), 2000);
-                            } else {
-                                Swal.fire({ icon: 'error', title: 'Oops...', text: data.message || 'No se pudo procesar el pedido.' });
+                            }).catch(function (error) {
+                                console.error('Error en el pago:', error);
+                                Swal.fire({ icon: 'error', title: 'Error en el Pago', text: 'No se pudo procesar el pago con PayPal.' });
+                            });
+                        },
+                        onError: function (err) {
+                            console.error('PayPal Error:', err);
+                            if (err.toString().includes('closed') || err.toString().includes('popup')) {
+                                return;
                             }
-                        })
-                        .catch(error => Swal.fire({ icon: 'error', title: 'Error de Conexión', text: 'No se pudo comunicar con el servidor.' }))
-                        .finally(() => {
-                            checkoutBtn.disabled = false;
-                            checkoutBtn.textContent = 'Realizar Pedido';
-                        });
+                            Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un error con PayPal.' });
+                        },
+                        onCancel: function (data) {
+                            console.log('Pago cancelado por el usuario');
+                            const cancelBtn = document.getElementById('cancel-order-btn');
+                            if (cancelBtn) cancelBtn.style.display = 'block';
+                        },
+                        onClick: function (data, actions) {
+                            if (data.fundingSource === 'card') {
+                                const cancelBtn = document.getElementById('cancel-order-btn');
+                                if (cancelBtn) cancelBtn.style.display = 'none';
+                            }
+                        }
+                    };
+
+                    // Si el usuario tiene PayPal guardado, solo mostrar botón de PayPal (no tarjeta)
+                    if (typeof hasSavedPayPal !== 'undefined' && hasSavedPayPal) {
+                        buttonConfig.fundingSource = paypal.FUNDING.PAYPAL;
                     }
-                });
+
+                    paypal.Buttons(buttonConfig).render('#paypal-button-container');
+
+                    // Observar cambios en el contenedor de PayPal
+                    const observer = new MutationObserver(function (mutations) {
+                        mutations.forEach(function (mutation) {
+                            const paypalIframe = paypalContainer.querySelector('iframe');
+                            const cancelBtn = document.getElementById('cancel-order-btn');
+
+                            if (paypalIframe && cancelBtn) {
+                                const iframeDoc = paypalIframe.contentWindow;
+                                if (iframeDoc) {
+                                    try {
+                                        const cardForm = paypalIframe.contentDocument?.querySelector('[data-funding-source="card"]');
+                                        if (cardForm) {
+                                            cancelBtn.style.display = 'none';
+                                        }
+                                    } catch (e) {
+                                        // Error de CORS
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                    observer.observe(paypalContainer, {
+                        childList: true,
+                        subtree: true,
+                        attributes: true
+                    });
+                }
             })
             .catch(error => {
-                // Este catch ahora maneja los 'Promise.reject' para evitar errores en la consola.
-                if (error !== 'No payment method' && error !== 'Carrito Inválido' && error !== 'No address') {
+                if (error !== 'Carrito Inválido' && error !== 'No address' && error !== 'Canceled') {
                     console.error('Error en el proceso de checkout:', error);
-                    Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un problema inesperado. Intenta de nuevo.' });
+                    if (typeof error === 'string' && !error.includes('closed')) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Ocurrió un problema inesperado. Intenta de nuevo.' });
+                    }
                 }
             });
+    });
+}
+
+// Manejar cierre del modal de confirmación - FUERA del if(checkoutBtn)
+document.addEventListener('DOMContentLoaded', function () {
+    const confirmModal = document.getElementById('confirm-order-modal');
+    const cancelOrderBtn = document.getElementById('cancel-order-btn');
+
+    if (cancelOrderBtn && confirmModal) {
+        cancelOrderBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar que el evento se propague
+            confirmModal.classList.remove('active');
+            // Limpiamos el contenedor para evitar duplicados si se vuelve a abrir
+            const container = document.getElementById('paypal-button-container');
+            if (container) container.innerHTML = '';
+            // Asegurarse de que el botón esté visible cuando se cierre el modal
+            cancelOrderBtn.style.display = 'block';
         });
     }
 
+    // Cerrar modal al hacer clic fuera de él
+    if (confirmModal) {
+        confirmModal.addEventListener('click', (e) => {
+            // Solo cerrar si se hace clic en el overlay, no en el modal-box
+            if (e.target === confirmModal) {
+                confirmModal.classList.remove('active');
+                // Limpiamos el contenedor
+                const container = document.getElementById('paypal-button-container');
+                if (container) container.innerHTML = '';
+                // Asegurarse de que el botón esté visible cuando se cierre el modal
+                const cancelBtn = document.getElementById('cancel-order-btn');
+                if (cancelBtn) cancelBtn.style.display = 'block';
+            }
+        });
+    }
+});
 
-    const addPaymentModal = document.getElementById('add-payment-modal');
-    const goToPaymentBtn = document.getElementById('go-to-payment-btn');
 
-    // Ir a la sección de método de pago
-    if (goToPaymentBtn) {
-        goToPaymentBtn.addEventListener('click', () => {
+const addPaymentModal = document.getElementById('add-payment-modal');
+const goToPaymentBtn = document.getElementById('go-to-payment-btn');
+
+// Ir a la sección de método de pago
+if (goToPaymentBtn) {
+    goToPaymentBtn.addEventListener('click', () => {
+        addPaymentModal.classList.remove('active');
+        // Simula un clic en el enlace del sidebar
+        document.querySelector('.nav-link[data-section="pago"]').click();
+    });
+}
+
+// Cerrar modal de "agregar pago" si se da clic fuera
+if (addPaymentModal) {
+    addPaymentModal.addEventListener('click', (e) => {
+        if (e.target === addPaymentModal) {
             addPaymentModal.classList.remove('active');
-            // Simula un clic en el enlace del sidebar
-            document.querySelector('.nav-link[data-section="pago"]').click();
-        });
-    }
+        }
+    });
+}
 
-    // Cerrar modal de "agregar pago" si se da clic fuera
-    if (addPaymentModal) {
-         addPaymentModal.addEventListener('click', (e) => {
-            if (e.target === addPaymentModal) {
-                addPaymentModal.classList.remove('active');
-            }
-        });
-    }
+// --- LÓGICA PARA EL MODAL DE AGREGAR DIRECCIÓN ---
+const addAddressModal = document.getElementById('add-address-modal');
+const goToProfileBtn = document.getElementById('go-to-profile-btn');
 
-    // --- LÓGICA PARA EL MODAL DE AGREGAR DIRECCIÓN ---
-    const addAddressModal = document.getElementById('add-address-modal');
-    const goToProfileBtn = document.getElementById('go-to-profile-btn');
+// Ir a la sección de perfil para agregar dirección
+if (goToProfileBtn) {
+    goToProfileBtn.addEventListener('click', function () {
+        // Cerrar el modal
+        addAddressModal.classList.remove('active');
 
-    // Ir a la sección de perfil para agregar dirección
-    if (goToProfileBtn) {
-        goToProfileBtn.addEventListener('click', function() {
-            // Cerrar el modal
+        // Simular clic en el enlace del sidebar
+        const profileLink = document.querySelector('.nav-link[data-section="perfil"]');
+        if (profileLink) {
+            profileLink.click();
+        }
+    });
+}
+
+// Cerrar modal de "agregar dirección" si se da clic fuera
+if (addAddressModal) {
+    addAddressModal.addEventListener('click', (e) => {
+        if (e.target === addAddressModal) {
             addAddressModal.classList.remove('active');
-            
-            // Simular clic en el enlace del sidebar
-            const profileLink = document.querySelector('.nav-link[data-section="perfil"]');
-            if (profileLink) {
-                profileLink.click();
-            }
-        });
-    }
+        }
+    });
+}
 
-    // Cerrar modal de "agregar dirección" si se da clic fuera
-    if (addAddressModal) {
-        addAddressModal.addEventListener('click', (e) => {
-            if (e.target === addAddressModal) {
-                addAddressModal.classList.remove('active');
-            }
-        });
-    }
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // --- LÓGICA PARA EL MODAL DE AGREGAR DIRECCIÓN ---
     const addAddressModal = document.getElementById('add-address-modal');
     const goToProfileBtn = document.getElementById('go-to-profile-btn');
 
     // Ir a la sección de perfil para agregar dirección
     if (goToProfileBtn) {
-        goToProfileBtn.addEventListener('click', function() {
+        goToProfileBtn.addEventListener('click', function () {
             console.log('Botón de agregar dirección clickeado'); // Para depuración
-            
+
             // Cerrar el modal
             if (addAddressModal) {
                 addAddressModal.classList.remove('active');
             }
-            
+
             // Simular clic en el enlace del sidebar
             const profileLink = document.querySelector('.nav-link[data-section="perfil"]');
             console.log('profileLink encontrado:', profileLink); // Para depuración
-            
+
             if (profileLink) {
                 profileLink.click();
             } else {
@@ -1809,7 +1915,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Cerrar modal de "agregar dirección" si se da clic fuera
     if (addAddressModal) {
-        addAddressModal.addEventListener('click', function(e) {
+        addAddressModal.addEventListener('click', function (e) {
             if (e.target === addAddressModal) {
                 addAddressModal.classList.remove('active');
             }

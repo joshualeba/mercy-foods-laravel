@@ -15,7 +15,12 @@ class Pedido extends Model
         'comision_plataforma', 
         'estado',
         'direccion_entrega',
-        'notas'
+        'notas',
+        'paypal_order_id',
+        'paypal_payer_id',
+        'paypal_payment_status',
+        'paypal_capture_id',
+        'metodo_pago'
     ];
 
     protected $casts = [

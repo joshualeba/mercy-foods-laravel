@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * Los atributos que se pueden asignar de forma masiva.
@@ -26,6 +27,9 @@ class User extends Authenticatable
          'address',
         'card_last_four',
         'card_expiry',
+        'card_name',
+        'paypal_email',
+        'paypal_payer_id',
      ];
 
     /**

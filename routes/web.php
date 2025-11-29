@@ -75,6 +75,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/metodo-pago', [PaymentController::class, 'index'])->name('cliente.pago.index');
     Route::post('/pago', [PaymentController::class, 'store'])->name('cliente.pago.procesar');
     Route::get('/verificar-pago', [PaymentController::class, 'verify'])->name('cliente.pago.verificar');
+    Route::post('/cliente/pago/save-paypal', [PaymentController::class, 'savePayPal'])->name('cliente.pago.save-paypal');
+    Route::post('/cliente/pago/remove', [PaymentController::class, 'removePaymentMethod'])->name('cliente.pago.remove');
+    
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::get('/api/restaurante/reviews', [ReviewController::class, 'getRestauranteReviews'])->name('api.restaurante.reviews');
     Route::get('/api/repartidor/reviews', [ReviewController::class, 'getRepartidorReviews'])->name('api.repartidor.reviews');
@@ -93,3 +96,10 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/faq', [FaqController::class, 'index']);
+
+// RUTAS PARA PAYPAL (HU_4.1) - Públicas para prueba
+Route::post('/paypal/create', [\App\Http\Controllers\PaypalController::class, 'createOrder'])->name('paypal.create');
+Route::post('/paypal/capture', [\App\Http\Controllers\PaypalController::class, 'captureOrder'])->name('paypal.capture');
+
+// Ruta temporal para verificar HU_4.1 (Backend PayPal)
+Route::view('/test-paypal', 'test-paypal');

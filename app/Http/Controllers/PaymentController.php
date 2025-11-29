@@ -64,9 +64,84 @@ class PaymentController extends Controller
     {
         $user = Auth::user();
 
-        // Verificamos si la columna 'card_last_four' tiene un valor
-        $hasPaymentMethod = !is_null($user->card_last_four);
+        // Verificamos si tiene PayPal o tarjeta guardada
+        $hasPaymentMethod = !is_null($user->paypal_email) || !is_null($user->card_last_four);
 
         return response()->json(['hasPaymentMethod' => $hasPaymentMethod]);
+    }
+
+    /**
+     * Guarda el método de pago de PayPal del usuario.
+     */
+    public function savePayPal(Request $request)
+    {
+        $request->validate([
+            'paypal_email' => 'required|email',
+            'paypal_payer_id' => 'required|string',
+        ]);
+
+        try {
+            $user = Auth::user();
+            $user->paypal_email = $request->paypal_email;
+            $user->paypal_payer_id = $request->paypal_payer_id;
+            $user->save();
+
+            \Log::info('Método de pago PayPal guardado', [
+                'user_id' => $user->id,
+                'paypal_email' => $request->paypal_email
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Método de pago guardado exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error al guardar método de pago PayPal', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar el método de pago'
+            ], 500);
+        }
+    }
+
+    /**
+     * Elimina el método de pago guardado del usuario.
+     */
+    public function removePaymentMethod()
+    {
+        try {
+            $user = Auth::user();
+            
+            // Limpiar todos los campos de pago
+            $user->card_name = null;
+            $user->card_last_four = null;
+            $user->card_expiry = null;
+            $user->paypal_email = null;
+            $user->paypal_payer_id = null;
+            $user->save();
+
+            \Log::info('Método de pago eliminado', [
+                'user_id' => $user->id
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Método de pago eliminado exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error al eliminar método de pago', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el método de pago'
+            ], 500);
+        }
     }
 }

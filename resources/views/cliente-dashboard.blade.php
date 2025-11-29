@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -180,6 +181,8 @@
     <script>
         const processCartUrl = '{{ route("carrito.procesar") }}';
         const verifyPaymentUrl = '{{ route("cliente.pago.verificar") }}';
+        const hasSavedPayPal = {{ Auth::user()->paypal_email ? 'true' : 'false' }};
+        const savedPayPalEmail = '{{ Auth::user()->paypal_email ?? "" }}';
     </script>
 
     {{-- Modal para detalles del platillo --}}
@@ -207,15 +210,41 @@
 
     {{-- Nuevo Modal para Confirmar Pedido --}}
     <div class="confirmation-modal-overlay" id="confirm-order-modal">
-        <div class="modal-box">
+        <div class="modal-box" style="max-width: 500px;">
             <h2>Confirmar tu pedido</h2>
-            <p>¿Estás seguro/a de que deseas realizar el pago por un total de <strong id="confirm-total-amount"></strong>?</p>
-            <div class="modal-buttons">
+            <p>Total a pagar: <strong id="confirm-total-amount"></strong></p>
+
+            @if(Auth::user()->paypal_email)
+                {{-- Usuario tiene PayPal guardado --}}
+                <div class="saved-payment-option" style="margin: 2rem 0;">
+                    <h3 style="margin-bottom: 1rem;">Método de pago</h3>
+                    <div class="payment-method-card" style="padding: 1rem; background-color: var(--main-bg); border-radius: 8px; border: 2px solid var(--primary-color);">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <i class="fab fa-paypal" style="font-size: 2rem; color: #0070ba;"></i>
+                            <div>
+                                <strong>PayPal</strong>
+                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-color-light);">{{ Auth::user()->paypal_email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-color-light);">Haz clic en el botón de PayPal para continuar con tu cuenta guardada</p>
+                </div>
+            @else
+                {{-- Usuario NO tiene método de pago guardado --}}
+                <p style="margin: 1.5rem 0;">Selecciona tu método de pago:</p>
+            @endif
+
+            {{-- Contenedor para botones de PayPal --}}
+            <div id="paypal-button-container"></div>
+
+            <div class="modal-buttons" style="margin-top: 1.5rem;">
                 <button class="btn-cancel" id="cancel-order-btn">Cancelar</button>
-                <button class="btn-confirm" id="confirm-order-btn">Aceptar y pagar</button>
             </div>
         </div>
     </div>
+
+    {{-- Script de PayPal SDK --}}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=MXN"></script>
 
     {{-- Nuevo Modal para agregar Método de Pago --}}
     <div class="confirmation-modal-overlay" id="add-payment-modal">
